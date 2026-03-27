@@ -1,8 +1,8 @@
 # LubanUI
 
 <p align="center">
-  <img src="https://img.shields.io/npm/v/luban-base.svg" alt="npm version">
-  <img src="https://img.shields.io/npm/v/luban-low-code.svg" alt="npm version">
+  <img src="https://img.shields.io/npm/v/%40luban-low-code%2Fluban-base.svg" alt="npm version">
+  <img src="https://img.shields.io/npm/v/%40luban-low-code%2Fluban-low-code.svg" alt="npm version">
   <img src="https://img.shields.io/github/license/luban-ui/luban-ui.svg" alt="license">
   <a href="https://nx.dev"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="30" alt="Nx"></a>
 </p>
@@ -21,8 +21,8 @@ LubanUI 是一个基于 Vue 3 的低代码平台核心组件库，提供基础�
 
 | 包                                          | 说明                                     |
 | ------------------------------------------- | ---------------------------------------- |
-| [luban-base](./packages/luban-base)         | 基础 UI 组件库（按钮、输入框、选择器等） |
-| [luban-low-code](./packages/luban-low-code) | 低代码运行时与可视化设计器               |
+| [@luban-low-code/luban-base](./packages/luban-base)         | 基础 UI 组件库（按钮、输入框、选择器等） |
+| [@luban-low-code/luban-low-code](./packages/luban-low-code) | 低代码运行时与可视化设计器               |
 | [luban-utils](./packages/luban-utils)       | 工具函数与通用逻辑                       |
 
 ## 快速开始
@@ -31,10 +31,10 @@ LubanUI 是一个基于 Vue 3 的低代码平台核心组件库，提供基础�
 
 ```bash
 # 安装基础组件库
-pnpm add luban-base
+pnpm add @luban-low-code/luban-base
 
 # 或者安装低代码组件库（包含基础组件）
-pnpm add luban-low-code
+pnpm add @luban-low-code/luban-low-code
 ```
 
 ### 使用基础组件
@@ -45,7 +45,7 @@ pnpm add luban-low-code
 </template>
 
 <script setup>
-import { LubanButton } from 'luban-base';
+import { LubanButton } from '@luban-low-code/luban-base';
 
 const handleClick = () => {
   console.log('clicked');
@@ -61,8 +61,8 @@ const handleClick = () => {
 </template>
 
 <script setup>
-import { LubanPage } from 'luban-low-code';
-import type { PageSchema } from 'luban-low-code';
+import { LubanPage } from '@luban-low-code/luban-low-code';
+import type { PageSchema } from '@luban-low-code/luban-low-code';
 
 const schema = {
   root: {

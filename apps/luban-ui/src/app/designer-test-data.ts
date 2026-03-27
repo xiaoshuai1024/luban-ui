@@ -1,4 +1,4 @@
-import type { NodeSchema, PageSchema } from '@luban-ui/luban-low-code';
+import type { NodeSchema, PageSchema } from '@luban-low-code/luban-low-code';
 
 let idCounter = 0;
 function nextId(): string {

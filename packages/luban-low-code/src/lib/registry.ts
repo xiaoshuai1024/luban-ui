@@ -13,7 +13,7 @@ import {
   LubanCheckbox,
   LubanRadioGroup,
   LubanSwitch,
-} from 'luban-base';
+} from '@luban-low-code/luban-base';
 
 const registry: Record<string, Component> = {
   LubanButton,

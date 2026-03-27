@@ -7,8 +7,8 @@ import {
   getPaletteGroups,
   isPaletteType,
   type PageSchema,
-} from '@luban-ui/luban-low-code';
-import { LubanSidePanel, LubanForm } from '@luban-ui/luban-base';
+} from '@luban-low-code/luban-low-code';
+import { LubanSidePanel, LubanForm } from '@luban-low-code/luban-base';
 import {
   createEmptyDesignerSchema,
   appendNodeToSchema,

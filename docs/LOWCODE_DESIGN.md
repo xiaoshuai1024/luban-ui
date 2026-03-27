@@ -6,14 +6,14 @@
 
 - `packages/luban-low-code/src/lib/schema.ts`：已有 `NodeSchema`、`PageSchema`。
 - `packages/luban-low-code/src/lib/RuntimeRenderer.vue`：根据 `root` + `formState` 递归渲染，从 registry 取 base 组件。
-- `packages/luban-low-code/package.json`：`dependencies` 含 `@luban-ui/luban-base` 和 `vue`。
+- `packages/luban-low-code/package.json`：`dependencies` 含 `@luban-low-code/luban-base` 和 `vue`。
 
 ### 1.2 设计要点
 
 - **按 JSON 渲染**：保持现有契约——调用方传入 `PageSchema`（含 `root: NodeSchema`、可选 `formState`），使用 `RuntimeRenderer` 或封装好的「页面渲染」入口即可。无需改运行时逻辑，只需明确对外 API 与文档。
-- **「仅需 pnpm install 一个包」**：保持 `@luban-ui/luban-low-code` 依赖 `@luban-ui/luban-base`（及 `vue`），在文档中说明安装方式，例如：
-  - `pnpm add @luban-ui/luban-low-code`
-  - 会拉取 `@luban-ui/luban-base` 与 `vue`，业务侧无需再单独安装 base。
+- **「仅需 pnpm install 一个包」**：保持 `@luban-low-code/luban-low-code` 依赖 `@luban-low-code/luban-base`（及 `vue`），在文档中说明安装方式，例如：
+  - `pnpm add @luban-low-code/luban-low-code`
+  - 会拉取 `@luban-low-code/luban-base` 与 `vue`，业务侧无需再单独安装 base。
 - **对外入口**：包入口 `packages/luban-low-code/src/index.ts` 已导出 `RuntimeRenderer`、`PageSchema`、`NodeSchema`、`getComponent`/`registerComponent`。可增加一个便捷用法（可选）：例如 `renderPage(schema)` 或提供一个小型 `<LubanPage :schema="schema" />` 组件，内部仅用 `RuntimeRenderer` + `formState`，便于「仅传 JSON 即渲染」的文档示例。
 - **不把 base 打进 low-code 包**：继续用 dependency 方式，避免重复打包、版本分裂和构建复杂度；若未来有「仅发布一个 npm 包」的强需求，再考虑把 base 作为 bundled dependency 或单包发布策略。
 
@@ -69,7 +69,7 @@
 flowchart TB
   subgraph consumer [使用方]
     App[App]
-    App -->|"pnpm add @luban-ui/luban-low-code"| Pkg
+    App -->|"pnpm add @luban-low-code/luban-low-code"| Pkg
   end
   subgraph Pkg [luban-low-code]
     Schema[PageSchema / NodeSchema]

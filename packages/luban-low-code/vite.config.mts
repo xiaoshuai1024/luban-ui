@@ -7,6 +7,14 @@ import * as path from 'path';
 export default defineConfig(() => ({
   root: import.meta.dirname,
   cacheDir: '../../node_modules/.vite/packages/luban-low-code',
+  resolve: {
+    alias: {
+      '@luban-low-code/luban-base': path.resolve(
+        import.meta.dirname,
+        '../luban-base/src/index.ts',
+      ),
+    },
+  },
   plugins: [
     vue(),
     dts({
@@ -37,8 +45,8 @@ export default defineConfig(() => ({
       formats: ['es' as const],
     },
     rollupOptions: {
-      // 将 vue 和 luban-base 作为外部依赖，由使用方或 workspace 提供
-      external: ['vue', 'luban-base'],
+      // 将 vue 和 scoped luban-base 作为外部依赖，由使用方或 workspace 提供
+      external: ['vue', '@luban-low-code/luban-base'],
     },
   },
   test: {

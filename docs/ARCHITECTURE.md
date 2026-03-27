@@ -110,7 +110,7 @@ flowchart LR
 
 ### 跨包引用
 
-- 统一通过包名引用：`@luban-ui/luban-base`、`@luban-ui/luban-low-code`、`@luban-ui/luban-utils`。
+- 统一通过包名引用：`@luban-low-code/luban-base`、`@luban-low-code/luban-low-code`、`@luban-ui/luban-utils`。
 - 在 app 中通过 [apps/luban-ui/vite.config.mts](../apps/luban-ui/vite.config.mts) 的 `resolve.alias` 将包名指向本地源码；[tsconfig.base.json](../tsconfig.base.json) 的 `paths` 与 `customConditions` 用于开发态类型与源码解析。避免在包之间使用相对路径跨包引用。
 
 ---
@@ -131,7 +131,7 @@ flowchart LR
 
 - 表单项节点可在 **props.rules** 中配置校验规则（`ValidationRule[]`），由运行时在值变更与失焦时执行 `validate(value, rules)`，并将结果通过 **error** / **errorMessage** 传给 base 组件。
 - 支持的规则（均为 JSON 可序列化，便于设计器配置）：**required**、**type**（email / tel / url / number）、**minLength** / **maxLength**、**min** / **max**、**pattern**（正则字符串）、每条规则可配 **message**。Checkbox/Switch 的 required 表示“必须勾选”。
-- 类型与 API：`@luban-ui/luban-low-code` 导出 `ValidationRule`、`validate()`，供设计器或外部校验复用。
+- 类型与 API：`@luban-low-code/luban-low-code` 导出 `ValidationRule`、`validate()`，供设计器或外部校验复用。
 
 ```mermaid
 flowchart TB

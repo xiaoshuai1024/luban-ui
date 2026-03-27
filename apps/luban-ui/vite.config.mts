@@ -16,11 +16,11 @@ export default defineConfig(() => ({
   },
   resolve: {
     alias: {
-      '@luban-ui/luban-base': path.resolve(
+      '@luban-low-code/luban-base': path.resolve(
         import.meta.dirname,
         '../../packages/luban-base/src/index.ts',
       ),
-      '@luban-ui/luban-low-code': path.resolve(
+      '@luban-low-code/luban-low-code': path.resolve(
         import.meta.dirname,
         '../../packages/luban-low-code/src/index.ts',
       ),
