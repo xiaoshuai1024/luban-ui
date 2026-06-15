@@ -1,18 +1,11 @@
 <script setup lang="ts">
 import { getComponent } from './registry';
 import type { NodeSchema } from './schema';
-import { isContainerType } from './constants';
+import { isContainerType, isFormValueType } from './constants';
 import { validate, type ValidationRule } from './validation';
 import DesignRendererSelf from './DesignRenderer.vue';
 
-const FORM_VALUE_TYPES = new Set([
-  'LubanInput',
-  'LubanTextArea',
-  'LubanSelect',
-  'LubanCheckbox',
-  'LubanRadioGroup',
-  'LubanSwitch',
-]);
+// FORM_VALUE_TYPES 从 constants 统一导入（T-ui-12 单一真相源），新增表单值物料自动生效
 
 const props = withDefaults(
   defineProps<{
@@ -66,7 +59,7 @@ function setFormValue(name: string | undefined, value: unknown): void {
 }
 
 function isFormValueType(type: string): boolean {
-  return FORM_VALUE_TYPES.has(type);
+  return isFormValueType(type);
 }
 
 function getFieldError(name: string | undefined): string | undefined {

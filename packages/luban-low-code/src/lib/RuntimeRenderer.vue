@@ -2,6 +2,7 @@
 import { getComponent } from './registry';
 import type { NodeSchema } from './schema';
 import { validate, type ValidationRule } from './validation';
+import { isFormValueType } from './constants';
 import { inject } from 'vue';
 
 /** Optional form submit handler provided by the host app (e.g. website DynamicPage) */
@@ -12,14 +13,7 @@ interface FormSubmitPayload {
 }
 const formSubmitHandler = inject<((payload: FormSubmitPayload) => void) | null>('lubanFormSubmit', null);
 
-const FORM_VALUE_TYPES = new Set([
-  'LubanInput',
-  'LubanTextArea',
-  'LubanSelect',
-  'LubanCheckbox',
-  'LubanRadioGroup',
-  'LubanSwitch',
-]);
+// FORM_VALUE_TYPES 从 constants 统一导入（T-ui-12 单一真相源）
 
 const props = withDefaults(
   defineProps<{
@@ -51,7 +45,7 @@ function setFormValue(name: string | undefined, value: unknown): void {
 }
 
 function isFormValueType(type: string): boolean {
-  return FORM_VALUE_TYPES.has(type);
+  return isFormValueType(type);
 }
 
 function getFieldError(name: string | undefined): string | undefined {

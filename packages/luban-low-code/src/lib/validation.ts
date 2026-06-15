@@ -135,15 +135,31 @@ function walkNodes(node: NodeSchema | undefined, cb: (n: NodeSchema) => void): v
 /**
  * 初始化整页表单状态：遍历 schema.root，对每个表单值节点按类型生成默认值。
  * 键为节点 id（与 validateAll 对齐）。
+ * 复合类型（数组/对象）按组件类型给正确的空值（修复 initFormState 🔴）。
  */
+const ARRAY_FORM_VALUE_TYPES = new Set<string>(['LubanTagInput']);
+const OBJECT_FORM_VALUE_TYPES = new Set<string>([
+  'LubanDateRange',
+  'LubanRegionSelect',
+]);
+
 export function initFormState(schema: PageSchema): Record<string, unknown> {
   const state: Record<string, unknown> = {};
   walkNodes(schema.root, (n) => {
     if (!FORM_VALUE_TYPES.has(n.type)) return;
+    const v = n.props?.value;
     if (BOOLEAN_FORM_VALUE_TYPES.has(n.type)) {
       state[n.id] = false;
+    } else if (ARRAY_FORM_VALUE_TYPES.has(n.type)) {
+      state[n.id] = v != null ? v : [];
+    } else if (OBJECT_FORM_VALUE_TYPES.has(n.type)) {
+      if (n.type === 'LubanDateRange') {
+        const dv = v as { start?: string; end?: string } | undefined;
+        state[n.id] = { start: dv?.start ?? '', end: dv?.end ?? '' };
+      } else {
+        state[n.id] = v != null ? v : {};
+      }
     } else {
-      const v = n.props?.value;
       state[n.id] = v != null ? v : '';
     }
   });
