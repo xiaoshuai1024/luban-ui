@@ -16,5 +16,13 @@ describe('LubanSwitch', () => {
     const update = wrapper.emitted('update:modelValue');
     expect(update).toBeTruthy();
   });
+
+  it('renders error message when error=true (T-ui-5)', () => {
+    const wrapper = mount(LubanSwitch, {
+      props: { modelValue: false, label: '同意', error: true, errorMessage: '须开启' },
+    });
+    expect(wrapper.find('.lb-form-field__error').exists()).toBe(true);
+    expect(wrapper.find('.lb-form-field__error').text()).toBe('须开启');
+  });
 });
 

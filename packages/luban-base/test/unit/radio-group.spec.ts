@@ -20,5 +20,19 @@ describe('LubanRadioGroup', () => {
     const update = wrapper.emitted('update:modelValue');
     expect(update).toBeTruthy();
   });
+
+  it('renders error message when error=true (T-ui-5)', () => {
+    const wrapper = mount(LubanRadioGroup, {
+      props: {
+        modelValue: null,
+        label: '单选',
+        options: [{ label: '1', value: 1 }],
+        error: true,
+        errorMessage: '必选一项',
+      },
+    });
+    expect(wrapper.find('.lb-form-field__error').exists()).toBe(true);
+    expect(wrapper.find('.lb-form-field__error').text()).toBe('必选一项');
+  });
 });
 

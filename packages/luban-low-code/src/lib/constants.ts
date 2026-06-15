@@ -13,6 +13,32 @@ export function isContainerType(type: string): boolean {
 }
 
 /**
+ * Component types that hold a form value (bound to formState). Mirrors the sets
+ * hard-coded in DesignRenderer.vue / RuntimeRenderer.vue. New form-value materials
+ * must be added here AND in those renderers.
+ */
+export const FORM_VALUE_TYPES = new Set<string>([
+  'LubanInput',
+  'LubanTextArea',
+  'LubanSelect',
+  'LubanCheckbox',
+  'LubanRadioGroup',
+  'LubanSwitch',
+]);
+
+export function isFormValueType(type: string): boolean {
+  return FORM_VALUE_TYPES.has(type);
+}
+
+/**
+ * Form-value types whose value defaults to boolean false (checkbox/switch).
+ */
+export const BOOLEAN_FORM_VALUE_TYPES = new Set<string>([
+  'LubanCheckbox',
+  'LubanSwitch',
+]);
+
+/**
  * Whether a child type can be dropped into a container type.
  * If acceptTypes is not defined for the container, any registered type is allowed.
  */

@@ -164,8 +164,29 @@ function buildDefaultMeta(): void {
     component: comp('LubanForm'),
     isContainer: true,
     acceptTypes: FORM_CONTROL_TYPES,
-    propSchema: {},
-    defaultProps: {},
+    propSchema: {
+      formId: { type: 'string', label: '关联表单ID', required: true },
+      submitConfig: {
+        type: 'json',
+        label: '提交配置',
+        default: { mode: 'toast', toastMessage: '提交成功' },
+      },
+      size: {
+        type: 'select',
+        label: '尺寸',
+        default: 'medium',
+        options: [
+          { label: '小', value: 'small' },
+          { label: '中', value: 'medium' },
+          { label: '大', value: 'large' },
+        ],
+      },
+    },
+    defaultProps: {
+      formId: '',
+      submitConfig: { mode: 'toast', toastMessage: '提交成功' },
+      size: 'medium',
+    },
     events: ['submit'],
   });
 
