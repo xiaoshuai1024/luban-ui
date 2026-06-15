@@ -6,6 +6,7 @@ export const CONTAINER_TYPES = new Set<string>([
   'LubanRow',
   'LubanCol',
   'LubanForm',
+  'LubanPoster',
 ]);
 
 export function isContainerType(type: string): boolean {
@@ -24,6 +25,16 @@ export const FORM_VALUE_TYPES = new Set<string>([
   'LubanCheckbox',
   'LubanRadioGroup',
   'LubanSwitch',
+  // 新增表单值物料（T-ui-9/11）
+  'LubanPhoneInput',
+  'LubanRegionSelect',
+  'LubanDatePicker',
+  'LubanFileUpload',
+  'LubanRating',
+  'LubanSlider',
+  'LubanDateRange',
+  'LubanTimePicker',
+  'LubanTagInput',
 ]);
 
 export function isFormValueType(type: string): boolean {

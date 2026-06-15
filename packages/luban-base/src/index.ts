@@ -21,3 +21,44 @@ export type {
   LubanSelectOption,
   LubanRadioOption,
 } from './lib/form/form-types';
+
+// 表单补全（T-ui-11）
+export { default as LubanDateRange } from './lib/form/LubanDateRange.vue';
+export { default as LubanTimePicker } from './lib/form/LubanTimePicker.vue';
+export { default as LubanTagInput } from './lib/form/LubanTagInput.vue';
+
+// 营销物料族（T-ui-7）
+export { default as LubanCountdown } from './lib/marketing/LubanCountdown.vue';
+export { default as LubanCoupon } from './lib/marketing/LubanCoupon.vue';
+export { default as LubanModal } from './lib/marketing/LubanModal.vue';
+export { default as LubanCarousel } from './lib/marketing/LubanCarousel.vue';
+export { default as LubanNavBar } from './lib/marketing/LubanNavBar.vue';
+export { default as LubanFooter } from './lib/marketing/LubanFooter.vue';
+
+// 网站搭建物料族（T-ui-8）
+export { default as LubanImage } from './lib/website/LubanImage.vue';
+export { default as LubanHeading } from './lib/website/LubanHeading.vue';
+export { default as LubanLink } from './lib/website/LubanLink.vue';
+export { default as LubanCard } from './lib/website/LubanCard.vue';
+export { default as LubanDivider } from './lib/website/LubanDivider.vue';
+export { default as LubanIcon } from './lib/website/LubanIcon.vue';
+export { default as LubanList } from './lib/website/LubanList.vue';
+export { default as LubanRichText } from './lib/website/LubanRichText.vue';
+export { default as LubanVideo } from './lib/website/LubanVideo.vue';
+export { default as LubanTabs } from './lib/website/LubanTabs.vue';
+export { default as LubanCollapse } from './lib/website/LubanCollapse.vue';
+
+// 留资物料族（T-ui-9）
+export { default as LubanPhoneInput } from './lib/lead/LubanPhoneInput.vue';
+export { default as LubanRegionSelect } from './lib/lead/LubanRegionSelect.vue';
+export { default as LubanDatePicker } from './lib/lead/LubanDatePicker.vue';
+export { default as LubanFileUpload } from './lib/lead/LubanFileUpload.vue';
+export { default as LubanRating } from './lib/lead/LubanRating.vue';
+export { default as LubanSlider } from './lib/lead/LubanSlider.vue';
+
+// 海报物料族（T-ui-10）
+export { default as LubanPoster } from './lib/poster/LubanPoster.vue';
+export { default as LubanPosterText } from './lib/poster/LubanPosterText.vue';
+export { default as LubanPosterImage } from './lib/poster/LubanPosterImage.vue';
+export { default as LubanShape } from './lib/poster/LubanShape.vue';
+export { default as LubanQRCode } from './lib/poster/LubanQRCode.vue';
