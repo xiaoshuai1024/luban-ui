@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { mount } from '@vue/test-utils';
 import LubanSelect from '../../src/lib/form/LubanSelect.vue';
+import { withModel } from '../helpers/withModel';
 
 describe('LubanSelect', () => {
   it('emits update:modelValue on change', async () => {
-    const wrapper = mount(LubanSelect, {
-      props: {
-        modelValue: null,
+    const { wrapper, v } = withModel(
+      LubanSelect,
+      {
         label: '选择',
         name: 'field',
         options: [
@@ -14,12 +14,9 @@ describe('LubanSelect', () => {
           { label: 'B', value: 'b' },
         ],
       },
-    });
-    const select = wrapper.get('select');
-    await select.setValue('b');
-    const update = wrapper.emitted('update:modelValue');
-    expect(update).toBeTruthy();
-    expect(update?.[0]?.[0]).toBe('b');
+      null as string | null
+    );
+    await wrapper.get('select').setValue('b');
+    expect(v.value).toBe('b');
   });
 });
-

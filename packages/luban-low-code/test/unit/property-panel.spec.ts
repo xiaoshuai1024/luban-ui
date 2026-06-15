@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { defineComponent, h, ref } from 'vue';
 import PropertyPanel from '../../src/lib/PropertyPanel.vue';
 import type { ComponentMeta } from '../../src/lib/componentMeta';
 
@@ -45,14 +46,20 @@ describe('PropertyPanel', () => {
 
   it('emits update:modelValue with a patch when text input changes', async () => {
     const meta = metaOf({ content: { type: 'string', label: '内容' } });
-    const w = mount(PropertyPanel, { props: { nodeMeta: meta, modelValue: { content: 'hi' } } });
-    const input = w.find('input[type="text"]');
-    expect(input.exists()).toBe(true);
-    await input.setValue('changed');
-    await w.vm.$nextTick();
-    const events = w.emitted('update:modelValue');
-    expect(events).toBeTruthy();
-    expect((events![events!.length - 1][0] as Record<string, unknown>).content).toBe('changed');
+    // 用父组件 v-model 监听 patch（绕过 emitted 捕获问题）
+    const received = ref<Record<string, unknown>>({ content: 'hi' });
+    const Parent = defineComponent({
+      setup() {
+        return () => h(PropertyPanel, {
+          nodeMeta: meta,
+          modelValue: received.value,
+          'onUpdate:modelValue': (patch: Record<string, unknown>) => { received.value = { ...received.value, ...patch }; },
+        });
+      },
+    });
+    const w = mount(Parent);
+    await w.find('input[type="text"]').setValue('changed');
+    expect((received.value as Record<string, unknown>).content).toBe('changed');
   });
 
   it('shows required asterisk for required fields', () => {
@@ -69,14 +76,19 @@ describe('PropertyPanel', () => {
 
   it('options editor can add a row', async () => {
     const meta = metaOf({ options: { type: 'options', label: '选项' } });
-    const w = mount(PropertyPanel, { props: { nodeMeta: meta, modelValue: { options: [] } } });
-    const addBtn = w.find('.lb-property-options__add');
-    expect(addBtn.exists()).toBe(true);
-    await addBtn.trigger('click');
-    await w.vm.$nextTick();
-    const events = w.emitted('update:modelValue');
-    expect(events).toBeTruthy();
-    const last = events![events!.length - 1][0] as { options: unknown[] };
+    const received = ref<Record<string, unknown>>({ options: [] });
+    const Parent = defineComponent({
+      setup() {
+        return () => h(PropertyPanel, {
+          nodeMeta: meta,
+          modelValue: received.value,
+          'onUpdate:modelValue': (patch: Record<string, unknown>) => { received.value = { ...received.value, ...patch }; },
+        });
+      },
+    });
+    const w = mount(Parent);
+    await w.find('.lb-property-options__add').trigger('click');
+    const last = received.value as { options: unknown[] };
     expect(last.options).toHaveLength(1);
   });
 });

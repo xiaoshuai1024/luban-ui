@@ -18,6 +18,12 @@ export default defineConfig(() => ({
   // worker: {
   //  plugins: [],
   // },
+  // 测试时将 luban-base 别名指向源码（构建时通过 rollupOptions.external 外部化）
+  resolve: {
+    alias: {
+      'luban-base': path.resolve(import.meta.dirname, '../luban-base/src/index.ts'),
+    },
+  },
   // Configuration for building your library.
   // See: https://vite.dev/guide/build.html#library-mode
   build: {
