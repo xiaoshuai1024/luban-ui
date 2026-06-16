@@ -111,7 +111,7 @@ function bubbleReorder(id: string, dir: 'up' | 'down'): void {
         @reorder="bubbleReorder"
       />
     </div>
-    <div v-if="renderNodes.length === 0" class="lb-outline-tree__empty">暂无节点</div>
+    <div v-if="renderNodes.length === 0 && depth === 0" class="lb-outline-tree__empty">暂无节点</div>
   </div>
 </template>
 

@@ -23,7 +23,21 @@ const CITIES: Record<string, string[]> = {
 const province = ref<string>('');
 const city = ref<string>('');
 const emitUpdate = () => emit('update:modelValue', { province: province.value, city: city.value });
-watch(province, () => { city.value = ''; emitUpdate(); });
+// 从外部 modelValue 回填（设计器选中已有数据节点时 / formState 初始化时）
+watch(() => props.modelValue, (mv) => {
+  if (mv && typeof mv === 'object') {
+    const r = mv as Record<string, string>;
+    province.value = r.province || '';
+    city.value = r.city || '';
+  }
+}, { immediate: true });
+// province 变化时重置 city（避免省份不匹配），但不覆盖外部回填
+watch(province, () => {
+  if (city.value && !CITIES[province.value]?.includes(city.value)) {
+    city.value = '';
+    emitUpdate();
+  }
+});
 </script>
 
 <template>

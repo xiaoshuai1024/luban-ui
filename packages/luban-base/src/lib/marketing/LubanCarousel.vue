@@ -1,31 +1,49 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 interface Slide { src: string; alt?: string; href?: string }
 const props = withDefaults(defineProps<{ slides: Slide[]; interval?: number }>(), { interval: 4000 });
 const current = ref(0);
-const prev = () => { current.value = (current.value - 1 + props.slides.length) % props.slides.length; };
-const next = () => { current.value = (current.value + 1) % props.slides.length; };
+let timer: ReturnType<typeof setInterval> | undefined;
+
+const slideCount = computed(() => props.slides.length);
+const safeIndex = computed(() => (slideCount.value > 0 ? current.value % slideCount.value : 0));
+
+const prev = () => { if (slideCount.value === 0) return; current.value = (current.value - 1 + slideCount.value) % slideCount.value; };
+const next = () => { if (slideCount.value === 0) return; current.value = (current.value + 1) % slideCount.value; };
+
+function startAutoplay() {
+  stopAutoplay();
+  if (slideCount.value > 1 && props.interval > 0) {
+    timer = setInterval(next, props.interval);
+  }
+}
+function stopAutoplay() { if (timer) { clearInterval(timer); timer = undefined; } }
+
+onMounted(startAutoplay);
+onUnmounted(stopAutoplay);
+watch(() => props.interval, startAutoplay);
 </script>
 
 <template>
-  <div class="lb-carousel">
-    <div class="lb-carousel__viewport">
+  <div class="lb-carousel" @mouseenter="stopAutoplay" @mouseleave="startAutoplay">
+    <div v-if="slideCount > 0" class="lb-carousel__viewport">
       <component
-        :is="props.slides[current]?.href ? 'a' : 'div'"
-        :href="props.slides[current]?.href"
+        :is="props.slides[safeIndex]?.href ? 'a' : 'div'"
+        :href="props.slides[safeIndex]?.href"
         class="lb-carousel__slide"
       >
-        <img v-if="props.slides[current]" :src="props.slides[current].src" :alt="props.slides[current].alt" />
+        <img :src="props.slides[safeIndex].src" :alt="props.slides[safeIndex].alt" />
       </component>
     </div>
-    <button v-if="props.slides.length > 1" class="lb-carousel__nav lb-carousel__nav--prev" type="button" @click="prev">‹</button>
-    <button v-if="props.slides.length > 1" class="lb-carousel__nav lb-carousel__nav--next" type="button" @click="next">›</button>
-    <div v-if="props.slides.length > 1" class="lb-carousel__dots">
+    <div v-else class="lb-carousel__placeholder">轮播图（请添加图片）</div>
+    <button v-if="slideCount > 1" class="lb-carousel__nav lb-carousel__nav--prev" type="button" @click="prev">‹</button>
+    <button v-if="slideCount > 1" class="lb-carousel__nav lb-carousel__nav--next" type="button" @click="next">›</button>
+    <div v-if="slideCount > 1" class="lb-carousel__dots">
       <button
         v-for="(_, i) in props.slides"
         :key="i"
         type="button"
-        :class="['lb-carousel__dot', { 'lb-carousel__dot--active': i === current }]"
+        :class="['lb-carousel__dot', { 'lb-carousel__dot--active': i === safeIndex }]"
         @click="current = i"
       />
     </div>
