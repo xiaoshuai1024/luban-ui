@@ -3,14 +3,24 @@ import { getComponent } from './registry';
 
 /**
  * Schema for a single prop (for property panel and validation).
+ * 支持基础类型 + 样式/自定义设置器类型（设计器升级 T-ui-d24）。
  */
 export interface PropSchemaItem {
-  type: 'string' | 'number' | 'boolean' | 'select' | 'json' | 'options';
+  type: 'string' | 'number' | 'boolean' | 'select' | 'json' | 'options'
+      | 'color' | 'spacing' | 'image' | 'richtext' | 'custom';
   default?: unknown;
   required?: boolean;
   /** For select: { label: string; value: string | number }[] */
   options?: { label: string; value: string | number }[];
   label?: string;
+  /** 自定义设置器名（优先于 type 渲染） */
+  setter?: string;
+  /** 分组标签（'基础' | '样式' | '事件' | '高级'） */
+  group?: string;
+  /** placeholder 提示文本 */
+  placeholder?: string;
+  /** 对于 spacing 类型：指定方向 ('all' | 'horizontal' | 'vertical' | 'top' | 'right' | 'bottom' | 'left') */
+  direction?: string;
 }
 
 export type PropSchema = Record<string, PropSchemaItem>;
@@ -20,16 +30,20 @@ export type PropSchema = Record<string, PropSchemaItem>;
  */
 export interface ComponentMeta {
   type: string;
-  category: 'layout' | 'form' | 'content' | 'button';
+  category: 'layout' | 'form' | 'content' | 'button' | 'marketing' | 'website' | 'poster';
   label: string;
   component: Component;
   propSchema: PropSchema;
+  /** 样式属性 schema（设计器升级，样式面板消费） */
+  styleSchema?: PropSchema;
   defaultProps: Record<string, unknown>;
   events: string[];
   /** If true, this component can accept child nodes (drop zone). */
   isContainer?: boolean;
   /** Allowed child types when isContainer; empty = any registered. */
   acceptTypes?: string[];
+  /** 物料图标（emoji 或图标类名，用于组件面板） */
+  icon?: string;
 }
 
 const metaByType: Record<string, ComponentMeta> = {};

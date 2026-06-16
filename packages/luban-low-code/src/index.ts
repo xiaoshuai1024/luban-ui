@@ -23,7 +23,20 @@ export {
   isFormValueType,
   BOOLEAN_FORM_VALUE_TYPES,
 } from './lib/constants';
-export { reorderRootChildren } from './lib/schemaUtils';
+export {
+  reorderRootChildren,
+  findNode,
+  findParent,
+  removeNode,
+  duplicateNode,
+  moveNode,
+  insertNode,
+  updateNodeProps,
+  bringToFront,
+  sendToBack,
+  cloneNode,
+  genNodeId,
+} from './lib/schemaUtils';
 export {
   getPaletteGroups,
   getPaletteItems,
