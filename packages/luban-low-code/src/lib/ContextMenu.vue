@@ -9,8 +9,7 @@ import { watch, nextTick, ref } from 'vue';
 
 type MenuAction =
   | 'copy' | 'paste' | 'delete'
-  | 'bring-front' | 'send-back' | 'move-up' | 'move-down'
-  | 'wrap-container';
+  | 'bring-front' | 'send-back' | 'move-up' | 'move-down';
 
 const props = withDefaults(
   defineProps<{
@@ -72,7 +71,6 @@ const menuItems = (): MenuItem[] => [
   { action: 'move-down', label: '下移', icon: '↓', shortcut: 'Ctrl+↓' },
   { action: 'bring-front', label: '置顶', icon: '⤒' },
   { action: 'send-back', label: '置底', icon: '⤓', dividerAfter: true },
-  { action: 'wrap-container', label: '转容器', icon: '▢', disabled: props.isContainer, dividerAfter: true },
   { action: 'delete', label: '删除', icon: '🗑', shortcut: 'Delete', danger: true },
 ];
 
