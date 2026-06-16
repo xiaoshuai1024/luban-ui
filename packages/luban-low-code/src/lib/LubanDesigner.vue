@@ -1,36 +1,67 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import Sortable from 'sortablejs';
 import RuntimeRenderer from './RuntimeRenderer.vue';
 import DesignRenderer from './DesignRenderer.vue';
 import { getComponent } from './registry';
 import type { PageSchema } from './schema';
 
+/**
+ * 设计器画布容器（重写 T-ui-d22）：
+ * - designMode 时渲染 DesignRenderer（可选节点 + 空容器引导 + Sortable 重排）
+ * - selectedNodeId 双向同步（v-model:selected-node-id），画布/面板/大纲三处联动
+ * - 透传 DesignRenderer 的 copy/delete/context-menu 事件
+ * - 非 designMode 时走 RuntimeRenderer（预览/访客视角）
+ * - 空页面引导：schema 为空或 root 无子节点时显示拖拽提示
+ */
 const props = withDefaults(
   defineProps<{
     schema: PageSchema | null | undefined;
     showToolbar?: boolean;
     placeholder?: string;
-    /** When true, use DesignRenderer (selectable nodes, empty placeholders, Sortable reorder) and emit select/add-node/reorder */
+    /** 设计模式：渲染 DesignRenderer 并支持选中/拖拽 */
     designMode?: boolean;
+    /** 选中节点 id（双向） */
+    selectedNodeId?: string | null;
   }>(),
-  { showToolbar: true, placeholder: '从左侧拖拽组件到此处', designMode: false }
+  {
+    showToolbar: true,
+    placeholder: '从左侧拖拽组件到此处',
+    designMode: false,
+    selectedNodeId: null,
+  }
 );
 
 const emit = defineEmits<{
   'update:schema': [value: PageSchema | null | undefined];
+  'update:selectedNodeId': [value: string | null];
   select: [nodeId: string | null];
-  /** Emit when a node type is dropped from palette; parentId 未传表示追加到 root.children，否则追加到该 id 对应节点（如表单）的 children */
+  /** 从面板拖入；parentId 缺省表示追加到 root.children */
   'add-node': [type: string, parentId?: string];
-  /** Emit when root.children are reordered (fromIndex, toIndex); parent may call reorderRootChildren */
+  /** root.children 重排（fromIndex, toIndex） */
   reorder: [fromIndex: number, toIndex: number];
+  /** 复制节点 */
+  copy: [nodeId: string];
+  /** 删除节点 */
+  delete: [nodeId: string];
+  /** 右键菜单（x, y, nodeId） */
+  'context-menu': [x: number, y: number, nodeId: string];
 }>();
 
 const formState = computed(() => props.schema?.formState ?? {});
 const formErrors = ref<Record<string, string>>({});
-const selectedNodeId = ref<string | null>(null);
 const sortableRef = ref<HTMLElement | null>(null);
 let sortableInstance: Sortable | null = null;
+
+// 内部 selectedNodeId 用于设计模式本地态，与 prop 双向同步
+const internalSelected = ref<string | null>(props.selectedNodeId);
+
+watch(
+  () => props.selectedNodeId,
+  (val) => {
+    if (val !== internalSelected.value) internalSelected.value = val;
+  }
+);
 
 watch(
   () => props.schema?.root?.id,
@@ -39,8 +70,9 @@ watch(
   }
 );
 
-function onSelect(nodeId: string | null): void {
-  selectedNodeId.value = nodeId;
+function syncSelected(nodeId: string | null): void {
+  internalSelected.value = nodeId;
+  emit('update:selectedNodeId', nodeId);
   emit('select', nodeId);
 }
 
@@ -79,11 +111,21 @@ onMounted(() => {
   initSortable();
 });
 
+onBeforeUnmount(() => {
+  sortableInstance?.destroy();
+  sortableInstance = null;
+});
+
 watch(
   () => props.schema?.root?.children?.length,
   () => {
     nextTick(() => initSortable());
   }
+);
+
+// 空态判定：root 无子节点
+const isEmpty = computed(
+  () => !props.schema?.root || (props.schema.root.children ?? []).length === 0
 );
 </script>
 
@@ -117,10 +159,13 @@ watch(
                 :root="child"
                 :form-state="formState"
                 :form-errors="formErrors"
-                :selected-node-id="selectedNodeId"
+                :selected-node-id="internalSelected"
                 :placeholder-text="placeholder"
-                @select="onSelect"
+                @select="syncSelected"
                 @add-node="(type, parentId) => emit('add-node', type, parentId)"
+                @copy="emit('copy', $event)"
+                @delete="emit('delete', $event)"
+                @context-menu="(x, y, id) => emit('context-menu', x, y, id)"
               />
             </div>
           </div>
@@ -130,7 +175,8 @@ watch(
             @dragover.prevent="onPaletteDragOver"
             @drop="onPaletteDrop"
           >
-            {{ placeholder }}
+            <span class="luban-designer__placeholder-icon">⊹</span>
+            <span>{{ placeholder }}</span>
           </div>
         </component>
         <div
@@ -146,8 +192,14 @@ watch(
         :form-errors="formErrors"
       />
     </div>
-    <div v-else class="luban-designer__placeholder">
-      {{ placeholder }}
+    <div
+      v-else
+      class="luban-designer__placeholder luban-designer__placeholder--page"
+      @dragover.prevent="onPaletteDragOver"
+      @drop="onPaletteDrop"
+    >
+      <span class="luban-designer__placeholder-icon">⊹</span>
+      <span>{{ placeholder }}</span>
     </div>
   </div>
 </template>
@@ -170,11 +222,27 @@ watch(
 .luban-designer__placeholder {
   min-height: 200px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #999;
-  border: 1px dashed #ccc;
-  border-radius: 4px;
+  gap: 8px;
+  color: #9ca3af;
+  font-size: 13px;
+  border: 2px dashed #dcdfe6;
+  border-radius: 8px;
+  background: #fafbfc;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.luban-designer__placeholder:hover {
+  border-color: #409eff;
+  background: #ecf5ff;
+}
+.luban-designer__placeholder--page {
+  min-height: 320px;
+}
+.luban-designer__placeholder-icon {
+  font-size: 28px;
+  color: #c0c4cc;
 }
 .luban-designer__canvas-spacer {
   min-height: 160px;

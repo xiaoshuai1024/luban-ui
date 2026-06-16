@@ -75,8 +75,30 @@ function formValueProps(nodeProps: Record<string, unknown> | undefined, name: st
 /** Props for component, excluding content/text (used for slot instead) */
 function componentProps(nodeProps: Record<string, unknown> | undefined): Record<string, unknown> {
   if (nodeProps == null) return {};
-  const { content: _c, text: _t, rules: _r, ...rest } = nodeProps;
+  const { content: _c, text: _t, rules: _r, style: _s, responsive: _rs, ...rest } = nodeProps;
   return rest;
+}
+
+/**
+ * 合并节点样式（T-web-d1）：
+ * - node.props.style: 基础 CSS-in-JS
+ * - node.props.responsive: { pc?, tablet?, mobile? } 按当前设备叠加
+ * 返回 Vue :style 对象语法。
+ */
+function mergedStyle(nodeProps: Record<string, unknown> | undefined): Record<string, string> | undefined {
+  if (!nodeProps) return undefined;
+  const style = (nodeProps.style as Record<string, string> | undefined) ?? {};
+  const responsive = nodeProps.responsive as {
+    pc?: Record<string, string>;
+    tablet?: Record<string, string>;
+    mobile?: Record<string, string>;
+  } | undefined;
+  if (!responsive) {
+    return Object.keys(style).length > 0 ? style : undefined;
+  }
+  // 按断点叠加（PC 为基础，tablet/mobile 覆盖）。运行时无断点感知，全合并；
+  // 真正的按设备渲染由 website 在 useRuntimeDevice 选择性裁剪 responsive。
+  return { ...style, ...(responsive.pc ?? {}), ...(responsive.tablet ?? {}), ...(responsive.mobile ?? {}) };
 }
 
 function slotContent(): string {
@@ -94,6 +116,7 @@ function slotContent(): string {
       v-if="getComponent(root.type) && isFormValueType(root.type)"
       :is="getComponent(root.type)"
       v-bind="formValueProps(root.props as Record<string, unknown>, root.props?.name as string)"
+      :style="mergedStyle(root.props as Record<string, unknown>)"
       :model-value="
         root.props?.name != null
           ? getFormValue(root.props.name as string)
@@ -119,6 +142,7 @@ function slotContent(): string {
       v-else-if="getComponent(root.type)"
       :is="getComponent(root.type)"
       v-bind="componentProps(root.props as Record<string, unknown>)"
+      :style="mergedStyle(root.props as Record<string, unknown>)"
       @submit="
         formSubmitHandler && root.type === 'LubanForm'
           ? formSubmitHandler({

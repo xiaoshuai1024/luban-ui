@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue';
 import { getComponent } from './registry';
 import type { NodeSchema } from './schema';
 import { isContainerType, isFormValueType } from './constants';
 import { validate, type ValidationRule } from './validation';
 import DesignRendererSelf from './DesignRenderer.vue';
+import NodeToolbar from './NodeToolbar.vue';
 
 // FORM_VALUE_TYPES 从 constants 统一导入（T-ui-12 单一真相源），新增表单值物料自动生效
 
@@ -14,15 +16,30 @@ const props = withDefaults(
     formErrors?: Record<string, string>;
     selectedNodeId: string | null;
     placeholderText?: string;
+    /** 是否可被删除/复制（root 节点为 false） */
+    isRoot?: boolean;
   }>(),
-  { formErrors: () => ({}), placeholderText: '拖拽组件到此处' }
+  { formErrors: () => ({}), placeholderText: '拖拽组件到此处', isRoot: false }
 );
 
 const emit = defineEmits<{
   select: [nodeId: string | null];
   /** 从面板拖入到当前容器时发出；parentId 为当前节点 id */
   'add-node': [type: string, parentId: string];
+  /** 复制节点 */
+  copy: [nodeId: string];
+  /** 删除节点 */
+  delete: [nodeId: string];
+  /** 右键菜单（坐标 + 节点 id） */
+  'context-menu': [x: number, y: number, nodeId: string];
 }>();
+
+// hover 态用于显示 NodeToolbar（即便未选中）
+const hovered = ref(false);
+const isSelected = computed(() => props.selectedNodeId === props.root.id);
+const showToolbar = computed(
+  () => !props.isRoot && (isSelected.value || hovered.value)
+);
 
 function onWrapperClick(e: Event, nodeId: string): void {
   e.stopPropagation();
@@ -91,8 +108,17 @@ function componentProps(
   nodeProps: Record<string, unknown> | undefined
 ): Record<string, unknown> {
   if (nodeProps == null) return {};
-  const { content: _c, text: _t, rules: _r, ...rest } = nodeProps;
+  const { content: _c, text: _t, rules: _r, style: _s, responsive: _rs, ...rest } = nodeProps;
   return rest;
+}
+
+/** 合并节点样式（设计态所见即所得，T-web-d1 同源） */
+function mergedStyle(nodeProps: Record<string, unknown> | undefined): Record<string, string> | undefined {
+  if (!nodeProps) return undefined;
+  const style = (nodeProps.style as Record<string, string> | undefined) ?? {};
+  const responsive = nodeProps.responsive as { pc?: Record<string, string>; tablet?: Record<string, string>; mobile?: Record<string, string> } | undefined;
+  if (!responsive) return Object.keys(style).length > 0 ? style : undefined;
+  return { ...style, ...(responsive.pc ?? {}), ...(responsive.tablet ?? {}), ...(responsive.mobile ?? {}) };
 }
 
 function slotContent(): string {
@@ -120,6 +146,23 @@ function onContainerDrop(e: DragEvent): void {
     // ignore
   }
 }
+
+/** 右键：选中当前节点并 emit 坐标（仅非 root 节点可触发菜单） */
+function onContextMenu(e: MouseEvent): void {
+  if (props.isRoot) return;
+  e.preventDefault();
+  e.stopPropagation();
+  emit('select', props.root.id);
+  emit('context-menu', e.clientX, e.clientY, props.root.id);
+}
+
+function onCopy(): void {
+  emit('copy', props.root.id);
+}
+
+function onDelete(): void {
+  emit('delete', props.root.id);
+}
 </script>
 
 <template>
@@ -128,9 +171,19 @@ function onContainerDrop(e: DragEvent): void {
       class="design-renderer__wrapper"
       :class="{
         'design-renderer__wrapper--selected': selectedNodeId === root.id,
+        'design-renderer__wrapper--root': isRoot,
       }"
       @click="onWrapperClick($event, root.id)"
+      @mouseenter="hovered = true"
+      @mouseleave="hovered = false"
+      @contextmenu="onContextMenu"
     >
+      <!-- 节点浮动工具条（hover/选中显示，仅非 root） -->
+      <NodeToolbar
+        v-if="showToolbar"
+        @copy="onCopy"
+        @delete="onDelete"
+      />
       <template v-if="isEmptyContainer()">
         <div
           class="design-renderer__placeholder"
@@ -152,6 +205,7 @@ function onContainerDrop(e: DragEvent): void {
               root.props?.name as string
             )
           "
+          :style="mergedStyle(root.props as Record<string, unknown>)"
           :model-value="
             root.props?.name != null
               ? getFormValue(root.props.name as string)
@@ -174,6 +228,9 @@ function onContainerDrop(e: DragEvent): void {
             :placeholder-text="placeholderText"
             @select="emit('select', $event)"
             @add-node="emit('add-node', $event[0], $event[1])"
+            @copy="emit('copy', $event)"
+            @delete="emit('delete', $event)"
+            @context-menu="emit('context-menu', $event[0], $event[1], $event[2])"
           />
         </component>
         <!-- Non-form components: props + slot from content or DesignRenderer children -->
@@ -181,6 +238,7 @@ function onContainerDrop(e: DragEvent): void {
           v-else-if="getComponent(root.type)"
           :is="getComponent(root.type)"
           v-bind="componentProps(root.props as Record<string, unknown>)"
+          :style="mergedStyle(root.props as Record<string, unknown>)"
         >
           <template v-if="(root.children ?? []).length">
             <div
@@ -198,6 +256,9 @@ function onContainerDrop(e: DragEvent): void {
                 :placeholder-text="placeholderText"
                 @select="emit('select', $event)"
                 @add-node="emit('add-node', $event[0], $event[1])"
+                @copy="emit('copy', $event)"
+                @delete="emit('delete', $event)"
+                @context-menu="emit('context-menu', $event[0], $event[1], $event[2])"
               />
             </div>
           </template>
@@ -214,6 +275,9 @@ function onContainerDrop(e: DragEvent): void {
             :placeholder-text="placeholderText"
             @select="emit('select', $event)"
             @add-node="emit('add-node', $event[0], $event[1])"
+            @copy="emit('copy', $event)"
+            @delete="emit('delete', $event)"
+            @context-menu="emit('context-menu', $event[0], $event[1], $event[2])"
           />
         </template>
       </template>
@@ -236,6 +300,15 @@ function onContainerDrop(e: DragEvent): void {
 .design-renderer__wrapper--selected {
   outline: 2px solid #1e88e5;
   outline-offset: 0;
+}
+/* root 节点不显示 hover 外框 */
+.design-renderer__wrapper--root:hover {
+  outline-color: transparent;
+}
+/* NodeToolbar 由 v-if 控制显示，强制覆盖 opacity */
+.design-renderer__wrapper :deep(.lb-node-toolbar) {
+  opacity: 1;
+  pointer-events: auto;
 }
 .design-renderer__placeholder {
   min-height: 48px;
