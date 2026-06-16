@@ -142,6 +142,7 @@ const OBJECT_FORM_VALUE_TYPES = new Set<string>([
   'LubanDateRange',
   'LubanRegionSelect',
 ]);
+const NUMBER_FORM_VALUE_TYPES = new Set<string>(['LubanRating', 'LubanSlider']);
 
 export function initFormState(schema: PageSchema): Record<string, unknown> {
   const state: Record<string, unknown> = {};
@@ -159,6 +160,8 @@ export function initFormState(schema: PageSchema): Record<string, unknown> {
       } else {
         state[n.id] = v != null ? v : {};
       }
+    } else if (NUMBER_FORM_VALUE_TYPES.has(n.type)) {
+      state[n.id] = v != null ? v : 0;
     } else {
       state[n.id] = v != null ? v : '';
     }

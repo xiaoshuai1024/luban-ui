@@ -44,10 +44,6 @@ function setFormValue(name: string | undefined, value: unknown): void {
   }
 }
 
-function isFormValueType(type: string): boolean {
-  return isFormValueType(type);
-}
-
 function getFieldError(name: string | undefined): string | undefined {
   if (name == null) return undefined;
   return props.formErrors[name];
