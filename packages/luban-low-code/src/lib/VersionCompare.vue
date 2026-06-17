@@ -64,24 +64,54 @@ const compareVersions = computed(() => {
   return { a: va, b: vb };
 });
 
-// 计算行级差异
+// 计算行级差异（LCS 算法，正确识别新增/删除行）
 const diffResult = computed(() => {
   if (!compareVersions.value) return null;
   const linesA = stringify(compareVersions.value.a.schema).split('\n');
   const linesB = stringify(compareVersions.value.b.schema).split('\n');
-  const maxLen = Math.max(linesA.length, linesB.length);
+  return lcsDiff(linesA, linesB);
+});
+
+/** LCS 行级 diff：返回对齐后的行序列，标注每行的 diff 类型 */
+function lcsDiff(a: string[], b: string[]): { a: string; b: string; diff: 'same' | 'changed' | 'added' | 'removed' }[] {
+  const n = a.length;
+  const m = b.length;
+  // dp[i][j] = a[0..i) 与 b[0..j) 的 LCS 长度
+  const dp: number[][] = Array.from({ length: n + 1 }, () => new Array<number>(m + 1).fill(0));
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= m; j++) {
+      if (a[i - 1] === b[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;
+      else dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+  // 回溯生成对齐序列（从尾部）
   const rows: { a: string; b: string; diff: 'same' | 'changed' | 'added' | 'removed' }[] = [];
-  for (let i = 0; i < maxLen; i++) {
-    const la = linesA[i] ?? '';
-    const lb = linesB[i] ?? '';
-    let diff: 'same' | 'changed' | 'added' | 'removed' = 'same';
-    if (la && !lb) diff = 'removed';
-    else if (!la && lb) diff = 'added';
-    else if (la !== lb) diff = 'changed';
-    rows.push({ a: la, b: lb, diff });
+  let i = n;
+  let j = m;
+  while (i > 0 && j > 0) {
+    if (a[i - 1] === b[j - 1]) {
+      rows.unshift({ a: a[i - 1], b: b[j - 1], diff: 'same' });
+      i--; j--;
+    } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+      // a 有 b 无：removed
+      rows.unshift({ a: a[i - 1], b: '', diff: 'removed' });
+      i--;
+    } else {
+      // b 有 a 无：added
+      rows.unshift({ a: '', b: b[j - 1], diff: 'added' });
+      j--;
+    }
+  }
+  while (i > 0) {
+    rows.unshift({ a: a[i - 1], b: '', diff: 'removed' });
+    i--;
+  }
+  while (j > 0) {
+    rows.unshift({ a: '', b: b[j - 1], diff: 'added' });
+    j--;
   }
   return rows;
-});
+}
 
 function stringify(val: unknown): string {
   try {
@@ -104,12 +134,9 @@ function clearSelection(): void {
 }
 
 function formatTime(iso: string): string {
-  try {
-    const d = new Date(iso);
-    return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-  } catch {
-    return iso;
-  }
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 </script>
 

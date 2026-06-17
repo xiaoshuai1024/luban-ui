@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * 轮播图可视化编辑器（T-ui-d18）：幻灯片列表增删改 + 拖拽排序 + 图片预览。
+ * 轮播图可视化编辑器（T-ui-d18）：幻灯片列表增删改 + 上下移动排序 + 图片预览。
  * modelValue 为 CarouselSlide[]。
  */
 import { computed } from 'vue';

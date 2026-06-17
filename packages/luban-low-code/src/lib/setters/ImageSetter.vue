@@ -3,7 +3,7 @@
  * 图片设置器（T-ui-d17）：URL 输入 + 预览 + 上传（FileReader 转 base64，零后端依赖）。
  * 适用于头像/海报图等小图；大图应配 OSS，由业务层接管（此处仅本地预览）。
  */
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -12,36 +12,59 @@ const props = withDefaults(
     previewWidth?: number;
     /** 占位提示 */
     placeholder?: string;
+    /** 本地上传大小上限（MB），默认 2MB */
+    maxSizeMB?: number;
   }>(),
-  { modelValue: '', previewWidth: 80, placeholder: '输入图片 URL 或上传' }
+  { modelValue: '', previewWidth: 80, placeholder: '输入图片 URL 或上传', maxSizeMB: 2 }
 );
 
 const emit = defineEmits<{
   'update:modelValue': [value: string];
 }>();
 
-const hasImage = computed(() => !!props.modelValue);
+const fileInputRef = ref<HTMLInputElement | null>(null);
+const errorMsg = ref<string | null>(null);
+const imgError = ref(false);
+
+const hasImage = computed(() => !!props.modelValue && !imgError.value);
 
 function onInput(e: Event): void {
+  imgError.value = false;
+  errorMsg.value = null;
   emit('update:modelValue', (e.target as HTMLInputElement).value);
 }
 
 function onFile(e: Event): void {
-  const file = (e.target as HTMLInputElement).files?.[0];
+  const input = e.target as HTMLInputElement;
+  const file = input.files?.[0];
+  // 清空 input value 以便重选同一文件
+  input.value = '';
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) {
-    // 本地 base64 超过 2MB 不内嵌，提示用 URL
+  const limit = props.maxSizeMB * 1024 * 1024;
+  if (file.size > limit) {
+    errorMsg.value = `图片超过 ${props.maxSizeMB}MB，请改用 URL 输入`;
     return;
   }
+  errorMsg.value = null;
   const reader = new FileReader();
   reader.onload = () => {
+    imgError.value = false;
     emit('update:modelValue', String(reader.result));
+  };
+  reader.onerror = () => {
+    errorMsg.value = '读取文件失败';
   };
   reader.readAsDataURL(file);
 }
 
 function clear(): void {
+  imgError.value = false;
+  errorMsg.value = null;
   emit('update:modelValue', '');
+}
+
+function onImgError(): void {
+  imgError.value = true;
 }
 </script>
 
@@ -57,23 +80,27 @@ function clear(): void {
       />
       <label class="lb-image-setter__upload" title="本地上传">
         📁
-        <input type="file" accept="image/*" hidden @change="onFile" />
+        <input ref="fileInputRef" type="file" accept="image/*" hidden @change="onFile" />
       </label>
       <button
-        v-if="hasImage"
+        v-if="modelValue"
         class="lb-image-setter__clear"
         title="清除"
         @click="clear"
       >✕</button>
     </div>
+    <div v-if="errorMsg" class="lb-image-setter__error">{{ errorMsg }}</div>
     <div v-if="hasImage" class="lb-image-setter__preview">
       <img
         :src="modelValue"
         alt="预览"
         :style="{ maxWidth: `${previewWidth}px` }"
-        @error="$emit('update:modelValue', modelValue)"
+        @error="onImgError"
       />
       <span class="lb-image-setter__preview-label">预览</span>
+    </div>
+    <div v-else-if="modelValue && imgError" class="lb-image-setter__error">
+      图片加载失败，请检查 URL
     </div>
   </div>
 </template>
@@ -131,6 +158,11 @@ function clear(): void {
   cursor: pointer;
   font-size: 12px;
   flex-shrink: 0;
+}
+.lb-image-setter__error {
+  font-size: 11px;
+  color: #f56c6c;
+  padding: 2px 4px;
 }
 .lb-image-setter__preview {
   display: flex;

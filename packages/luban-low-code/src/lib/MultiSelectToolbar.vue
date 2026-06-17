@@ -69,7 +69,7 @@ function isDisabled(btn: AlignBtn): boolean {
         :key="btn.type"
         class="lb-multiselect__btn"
         :class="{ 'lb-multiselect__btn--disabled': isDisabled(btn) }"
-        :title="btn.label + (isDisabled(btn) ? '' : '')"
+        :title="isDisabled(btn) ? `${btn.label}（不可用）` : btn.label"
         :disabled="isDisabled(btn)"
         @click="emit('align', btn.type)"
       >

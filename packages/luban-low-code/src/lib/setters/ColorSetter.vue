@@ -2,8 +2,9 @@
 /**
  * 颜色设置器（T-ui-d17）：原生 color picker + 文本输入 + 透明度（可选）。
  * 支持十六进制 / rgb。预设色板快速取色。
+ * 文本输入允许临时非法态，blur 时校验并标红。
  */
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -23,6 +24,16 @@ const PRESETS = [
   '#f5222d', '#fa8c16', '#faad14', '#13c2c2', '#1677ff', '#722ed1', '#eb2f96',
 ];
 
+const localText = ref(props.modelValue);
+const invalid = ref(false);
+
+// 外部 modelValue 变化时同步本地态
+import { watch } from 'vue';
+watch(() => props.modelValue, (val) => {
+  localText.value = val;
+  invalid.value = false;
+});
+
 const hexPart = computed(() => {
   const v = props.modelValue ?? '';
   // 取 hex 部分（#RRGGBB），忽略 alpha 后缀
@@ -33,10 +44,24 @@ function onSelect(e: Event): void {
   emit('update:modelValue', (e.target as HTMLInputElement).value);
 }
 
-function onText(e: Event): void {
-  const val = (e.target as HTMLInputElement).value.trim();
-  if (/^#[0-9a-fA-F]{3,8}$/.test(val) || val === '') {
+function isValidHex(val: string): boolean {
+  return /^#[0-9a-fA-F]{3,8}$/.test(val) || val === '';
+}
+
+function onTextInput(e: Event): void {
+  localText.value = (e.target as HTMLInputElement).value;
+  invalid.value = !isValidHex(localText.value.trim());
+}
+
+function onTextBlur(): void {
+  const val = localText.value.trim();
+  if (isValidHex(val)) {
+    invalid.value = false;
     emit('update:modelValue', val);
+  } else {
+    // 非法：回退到当前 modelValue
+    localText.value = props.modelValue;
+    invalid.value = false;
   }
 }
 </script>
@@ -52,10 +77,12 @@ function onText(e: Event): void {
       />
       <input
         class="lb-color-setter__text"
+        :class="{ 'lb-color-setter__text--invalid': invalid }"
         type="text"
-        :value="modelValue"
+        :value="localText"
         placeholder="#000000"
-        @change="onText"
+        @input="onTextInput"
+        @blur="onTextBlur"
       />
     </div>
     <div class="lb-color-setter__presets">
@@ -104,6 +131,9 @@ function onText(e: Event): void {
 .lb-color-setter__text:focus {
   border-color: #409eff;
   outline: none;
+}
+.lb-color-setter__text--invalid {
+  border-color: #f56c6c;
 }
 .lb-color-setter__presets {
   display: flex;

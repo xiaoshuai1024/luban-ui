@@ -3,6 +3,12 @@ import { computed } from 'vue';
 
 /**
  * 对齐辅助线（T-ui-d12）：在多选/拖拽场景下显示同级节点的边缘对齐线 + 吸附。
+ *
+ * ⚠️ 接线状态：当前 DesignRenderer 使用 Sortable（流式布局），非自由定位，
+ * 故本组件暂未自动接入。海报模式（绝对定位）启用后，需由宿主计算
+ * 选中节点 + 同级节点的 DOM rect（相对画布坐标）传入 active/siblings。
+ * 组件本身逻辑完整（SVG 辅助线 + 边缘/中线吸附 + 间距标注），可安全消费。
+ *
  * 纯展示组件：接收 nodes（选中节点的 DOM rects，相对画布坐标），
  * 渲染水平/垂直辅助线 + 间距标注。吸附阈值由 props.threshold 控制。
  */
@@ -124,27 +130,41 @@ function rectEdges(r: AlignRect): {
   };
 }
 
-// 间距标注：active 与最近的同级节点间距
+// 间距标注：active 与同级节点的水平 + 垂直间距
 const distanceLabels = computed(() => {
   if (!props.active || props.siblings.length === 0) return [];
   const labels: { x: number; y: number; text: string }[] = [];
   const a = props.active;
   for (const sib of props.siblings) {
-    // 水平间距
-    let gap: number | null = null;
+    // 水平间距（左右相邻）
+    let hGap: number | null = null;
     let labelX = 0;
     let labelY = 0;
     if (sib.x >= a.x + a.width) {
-      gap = sib.x - (a.x + a.width);
-      labelX = a.x + a.width + gap / 2;
+      hGap = sib.x - (a.x + a.width);
+      labelX = a.x + a.width + hGap / 2;
       labelY = a.y + a.height / 2;
     } else if (sib.x + sib.width <= a.x) {
-      gap = a.x - (sib.x + sib.width);
-      labelX = sib.x + sib.width + gap / 2;
+      hGap = a.x - (sib.x + sib.width);
+      labelX = sib.x + sib.width + hGap / 2;
       labelY = a.y + a.height / 2;
     }
-    if (gap != null && gap > 0 && gap < 200) {
-      labels.push({ x: labelX, y: labelY, text: `${Math.round(gap)}` });
+    if (hGap != null && hGap > 0 && hGap < 200) {
+      labels.push({ x: labelX, y: labelY, text: `${Math.round(hGap)}` });
+    }
+    // 垂直间距（上下相邻）
+    let vGap: number | null = null;
+    if (sib.y >= a.y + a.height) {
+      vGap = sib.y - (a.y + a.height);
+      labelX = a.x + a.width / 2;
+      labelY = a.y + a.height + vGap / 2;
+    } else if (sib.y + sib.height <= a.y) {
+      vGap = a.y - (sib.y + sib.height);
+      labelX = a.x + a.width / 2;
+      labelY = sib.y + sib.height + vGap / 2;
+    }
+    if (vGap != null && vGap > 0 && vGap < 200) {
+      labels.push({ x: labelX, y: labelY, text: `${Math.round(vGap)}` });
     }
   }
   return labels;

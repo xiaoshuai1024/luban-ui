@@ -2,9 +2,10 @@
 /**
  * 间距设置器（T-ui-d17）：四向（上/右/下/左）间距输入 + 链锁统一值。
  * modelValue 为 { top, right, bottom, left } 或单一字符串（统一）。
+ * 支持链锁切换：点击中心图标进入/退出统一编辑模式。
  * 支持 px / rem / % 单位。
  */
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 
 interface Spacing {
   top?: string;
@@ -34,14 +35,30 @@ const spacing = computed<Spacing>(() => {
   return { top: '', right: '', bottom: '', left: '', ...v };
 });
 
-const linked = computed(() => {
+const valuesEqual = computed(() => {
   const s = spacing.value;
   const vals = [s.top, s.right, s.bottom, s.left];
   const first = vals[0];
   return vals.every((x) => x === first);
 });
 
+// 链锁模式：true 时四向同步编辑；初始随 valuesEqual 但可手动切换
+const linked = ref<boolean>(valuesEqual.value);
+
+function toggleLinked(): void {
+  if (!linked.value) {
+    // 进入链锁：把四向同步为当前 top 值
+    setAll(spacing.value.top ?? '');
+  }
+  linked.value = !linked.value;
+}
+
 function setSide(side: keyof Spacing, val: string): void {
+  if (linked.value) {
+    // 链锁模式：改一个等于改全部
+    setAll(val);
+    return;
+  }
   const next = { ...spacing.value, [side]: val };
   emit('update:modelValue', next);
 }
@@ -90,7 +107,12 @@ function setAll(val: string): void {
           @input="setSide('left', ($event.target as HTMLInputElement).value)"
         />
       </div>
-      <div class="lb-spacing-setter__center" :class="{ 'lb-spacing-setter__center--linked': linked }">
+      <div
+        class="lb-spacing-setter__center"
+        :class="{ 'lb-spacing-setter__center--linked': linked }"
+        :title="linked ? '点击解除链锁（四向独立编辑）' : '点击链锁统一编辑'"
+        @click="toggleLinked"
+      >
         <span class="lb-spacing-setter__center-icon">{{ linked ? '🔗' : '⊡' }}</span>
       </div>
     </div>
@@ -145,12 +167,16 @@ function setAll(val: string): void {
 }
 .lb-spacing-setter__field--top { grid-column: 2; grid-row: 1; }
 .lb-spacing-setter__field--left { grid-column: 1; grid-row: 2; }
-.lb-spacing-setter__center { grid-column: 2; grid-row: 2; text-align: center; }
+.lb-spacing-setter__center { grid-column: 2; grid-row: 2; text-align: center; cursor: pointer; }
 .lb-spacing-setter__field--right { grid-column: 3; grid-row: 2; }
 .lb-spacing-setter__field--bottom { grid-column: 2; grid-row: 3; }
 .lb-spacing-setter__center-icon {
   font-size: 16px;
   color: #c0c4cc;
+  transition: color 0.15s ease;
+}
+.lb-spacing-setter__center:hover .lb-spacing-setter__center-icon {
+  color: #909399;
 }
 .lb-spacing-setter__center--linked .lb-spacing-setter__center-icon {
   color: #409eff;

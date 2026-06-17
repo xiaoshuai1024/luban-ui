@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * 标签页可视化编辑器（T-ui-d18）：Tab 列表增删改 + 拖拽排序。
+ * 标签页可视化编辑器（T-ui-d18）：Tab 列表增删改 + 上下移动排序。
  * modelValue 为 TabItem[]（label + key + 可选 content）。
  */
 import { computed } from 'vue';
@@ -67,7 +67,6 @@ function move(index: number, dir: -1 | 1): void {
         :key="tab.id ?? i"
         class="lb-tabs-setter__item"
       >
-        <span class="lb-tabs-setter__handle" title="拖拽排序">⠿</span>
         <input
           class="lb-tabs-setter__input"
           type="text"

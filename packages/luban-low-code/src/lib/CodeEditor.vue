@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onBeforeUnmount } from 'vue';
 import type { PageSchema } from './schema';
 
 /**
  * JSON schema 代码编辑器（T-ui-d13）：
  * - 行号显示 + 等宽字体 + 语法着色（简易）
  * - 格式化按钮（2 空格缩进）
- * - 实时 JSON 校验（错误高亮 + 错误提示）
+ * - 实时 JSON 校验（错误高亮 + 错误提示）+ 防抖（300ms）
+ * - 行号滚动同步
  * - 双向同步：modelValue (PageSchema) ↔ 编辑区文本
  *
  * 纯展示+编辑组件，校验通过后 emit('update:modelValue')。
@@ -30,6 +31,8 @@ const emit = defineEmits<{
 
 const text = ref('');
 const error = ref<string | null>(null);
+const textareaRef = ref<HTMLTextAreaElement | null>(null);
+const gutterRef = ref<HTMLPreElement | null>(null);
 
 // 初始化 + 外部 modelValue 变化时同步到编辑区
 watch(
@@ -96,10 +99,31 @@ function format(): void {
   }
 }
 
+// 防抖：避免每次按键 parse 整个 JSON + emit（大 schema 卡顿 + 历史栈膨胀）
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+function debouncedParse(): void {
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    parseAndEmit();
+    debounceTimer = null;
+  }, 300);
+}
+
+onBeforeUnmount(() => {
+  if (debounceTimer) clearTimeout(debounceTimer);
+});
+
 function onInput(e: Event): void {
   text.value = (e.target as HTMLTextAreaElement).value;
-  // 实时校验 + 同步（防抖简化为立即）
-  parseAndEmit();
+  // 防抖校验 + 同步
+  debouncedParse();
+}
+
+/** 行号滚动同步：textarea 滚动时同步 gutter scrollTop */
+function onScroll(): void {
+  if (gutterRef.value && textareaRef.value) {
+    gutterRef.value.scrollTop = textareaRef.value.scrollTop;
+  }
 }
 
 // 行号
@@ -128,10 +152,12 @@ const lineNumbers = computed(() =>
     <div class="lb-code-editor__body">
       <pre
         v-if="showLineNumbers"
+        ref="gutterRef"
         class="lb-code-editor__gutter"
         aria-hidden="true"
       ><code>{{ lineNumbers }}</code></pre>
       <textarea
+        ref="textareaRef"
         class="lb-code-editor__textarea"
         :value="text"
         :readonly="readOnly"
@@ -140,6 +166,7 @@ const lineNumbers = computed(() =>
         autocorrect="off"
         autocapitalize="off"
         @input="onInput"
+        @scroll="onScroll"
       />
     </div>
 

@@ -42,7 +42,14 @@ function exec(command: string, value?: string): void {
 
 function setLink(): void {
   const url = window.prompt('输入链接地址（含 https://）');
-  if (url) exec('createLink', url);
+  if (!url) return;
+  // 校验 URL 合法性（避免无效 href 如纯中文）
+  try {
+    const parsed = new URL(url.startsWith('http') ? url : `https://${url}`);
+    exec('createLink', parsed.href);
+  } catch {
+    // 非法 URL，忽略
+  }
 }
 
 function emitChange(): void {
@@ -56,9 +63,9 @@ const TOOLS: { cmd: string; icon: string; title: string; arg?: string }[] = [
   { cmd: 'strikeThrough', icon: 'S', title: '删除线' },
   { cmd: 'insertUnorderedList', icon: '•', title: '无序列表' },
   { cmd: 'insertOrderedList', icon: '1.', title: '有序列表' },
-  { cmd: 'justifyLeft', icon: '⇤', title: '左对齐', arg: 'left' },
-  { cmd: 'justifyCenter', icon: '≡', title: '居中', arg: 'center' },
-  { cmd: 'justifyRight', icon: '⇥', title: '右对齐', arg: 'right' },
+  { cmd: 'justifyLeft', icon: '⇤', title: '左对齐' },
+  { cmd: 'justifyCenter', icon: '≡', title: '居中' },
+  { cmd: 'justifyRight', icon: '⇥', title: '右对齐' },
   { cmd: 'removeFormat', icon: '⊘', title: '清除格式' },
 ];
 </script>
