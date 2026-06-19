@@ -2,7 +2,7 @@
 import { getComponent } from './registry';
 import type { NodeSchema } from './schema';
 import { validate, type ValidationRule } from './validation';
-import { evaluateBoolean, interpolate } from './expression';
+import { evaluate, evaluateBoolean, interpolate } from './expression';
 import { createActionRunner, type ActionContext } from './action';
 import { computed, inject } from 'vue';
 
@@ -43,6 +43,25 @@ const evalCtx = computed<Record<string, unknown>>(() => ({
 /** 条件渲染：visible 表达式求值（undefined/缺省=true；危险表达式默认 false 不渲染） */
 function isNodeVisible(node: NodeSchema): boolean {
   return evaluateBoolean(node.visible, evalCtx.value);
+}
+
+/** 循环渲染：loop.data 求值为数组（表达式或字面量），按元素多次渲染本节点 */
+const loopItems = computed<unknown[]>(() => {
+  if (!props.root.loop) return [];
+  const data = props.root.loop.data;
+  const resolved = typeof data === 'string' ? evaluate(data, evalCtx.value) : data;
+  return Array.isArray(resolved) ? resolved : [];
+});
+/** 去掉 loop 字段的 root 副本（递归渲染时不再触发 loop） */
+const rootWithoutLoop = computed<NodeSchema>(() => {
+  const { loop: _loop, ...rest } = props.root;
+  return rest as NodeSchema;
+});
+/** 每次循环把 itemVar/keyVar 注入表达式上下文 */
+function loopCtx(item: unknown, idx: number): Record<string, unknown> {
+  const itemVar = props.root.loop?.itemVar ?? 'item';
+  const keyVar = props.root.loop?.keyVar ?? 'index';
+  return { ...evalCtx.value, [itemVar]: item, [keyVar]: idx };
 }
 
 /** 事件动作执行器（host 可 provide 'lubanActionRunner' 覆盖，如注入 router.navigate） */
@@ -137,9 +156,20 @@ function slotContent(): string {
 
 <template>
   <template v-if="root && isNodeVisible(root)">
+    <!-- loop: 按 loop.data 数组重复渲染本节点（每 item 注入 ctx） -->
+    <template v-if="root.loop && loopItems.length">
+      <RuntimeRenderer
+        v-for="(item, idx) in loopItems"
+        :key="idx"
+        :root="rootWithoutLoop"
+        :form-state="formState"
+        :form-errors="formErrors"
+        :ctx="loopCtx(item, idx)"
+      />
+    </template>
     <!-- Form value components: bind v-model to formState + validation error -->
     <component
-      v-if="getComponent(root.type) && isFormValueType(root.type)"
+      v-else-if="!root.loop && getComponent(root.type) && isFormValueType(root.type)"
       :is="getComponent(root.type)"
       v-bind="formValueProps(root.props as Record<string, unknown>, root.props?.name as string)"
       :model-value="
