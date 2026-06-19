@@ -3,6 +3,8 @@ import { getComponent } from './registry';
 import type { NodeSchema } from './schema';
 import { isContainerType } from './constants';
 import { validate, type ValidationRule } from './validation';
+import Sortable from 'sortablejs';
+import { onMounted, onBeforeUnmount, ref as vueRef } from 'vue';
 import DesignRendererSelf from './DesignRenderer.vue';
 
 const FORM_VALUE_TYPES = new Set([
@@ -29,6 +31,8 @@ const emit = defineEmits<{
   select: [nodeId: string | null];
   /** 从面板拖入到当前容器时发出；parentId 为当前节点 id */
   'add-node': [type: string, parentId: string];
+  /** 跨容器拖拽冒泡（来自子容器 Sortable onEnd） */
+  'move-node': [nodeId: string, fromParentId: string | null, toParentId: string | null, toIndex: number];
 }>();
 
 function onWrapperClick(e: Event, nodeId: string): void {
@@ -133,12 +137,47 @@ function onContainerDrop(e: DragEvent): void {
     // ignore
   }
 }
+
+// === 容器内 Sortable（group: luban-nodes，支持跨容器拖拽） ===
+const containerDropRef = vueRef<HTMLElement | null>(null);
+let containerSortable: Sortable | null = null;
+
+function handleContainerSortEnd(ev: Sortable.SortableEvent): void {
+  const oldIndex = ev.oldIndex;
+  const newIndex = ev.newIndex;
+  if (oldIndex == null || newIndex == null) return;
+  const fromParent = (ev.from as HTMLElement).dataset.parentId ?? '';
+  const toParent = (ev.to as HTMLElement).dataset.parentId ?? '';
+  const nodeId = (ev.item as HTMLElement).dataset.nodeId ?? '';
+  // revert DOM：跨容器时还原，交由 Vue 按 schema 重渲染
+  if (ev.from !== ev.to && ev.item.parentNode === ev.to) {
+    ev.from.insertBefore(ev.item, ev.from.children[oldIndex] ?? null);
+  }
+  if (!nodeId) return;
+  emit('move-node', nodeId, fromParent || null, toParent || null, newIndex);
+}
+
+onMounted(() => {
+  if (containerDropRef.value) {
+    containerDropRef.value.dataset.parentId = props.root.id;
+    containerSortable = Sortable.create(containerDropRef.value, {
+      animation: 150,
+      group: 'luban-nodes',
+      onEnd: handleContainerSortEnd,
+    });
+  }
+});
+onBeforeUnmount(() => {
+  containerSortable?.destroy();
+  containerSortable = null;
+});
 </script>
 
 <template>
   <template v-if="root">
     <div
       class="design-renderer__wrapper"
+      :data-node-id="root.id"
       :class="{
         'design-renderer__wrapper--selected': selectedNodeId === root.id,
         'design-renderer__wrapper--locked': root.locked,
@@ -199,6 +238,7 @@ function onContainerDrop(e: DragEvent): void {
         >
           <template v-if="(root.children ?? []).length">
             <div
+              ref="containerDropRef"
               class="design-renderer__container-drop"
               @dragover.prevent="onContainerDragOver"
               @drop="onContainerDrop"
@@ -213,6 +253,7 @@ function onContainerDrop(e: DragEvent): void {
                 :placeholder-text="placeholderText"
                 @select="emit('select', $event)"
                 @add-node="emit('add-node', $event[0], $event[1])"
+                @move-node="(nodeId, from, to, idx) => emit('move-node', nodeId, from, to, idx)"
               />
             </div>
           </template>
