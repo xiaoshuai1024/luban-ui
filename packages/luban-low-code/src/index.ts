@@ -1,4 +1,4 @@
-export type { PageSchema, NodeSchema } from './lib/schema';
+export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource } from './lib/schema';
 export type { ValidationRule } from './lib/validation';
 export { validate } from './lib/validation';
 export { default as LubanDesigner } from './lib/LubanDesigner.vue';
@@ -25,6 +25,11 @@ export {
   isPaletteType,
 } from './lib/palette';
 export type { PaletteItem, PaletteCategory, PaletteGroup } from './lib/palette';
+
+// === expression sandbox (低代码表达式引擎, 自研沙箱 0.1.0) ===
+// evaluate/interpolate/evaluateBoolean：供 RuntimeRenderer 条件/循环/事件求值、
+// PropertyPanel 表达式输入消费。沙箱禁 eval/Function/危险标识符（见 expression.ts）。
+export { evaluate, interpolate, evaluateBoolean } from './lib/expression';
 
 // === material contract layer (foundation, 0.1.0) ===
 // defineMaterial + MaterialRegistry + JSON Schema 类型 + compat 适配层。
