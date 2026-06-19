@@ -3,6 +3,7 @@ import { getComponent } from './registry';
 import type { NodeSchema } from './schema';
 import { validate, type ValidationRule } from './validation';
 import { evaluateBoolean } from './expression';
+import { createActionRunner, type ActionContext } from './action';
 import { computed, inject } from 'vue';
 
 /** Optional form submit handler provided by the host app (e.g. website DynamicPage) */
@@ -42,6 +43,24 @@ const evalCtx = computed<Record<string, unknown>>(() => ({
 /** 条件渲染：visible 表达式求值（undefined/缺省=true；危险表达式默认 false 不渲染） */
 function isNodeVisible(node: NodeSchema): boolean {
   return evaluateBoolean(node.visible, evalCtx.value);
+}
+
+/** 事件动作执行器（host 可 provide 'lubanActionRunner' 覆盖，如注入 router.navigate） */
+const actionRunner = inject('lubanActionRunner', createActionRunner());
+
+/** 把节点 events（事件名→动作表达式）解析为 v-on 可用的 handler map */
+function resolveEvents(
+  events: Record<string, string> | undefined,
+): Record<string, (e: unknown) => void> {
+  const out: Record<string, (e: unknown) => void> = {};
+  if (!events) return out;
+  for (const [eventName, actionExpr] of Object.entries(events)) {
+    out[eventName] = () => {
+      const actx: ActionContext = { vars: evalCtx.value };
+      actionRunner.run(actionExpr, actx);
+    };
+  }
+  return out;
 }
 
 function getFormValue(name: string | undefined): unknown {
@@ -144,6 +163,7 @@ function slotContent(): string {
       v-else-if="getComponent(root.type)"
       :is="getComponent(root.type)"
       v-bind="componentProps(root.props as Record<string, unknown>)"
+      v-on="resolveEvents(root.events)"
       @submit="
         formSubmitHandler && root.type === 'LubanForm'
           ? formSubmitHandler({
