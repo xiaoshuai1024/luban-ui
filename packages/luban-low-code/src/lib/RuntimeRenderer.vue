@@ -2,7 +2,7 @@
 import { getComponent } from './registry';
 import type { NodeSchema } from './schema';
 import { validate, type ValidationRule } from './validation';
-import { evaluateBoolean } from './expression';
+import { evaluateBoolean, interpolate } from './expression';
 import { createActionRunner, type ActionContext } from './action';
 import { computed, inject } from 'vue';
 
@@ -119,7 +119,12 @@ function formValueProps(nodeProps: Record<string, unknown> | undefined, name: st
 function componentProps(nodeProps: Record<string, unknown> | undefined): Record<string, unknown> {
   if (nodeProps == null) return {};
   const { content: _c, text: _t, rules: _r, ...rest } = nodeProps;
-  return rest;
+  // 字符串 props 做 {{}} 插值（数据驱动：props 可引用 ctx/$form 变量）
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(rest)) {
+    out[k] = typeof v === 'string' ? interpolate(v, evalCtx.value) : v;
+  }
+  return out;
 }
 
 function slotContent(): string {
