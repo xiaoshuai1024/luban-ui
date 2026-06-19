@@ -2,7 +2,8 @@
 import { getComponent } from './registry';
 import type { NodeSchema } from './schema';
 import { validate, type ValidationRule } from './validation';
-import { inject } from 'vue';
+import { evaluateBoolean } from './expression';
+import { computed, inject } from 'vue';
 
 /** Optional form submit handler provided by the host app (e.g. website DynamicPage) */
 interface FormSubmitPayload {
@@ -26,9 +27,22 @@ const props = withDefaults(
     root: NodeSchema;
     formState: Record<string, unknown>;
     formErrors?: Record<string, string>;
+    /** 表达式上下文（数据源数据等），与 formState 合并供 visible/loop/events 求值 */
+    ctx?: Record<string, unknown>;
   }>(),
-  { formErrors: () => ({}) }
+  { formErrors: () => ({}), ctx: () => ({}) }
 );
+
+/** 表达式求值上下文：数据源 ctx + $form（表单字段值，供 visible 等引用） */
+const evalCtx = computed<Record<string, unknown>>(() => ({
+  ...props.ctx,
+  $form: props.formState,
+}));
+
+/** 条件渲染：visible 表达式求值（undefined/缺省=true；危险表达式默认 false 不渲染） */
+function isNodeVisible(node: NodeSchema): boolean {
+  return evaluateBoolean(node.visible, evalCtx.value);
+}
 
 function getFormValue(name: string | undefined): unknown {
   if (name == null) return undefined;
@@ -98,7 +112,7 @@ function slotContent(): string {
 </script>
 
 <template>
-  <template v-if="root">
+  <template v-if="root && isNodeVisible(root)">
     <!-- Form value components: bind v-model to formState + validation error -->
     <component
       v-if="getComponent(root.type) && isFormValueType(root.type)"
@@ -122,6 +136,7 @@ function slotContent(): string {
         :root="child"
         :form-state="formState"
         :form-errors="formErrors"
+        :ctx="evalCtx"
       />
     </component>
     <!-- Non-form components: props only, optional slot from content/text -->
@@ -157,6 +172,7 @@ function slotContent(): string {
         :root="child"
         :form-state="formState"
         :form-errors="formErrors"
+        :ctx="evalCtx"
       />
     </template>
   </template>
