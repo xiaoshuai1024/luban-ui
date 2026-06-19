@@ -114,12 +114,14 @@ function slotContent(): string {
 }
 
 function onContainerDragOver(e: DragEvent): void {
+  if (props.root.locked) return; // locked 容器不接受拖入
   e.preventDefault();
   e.stopPropagation();
   if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
 }
 
 function onContainerDrop(e: DragEvent): void {
+  if (props.root.locked) return; // locked 容器不接受 drop
   e.preventDefault();
   e.stopPropagation();
   const raw = e.dataTransfer?.getData('application/json');
@@ -139,6 +141,8 @@ function onContainerDrop(e: DragEvent): void {
       class="design-renderer__wrapper"
       :class="{
         'design-renderer__wrapper--selected': selectedNodeId === root.id,
+        'design-renderer__wrapper--locked': root.locked,
+        'design-renderer__wrapper--hidden': root.hidden,
       }"
       @click="onWrapperClick($event, root.id)"
     >
@@ -247,6 +251,13 @@ function onContainerDrop(e: DragEvent): void {
 .design-renderer__wrapper--selected {
   outline: 2px solid #1e88e5;
   outline-offset: 0;
+}
+.design-renderer__wrapper--locked {
+  outline: 2px dashed #9ca3af;
+  cursor: not-allowed;
+}
+.design-renderer__wrapper--hidden {
+  opacity: 0.4;
 }
 .design-renderer__placeholder {
   min-height: 48px;
