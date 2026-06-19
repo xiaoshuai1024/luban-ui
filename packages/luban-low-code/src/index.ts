@@ -74,6 +74,12 @@ export {
   checkboxMaterial,
   radioGroupMaterial,
   switchMaterial,
+  tableMaterial,
+  menuMaterial,
+  tabsMaterial,
+  modalMaterial,
+  drawerMaterial,
+  toastMaterial,
 } from './materials';
 
 /**
