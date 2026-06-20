@@ -18,6 +18,15 @@ export interface NodeSchema {
   locked?: boolean;
   /** 编辑态隐藏：设计器不渲染但保留 schema（区别于运行态 visible） */
   hidden?: boolean;
+  /**
+   * 节点级自定义样式（CSS 属性 → 值，如 { backgroundColor:'#fff', fontSize:'16px' }）。
+   * 设计态由 PropertyPanel 样式分区写入；DesignRenderer 在 wrapper div 绑 :style，
+   * RuntimeRenderer 经 componentProps 注入到组件根（inheritAttrs 透传）。
+   * 值在写入前由 PropertyPanel 做安全过滤（拒绝 expression()/javascript: 等危险协议）。
+   */
+  style?: Record<string, string>;
+  /** 节点级自定义 class（空格分隔），与 style 一样由属性面板配置。 */
+  className?: string;
 }
 
 /** 循环渲染配置 */

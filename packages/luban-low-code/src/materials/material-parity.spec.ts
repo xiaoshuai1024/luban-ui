@@ -24,8 +24,8 @@ import { CONTAINER_TYPES, FORM_CONTROL_TYPES } from '../lib/constants';
 describe('material registry parity', () => {
   const all = materialRegistry.getAll();
 
-  it('registers all 20 materials', () => {
-    expect(all.length).toBe(20);
+  it('registers all 24 materials', () => {
+    expect(all.length).toBe(24);
   });
 
   it('includes SidePanel (首次纳入)', () => {
@@ -135,7 +135,7 @@ describe('material registry parity', () => {
     }
   });
 
-  it('getComponent resolves all 20 materials via registry (no undefined)', () => {
+  it('getComponent resolves all 24 materials via registry (no undefined)', () => {
     // 验证 registry.ts getComponent 经 materialRegistry 取到全部物料的 component
     for (const def of all) {
       const comp = getComponent(def.name);
@@ -143,10 +143,10 @@ describe('material registry parity', () => {
     }
   });
 
-  it('getComponentMeta derives ComponentMeta for all 20 materials', () => {
+  it('getComponentMeta derives ComponentMeta for all 24 materials', () => {
     // 验证 componentMeta.ts 经 compat.toLegacyComponentMeta 派生旧 ComponentMeta
     const metas = getAllComponentMeta();
-    expect(metas.length).toBe(20);
+    expect(metas.length).toBe(24);
     for (const meta of metas) {
       expect(meta.type).toBeTruthy();
       expect(meta.component).toBeDefined();
@@ -154,19 +154,21 @@ describe('material registry parity', () => {
     }
   });
 
-  it('palette still covers the 14 legacy materials across 信息/表单 (W1-T6 new categories excluded)', () => {
-    // W1-T6 新增的 6 物料 category（data-display/navigation/feedback）不在
-    // 旧 palette 的「信息/表单」映射集，故 palette 计数仍为 14；新物料由
-    // PropertyPanel/registry 直接消费。此处锁定该不变量防回归。
+  it('palette covers 信息/表单 groups (marketing 4 物料以 category=content 进信息组)', () => {
+    // 现状：marketing 4 物料（Hero/CTA/Testimonial/LeadCapture）声明 category=content，
+    // 故落入信息组，palette 计数为 18（14 基础信息/表单 + 4 marketing 进信息）。
+    // W1-T6 新增的 6 物料（data-display/navigation/feedback）不在 palette 映射集。
+    // 注：D15-E4 调色板重组将改为 7 组（含独立营销组），届时本断言需同步更新。
     const items = getPaletteItems();
-    expect(items.length).toBe(14);
+    expect(items.length).toBe(18);
     const groups = getPaletteGroups();
     expect(groups.length).toBe(2);
     expect(groups.map((g) => g.category)).toEqual(['信息', '表单']);
-    // 信息组含 SidePanel（首次纳入）
+    // 信息组含 SidePanel + 4 marketing
     const infoTypes = groups[0].items.map((i) => i.type);
     expect(infoTypes).toContain('LubanSidePanel');
-    // 新物料不在旧 palette 中
+    expect(infoTypes).toContain('LubanHero');
+    // W1-T6 6 物料不在 palette 中（D15-E4 将纳入）
     for (const name of [
       'LubanTable',
       'LubanMenu',

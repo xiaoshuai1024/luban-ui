@@ -29,11 +29,25 @@ import '../materials';
  * Schema for a single prop (for property panel and validation).
  */
 export interface PropSchemaItem {
-  type: 'string' | 'number' | 'boolean' | 'select' | 'json' | 'options';
+  type:
+    | 'string'
+    | 'number'
+    | 'boolean'
+    | 'select'
+    | 'json'
+    | 'options'
+    | 'array';
   default?: unknown;
   required?: boolean;
   /** For select: { label: string; value: string | number }[] */
   options?: { label: string; value: string | number }[];
+  /**
+   * For array: 描述数组每个元素的字段表（派生自 JSONSchema items.properties）。
+   * PropertyPanel 数组控件据此渲染每行 N 个字段输入；兼容层（compat.ts）从
+   * MaterialDefinition propsSchema 的 array.items.properties 派生本字段。
+   * 嵌套数组（itemFields 内仍含 array）由控件递归降级为 json 编辑（v1 不支持可视化嵌套）。
+   */
+  itemFields?: PropSchema;
   label?: string;
 }
 
