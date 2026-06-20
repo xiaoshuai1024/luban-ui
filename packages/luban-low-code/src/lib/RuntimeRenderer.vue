@@ -123,25 +123,52 @@ function validateField(name: string | undefined): void {
 }
 
 /** Props for form value component: base props + modelValue + error/errorMessage from validation */
-function formValueProps(nodeProps: Record<string, unknown> | undefined, name: string | undefined): Record<string, unknown> {
-  if (nodeProps == null) return {};
+function formValueProps(
+  nodeProps: Record<string, unknown> | undefined,
+  name: string | undefined,
+  node: NodeSchema
+): Record<string, unknown> {
+  if (nodeProps == null) return nodeStyleProps(node);
   const { content: _c, text: _t, rules: _r, ...rest } = nodeProps;
   const errorMessage = getFieldError(name);
   return {
     ...rest,
     error: !!errorMessage,
     errorMessage: errorMessage ?? undefined,
+    ...nodeStyleProps(node),
   };
 }
 
 /** Props for component, excluding content/text (used for slot instead) */
-function componentProps(nodeProps: Record<string, unknown> | undefined): Record<string, unknown> {
-  if (nodeProps == null) return {};
+function componentProps(
+  nodeProps: Record<string, unknown> | undefined,
+  node: NodeSchema
+): Record<string, unknown> {
+  // 节点级 style/className 即使 props 为空也要透传（inheritAttrs 落到组件根）
+  if (nodeProps == null) return nodeStyleProps(node);
   const { content: _c, text: _t, rules: _r, ...rest } = nodeProps;
   // 字符串 props 做 {{}} 插值（数据驱动：props 可引用 ctx/$form 变量）
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(rest)) {
     out[k] = typeof v === 'string' ? interpolate(v, evalCtx.value) : v;
+  }
+  return { ...out, ...nodeStyleProps(node) };
+}
+
+/**
+ * 节点级样式/类名透传 props（D15-A2）。
+ *
+ * 从 node.style（CSS 属性→值）+ node.className 派生 { style, class }，
+ * 经 componentProps 合并后由 v-bind 流入组件；Vue inheritAttrs 自动把
+ * style/class 合并到组件根元素。仅返回有值的键，避免空对象污染。
+ */
+function nodeStyleProps(node: NodeSchema): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  if (node.style && Object.keys(node.style).length > 0) {
+    out.style = node.style;
+  }
+  if (node.className) {
+    out.class = node.className;
   }
   return out;
 }
@@ -171,7 +198,7 @@ function slotContent(): string {
     <component
       v-else-if="!root.loop && getComponent(root.type) && isFormValueType(root.type)"
       :is="getComponent(root.type)"
-      v-bind="formValueProps(root.props as Record<string, unknown>, root.props?.name as string)"
+      v-bind="formValueProps(root.props as Record<string, unknown>, root.props?.name as string, root)"
       :model-value="
         root.props?.name != null
           ? getFormValue(root.props.name as string)
@@ -197,14 +224,16 @@ function slotContent(): string {
     <component
       v-else-if="getComponent(root.type)"
       :is="getComponent(root.type)"
-      v-bind="componentProps(root.props as Record<string, unknown>)"
+      v-bind="componentProps(root.props as Record<string, unknown>, root)"
       v-on="resolveEvents(root.events)"
       @submit="
-        formSubmitHandler && root.type === 'LubanForm'
+        formSubmitHandler && (root.type === 'LubanForm' || root.type === 'LubanLeadCapture')
           ? formSubmitHandler({
               formId: (root.props?.formId as string) || '',
-              formState: props.formState,
-              event: $event,
+              formState: root.type === 'LubanLeadCapture'
+                ? ($event as Record<string, unknown>)
+                : props.formState,
+              event: $event as Event,
             })
           : undefined
       "

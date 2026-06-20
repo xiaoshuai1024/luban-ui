@@ -24,8 +24,8 @@ import { CONTAINER_TYPES, FORM_CONTROL_TYPES } from '../lib/constants';
 describe('material registry parity', () => {
   const all = materialRegistry.getAll();
 
-  it('registers all 24 materials', () => {
-    expect(all.length).toBe(24);
+  it('registers all 33 materials', () => {
+    expect(all.length).toBe(33);
   });
 
   it('includes SidePanel (首次纳入)', () => {
@@ -135,7 +135,7 @@ describe('material registry parity', () => {
     }
   });
 
-  it('getComponent resolves all 24 materials via registry (no undefined)', () => {
+  it('getComponent resolves all 33 materials via registry (no undefined)', () => {
     // 验证 registry.ts getComponent 经 materialRegistry 取到全部物料的 component
     for (const def of all) {
       const comp = getComponent(def.name);
@@ -143,10 +143,10 @@ describe('material registry parity', () => {
     }
   });
 
-  it('getComponentMeta derives ComponentMeta for all 24 materials', () => {
+  it('getComponentMeta derives ComponentMeta for all 33 materials', () => {
     // 验证 componentMeta.ts 经 compat.toLegacyComponentMeta 派生旧 ComponentMeta
     const metas = getAllComponentMeta();
-    expect(metas.length).toBe(24);
+    expect(metas.length).toBe(33);
     for (const meta of metas) {
       expect(meta.type).toBeTruthy();
       expect(meta.component).toBeDefined();
@@ -154,31 +154,43 @@ describe('material registry parity', () => {
     }
   });
 
-  it('palette covers 信息/表单 groups (marketing 4 物料以 category=content 进信息组)', () => {
-    // 现状：marketing 4 物料（Hero/CTA/Testimonial/LeadCapture）声明 category=content，
-    // 故落入信息组，palette 计数为 18（14 基础信息/表单 + 4 marketing 进信息）。
-    // W1-T6 新增的 6 物料（data-display/navigation/feedback）不在 palette 映射集。
-    // 注：D15-E4 调色板重组将改为 7 组（含独立营销组），届时本断言需同步更新。
-    const items = getPaletteItems();
-    expect(items.length).toBe(18);
+  it('palette covers 7 groups (信息/布局/表单/营销/导航/反馈/数据展示) — D15-E4 重组', () => {
+    // D15-E4：调色板从 2 组扩展为 7 组，全部已注册物料（含 W1-T6 6 物料 +
+    // marketing 物料）首次进入调色板。layout 同时进信息+布局两组。
     const groups = getPaletteGroups();
-    expect(groups.length).toBe(2);
-    expect(groups.map((g) => g.category)).toEqual(['信息', '表单']);
-    // 信息组含 SidePanel + 4 marketing
-    const infoTypes = groups[0].items.map((i) => i.type);
+    expect(groups.length).toBe(7);
+    expect(groups.map((g) => g.category)).toEqual([
+      '信息',
+      '布局',
+      '表单',
+      '营销',
+      '导航',
+      '反馈',
+      '数据展示',
+    ]);
+    // 信息组含 SidePanel
+    const infoTypes = groups.find((g) => g.category === '信息')!.items.map((i) => i.type);
     expect(infoTypes).toContain('LubanSidePanel');
-    expect(infoTypes).toContain('LubanHero');
-    // W1-T6 6 物料不在 palette 中（D15-E4 将纳入）
-    for (const name of [
-      'LubanTable',
-      'LubanMenu',
-      'LubanTabs',
-      'LubanModal',
-      'LubanDrawer',
-      'LubanToast',
-    ]) {
-      expect(items.some((i) => i.type === name)).toBe(false);
-    }
+    // 营销组含 marketing 物料（Hero/CTA/Testimonial/LeadCapture category=marketing）
+    const marketingTypes = groups.find((g) => g.category === '营销')!.items.map((i) => i.type);
+    expect(marketingTypes).toContain('LubanHero');
+    expect(marketingTypes).toContain('LubanCTA');
+    expect(marketingTypes).toContain('LubanTestimonial');
+    expect(marketingTypes).toContain('LubanLeadCapture');
+    // 导航/反馈/数据展示组首次纳入 W1-T6 6 物料
+    const navTypes = groups.find((g) => g.category === '导航')!.items.map((i) => i.type);
+    expect(navTypes).toContain('LubanMenu');
+    expect(navTypes).toContain('LubanTabs');
+    const feedbackTypes = groups.find((g) => g.category === '反馈')!.items.map((i) => i.type);
+    expect(feedbackTypes).toContain('LubanModal');
+    expect(feedbackTypes).toContain('LubanDrawer');
+    expect(feedbackTypes).toContain('LubanToast');
+    const dataTypes = groups.find((g) => g.category === '数据展示')!.items.map((i) => i.type);
+    expect(dataTypes).toContain('LubanTable');
+    // 扁平列表去重（layout 同时在信息+布局，只算一次）
+    const flat = getPaletteItems();
+    const flatTypes = new Set(flat.map((i) => i.type));
+    expect(flatTypes.size).toBe(flat.length); // 无重复
   });
 
   it('CONTAINER_TYPES and FORM_CONTROL_TYPES derive from registry', () => {

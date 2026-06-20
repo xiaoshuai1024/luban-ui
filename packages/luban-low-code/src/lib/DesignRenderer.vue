@@ -183,11 +183,15 @@ onBeforeUnmount(() => {
     <div
       class="design-renderer__wrapper"
       :data-node-id="root.id"
-      :class="{
-        'design-renderer__wrapper--selected': selectedNodeId === root.id,
-        'design-renderer__wrapper--locked': root.locked,
-        'design-renderer__wrapper--hidden': root.hidden,
-      }"
+      :class="[
+        {
+          'design-renderer__wrapper--selected': selectedNodeId === root.id,
+          'design-renderer__wrapper--locked': root.locked,
+          'design-renderer__wrapper--hidden': root.hidden,
+        },
+        root.className,
+      ]"
+      :style="root.style"
       @click="onWrapperClick($event, root.id)"
     >
       <template v-if="isEmptyContainer()">
