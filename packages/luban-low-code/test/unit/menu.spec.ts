@@ -9,7 +9,7 @@
  *
  * @since 1.0.0
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { menuMaterial } from '../../src/materials/navigation/menu/material';
 import LubanMenu from '../../src/materials/navigation/menu/LubanMenu.vue';
@@ -97,22 +97,25 @@ describe('LubanMenu component — rendering', () => {
   });
 
   it('emits select with key on item click', async () => {
-    const wrapper = mount(LubanMenu, { props: { items } });
+    let lastKey: unknown = undefined;
+    const wrapper = mount(LubanMenu, {
+      props: { items, onSelect: (k: string) => (lastKey = k) },
+    });
     const topItems = wrapper.findAll('.lb-menu__item');
     // click the label span inside first item
     await topItems[0].find('.lb-menu__label').trigger('click');
-    expect(wrapper.emitted('select')).toBeTruthy();
-    expect(wrapper.emitted('select')![0][0]).toBe('home');
+    expect(lastKey).toBe('home');
   });
 
   it('emits select with child key and stops propagation to parent', async () => {
-    const wrapper = mount(LubanMenu, { props: { items } });
+    const keys: string[] = [];
+    const wrapper = mount(LubanMenu, {
+      props: { items, onSelect: (k: string) => keys.push(k) },
+    });
     const subitem = wrapper.findAll('.lb-menu__subitem')[0];
     await subitem.trigger('click');
-    const emitted = wrapper.emitted('select');
-    expect(emitted).toBeTruthy();
-    expect(emitted![0][0]).toBe('account');
-    // 子菜单 click stop 冒泡，父项 key 不应出现在 payload
-    expect(emitted!.length).toBe(1);
+    expect(keys).toContain('account');
+    // 子菜单 click stop 冒泡，父项 key 不应再次出现（select 仅触发一次）
+    expect(keys.length).toBe(1);
   });
 });

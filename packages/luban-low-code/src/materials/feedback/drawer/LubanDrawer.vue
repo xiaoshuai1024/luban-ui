@@ -5,8 +5,10 @@
  * 轻量自研实现（Material Design 风格），不依赖 element-plus。
  * visible 受控（v-model:visible），placement 控制滑出方向，
  * size 表示抽屉尺寸（横向=宽度，纵向=高度）。
+ *
+ * a11y：role="dialog" + aria-modal + aria-label/aria-labelledby；ESC 关闭。
  */
-import { watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
 
 type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
 
@@ -55,6 +57,19 @@ function panelStyle(): Record<string, string> {
   const horizontal = props.placement === 'left' || props.placement === 'right';
   return horizontal ? { width: props.size } : { height: props.size };
 }
+
+// a11y (L1): ESC closes the drawer while it is visible.
+function onKeydown(e: KeyboardEvent): void {
+  if (props.visible && e.key === 'Escape') {
+    e.preventDefault();
+    close();
+  }
+}
+
+onMounted(() => document.addEventListener('keydown', onKeydown));
+onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown));
+
+const titleId = computed(() => 'lb-drawer-title');
 </script>
 
 <template>
@@ -64,6 +79,10 @@ function panelStyle(): Record<string, string> {
         v-if="visible"
         class="lb-drawer__mask"
         :class="`lb-drawer__mask--${placement}`"
+        role="dialog"
+        aria-modal="true"
+        :aria-labelledby="title ? titleId : undefined"
+        :aria-label="title ? undefined : '抽屉'"
         @click="onMaskClick"
       >
         <div
@@ -73,7 +92,7 @@ function panelStyle(): Record<string, string> {
           @click="stop"
         >
           <div class="lb-drawer__header">
-            <span class="lb-drawer__title">{{ title }}</span>
+            <span :id="titleId" class="lb-drawer__title">{{ title }}</span>
             <button
               type="button"
               class="lb-drawer__close"
@@ -93,6 +112,8 @@ function panelStyle(): Record<string, string> {
 </template>
 
 <style scoped lang="scss">
+// TODO(design-token): 当前 luban-low-code 物料硬编码色值/圆角；
+// 待 luban-base 暴露可跨包消费的 token 入口（scss alias 或 CSS 变量）后迁移。
 .lb-drawer__mask {
   position: fixed;
   inset: 0;

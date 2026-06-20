@@ -9,7 +9,7 @@
  *
  * @since 1.0.0
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { tableMaterial } from '../../src/materials/data-display/table/material';
 import LubanTable from '../../src/materials/data-display/table/LubanTable.vue';
@@ -114,15 +114,67 @@ describe('LubanTable component — rendering', () => {
   });
 
   it('emits rowClick with the clicked row payload', async () => {
-    const wrapper = mount(LubanTable, { props: { columns, rows } });
+    let lastRow: unknown = undefined;
+    const wrapper = mount(LubanTable, {
+      props: {
+        columns,
+        rows,
+        onRowClick: (row: unknown) => (lastRow = row),
+      },
+    });
     await wrapper.findAll('.lb-table__row')[0].trigger('click');
-    expect(wrapper.emitted('rowClick')).toBeTruthy();
-    expect(wrapper.emitted('rowClick')![0][0]).toEqual(rows[0]);
+    expect(lastRow).toEqual(rows[0]);
   });
 
   it('renders column width style for numeric width (px)', () => {
     const wrapper = mount(LubanTable, { props: { columns, rows: [] } });
     const ths = wrapper.findAll('.lb-table__th');
     expect(ths[1].attributes('style')).toContain('width: 80px');
+  });
+
+  it('paginates rows when pageSize < rows.length (H1)', async () => {
+    const longRows = [
+      { name: 'a', age: 1 },
+      { name: 'b', age: 2 },
+      { name: 'c', age: 3 },
+      { name: 'd', age: 4 },
+      { name: 'e', age: 5 },
+    ];
+    const wrapper = mount(LubanTable, {
+      props: { columns, rows: longRows, pageSize: 2 },
+    });
+    // 第 1 页：前 2 条
+    let trs = wrapper.findAll('.lb-table__row');
+    expect(trs).toHaveLength(2);
+    expect(trs[0].text()).toContain('a');
+    expect(trs[1].text()).toContain('b');
+    expect(wrapper.find('.lb-table__pagination').exists()).toBe(true);
+    expect(wrapper.find('.lb-table__page-info').text()).toBe('1 / 3');
+
+    // 翻到下一页：第 3-4 条
+    await wrapper.find('.lb-table__page-btn[aria-label="下一页"]').trigger('click');
+    trs = wrapper.findAll('.lb-table__row');
+    expect(trs).toHaveLength(2);
+    expect(trs[0].text()).toContain('c');
+    expect(trs[1].text()).toContain('d');
+  });
+
+  it('disables prev on first page and next on last page (H1)', () => {
+    const longRows = Array.from({ length: 5 }, (_, i) => ({ name: String(i), age: i }));
+    const wrapper = mount(LubanTable, {
+      props: { columns, rows: longRows, pageSize: 2 },
+    });
+    const btns = wrapper.findAll('.lb-table__page-btn');
+    expect(btns[0].attributes('disabled')).toBeDefined(); // prev 禁用
+    expect(btns[1].attributes('disabled')).toBeUndefined(); // next 可用
+  });
+
+  it('renders all rows without pagination controls when pageSize<=0 (H1)', () => {
+    const longRows = Array.from({ length: 5 }, (_, i) => ({ name: String(i), age: i }));
+    const wrapper = mount(LubanTable, {
+      props: { columns, rows: longRows, pageSize: 0 },
+    });
+    expect(wrapper.findAll('.lb-table__row')).toHaveLength(5);
+    expect(wrapper.find('.lb-table__pagination').exists()).toBe(false);
   });
 });

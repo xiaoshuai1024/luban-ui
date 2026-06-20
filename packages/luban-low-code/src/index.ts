@@ -31,6 +31,12 @@ export type { PaletteItem, PaletteCategory, PaletteGroup } from './lib/palette';
 // PropertyPanel 表达式输入消费。沙箱禁 eval/Function/危险标识符（见 expression.ts）。
 export { evaluate, interpolate, evaluateBoolean } from './lib/expression';
 
+// === action runner (事件动作执行器, W1-T4) ===
+// host 可 import createActionRunner 自定义动作路由，或直接复用 ActionContext 类型
+// 注入 navigate/alert/setVar。RuntimeRenderer 通过 provide('lubanActionRunner') 消费。
+export { createActionRunner, parseAction, evalArg } from './lib/action';
+export type { ActionRunner, ActionContext } from './lib/action';
+
 // === material contract layer (foundation, 0.1.0) ===
 // defineMaterial + MaterialRegistry + JSON Schema 类型 + compat 适配层。
 // 旧导出（getComponentMeta 等）保持不变；新物料统一通过 defineMaterial 声明。

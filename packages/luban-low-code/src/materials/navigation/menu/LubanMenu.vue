@@ -3,13 +3,20 @@
  * LubanMenu — 导航菜单物料组件（navigation/menu）。
  *
  * 轻量自研实现（Material Design 风格），不依赖 element-plus。
- * 支持 horizontal/vertical 两种模式；支持子菜单（children 递归渲染）。
+ * 支持 horizontal/vertical 两种模式；支持子菜单（children 渲染一层）。
  * activeKey 受控（由父组件通过 props 同步）。
+ *
+ * 注：children 仅支持一层（与 material.ts propsSchema 的 children.items 对齐）。
+ * MenuItem.children 是 SubMenuItem[]（不含 children 字段），避免递归类型误导。
  */
+interface SubMenuItem {
+  label: string;
+  key: string;
+}
 interface MenuItem {
   label: string;
   key: string;
-  children?: MenuItem[];
+  children?: SubMenuItem[];
 }
 
 type MenuMode = 'horizontal' | 'vertical';

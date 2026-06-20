@@ -163,6 +163,11 @@ onMounted(() => {
     containerSortable = Sortable.create(containerDropRef.value, {
       animation: 150,
       group: 'luban-nodes',
+      // FINDING-1: reject drag-start on locked nodes (plan §4.2: locked 不可拖/删/改).
+      // The `--locked` class is applied to the wrapper above; Sortable's filter option
+      // makes items matching the selector non-draggable.
+      filter: '.design-renderer__wrapper--locked',
+      preventOnFilter: false,
       onEnd: handleContainerSortEnd,
     });
   }

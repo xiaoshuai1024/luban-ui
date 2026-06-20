@@ -197,6 +197,16 @@ class Parser {
 }
 
 // ===== Executor =====
+/**
+ * Member/index access blacklist — complements the identifier-level blacklist in
+ * {@link primary}. Without this, `obj.constructor` / `obj['__proto__']` would read
+ * the prototype chain and leak host type internals (no function-call syntax means
+ * this can't escalate to RCE, but it violates the minimal-exposure sandbox rule).
+ * Both the parsed member name (`mem.p`) and the runtime index value (`idx`) are
+ * checked because the identifier blacklist only catches bare `constructor` tokens.
+ */
+const MEMBER_BLACKLIST = new Set(['constructor', '__proto__', 'prototype'])
+
 function exec(node: AST, ctx: EvalContext): unknown {
   switch (node.t) {
     case 'lit': return node.v
@@ -204,12 +214,14 @@ function exec(node: AST, ctx: EvalContext): unknown {
     case 'mem': {
       const o = exec(node.o, ctx)
       if (o == null) return undefined
+      if (MEMBER_BLACKLIST.has(node.p)) return undefined
       return (o as Record<string, unknown>)[node.p]
     }
     case 'idx': {
       const o = exec(node.o, ctx)
       const i = exec(node.i, ctx)
       if (o == null) return undefined
+      if (typeof i === 'string' && MEMBER_BLACKLIST.has(i)) return undefined
       return (o as Record<string, unknown>)[i as string]
     }
     case 'un': {

@@ -5,8 +5,11 @@
  * 轻量自研实现（Material Design 风格），不依赖 element-plus。
  * visible 受控（v-model:visible），通过 open/close 事件对外通知。
  * width 接受任意 CSS 宽度（'50%' / '480px' 等）。
+ *
+ * a11y：role="dialog" + aria-modal + aria-labelledby；ESC 关闭（focus trap 暂未实现，
+ * 后续可在样式面板波次或 a11y 专项补全）。
  */
-import { watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -49,6 +52,20 @@ function onMaskClick(): void {
 function stop(e: Event): void {
   e.stopPropagation();
 }
+
+// a11y (L1): ESC closes the modal while it is visible.
+function onKeydown(e: KeyboardEvent): void {
+  if (props.visible && e.key === 'Escape') {
+    e.preventDefault();
+    close();
+  }
+}
+
+onMounted(() => document.addEventListener('keydown', onKeydown));
+onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown));
+
+// aria-labelledby points at the title when present (otherwise aria-label is used).
+const titleId = computed(() => 'lb-modal-title');
 </script>
 
 <template>
@@ -59,6 +76,8 @@ function stop(e: Event): void {
         class="lb-modal__mask"
         role="dialog"
         aria-modal="true"
+        :aria-labelledby="title ? titleId : undefined"
+        :aria-label="title ? undefined : '对话框'"
         @click="onMaskClick"
       >
         <div
@@ -67,7 +86,7 @@ function stop(e: Event): void {
           @click="stop"
         >
           <div class="lb-modal__header">
-            <span class="lb-modal__title">{{ title }}</span>
+            <span :id="titleId" class="lb-modal__title">{{ title }}</span>
             <button
               type="button"
               class="lb-modal__close"
@@ -90,6 +109,8 @@ function stop(e: Event): void {
 </template>
 
 <style scoped lang="scss">
+// TODO(design-token): 当前 luban-low-code 物料硬编码色值/圆角；
+// 待 luban-base 暴露可跨包消费的 token 入口（scss alias 或 CSS 变量）后迁移。
 .lb-modal__mask {
   position: fixed;
   inset: 0;

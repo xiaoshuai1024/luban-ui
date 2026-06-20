@@ -68,6 +68,21 @@ describe('evaluate — 沙箱表达式求值', () => {
   it('沙箱：不支持函数调用语法（防任意调用）', () => {
     expect(() => evaluate('foo()')).toThrow()
   })
+
+  it('沙箱：成员访问禁用 constructor/__proto__/prototype（堵原型链泄露）', () => {
+    const ctx = { user: { name: 'a' } }
+    // mem (dot) access — each must return undefined rather than the prototype
+    expect(evaluate('user.constructor', ctx)).toBe(undefined)
+    expect(evaluate('user.__proto__', ctx)).toBe(undefined)
+    expect(evaluate('user.prototype', ctx)).toBe(undefined)
+    // idx (bracket) access — same blacklist applied at runtime
+    expect(evaluate('user["constructor"]', ctx)).toBe(undefined)
+    expect(evaluate('user["__proto__"]', ctx)).toBe(undefined)
+    expect(evaluate('user["prototype"]', ctx)).toBe(undefined)
+    // normal member/index access still works
+    expect(evaluate('user.name', ctx)).toBe('a')
+    expect(evaluate('user["name"]', ctx)).toBe('a')
+  })
 })
 
 describe('interpolate — {{}} Mustache 插值', () => {

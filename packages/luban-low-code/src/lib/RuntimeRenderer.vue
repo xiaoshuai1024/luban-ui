@@ -216,6 +216,7 @@ function slotContent(): string {
           :root="child"
           :form-state="formState"
           :form-errors="formErrors"
+          :ctx="evalCtx"
         />
       </template>
       <template v-else-if="slotContent()">{{ slotContent() }}</template>

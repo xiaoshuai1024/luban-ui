@@ -70,6 +70,9 @@ function initSortable(): void {
   sortableInstance = Sortable.create(sortableRef.value, {
     animation: 150,
     group: 'luban-nodes',
+    // FINDING-1: locked nodes can't be dragged out (plan §4.2).
+    filter: '.design-renderer__wrapper--locked',
+    preventOnFilter: false,
     onEnd(ev) {
       const oldIndex = ev.oldIndex;
       const newIndex = ev.newIndex;

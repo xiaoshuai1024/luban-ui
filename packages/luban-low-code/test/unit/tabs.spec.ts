@@ -6,7 +6,7 @@
  *
  * @since 1.0.0
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { tabsMaterial } from '../../src/materials/navigation/tabs/material';
 import LubanTabs from '../../src/materials/navigation/tabs/LubanTabs.vue';
@@ -90,10 +90,12 @@ describe('LubanTabs component — rendering', () => {
   });
 
   it('emits change with key on tab click', async () => {
-    const wrapper = mount(LubanTabs, { props: { tabs } });
+    let lastKey: unknown = undefined;
+    const wrapper = mount(LubanTabs, {
+      props: { tabs, onChange: (k: string) => (lastKey = k) },
+    });
     await wrapper.findAll('.lb-tabs__tab')[1].trigger('click');
-    expect(wrapper.emitted('change')).toBeTruthy();
-    expect(wrapper.emitted('change')![0][0]).toBe('comment');
+    expect(lastKey).toBe('comment');
   });
 
   it('renders default slot content in panel', () => {

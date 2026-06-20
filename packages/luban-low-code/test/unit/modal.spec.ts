@@ -6,7 +6,7 @@
  *
  * @since 1.0.0
  */
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { modalMaterial } from '../../src/materials/feedback/modal/material';
 import LubanModal from '../../src/materials/feedback/modal/LubanModal.vue';
@@ -72,45 +72,96 @@ describe('LubanModal component — rendering & events', () => {
   });
 
   it('emits open when visible transitions false→true', async () => {
-    const wrapper = mount(LubanModal, { props: { visible: false } });
+    const events: string[] = [];
+    const wrapper = mount(LubanModal, {
+      props: {
+        visible: false,
+        onOpen: () => events.push('open'),
+        onClose: () => events.push('close'),
+      },
+    });
     await wrapper.setProps({ visible: true });
-    expect(wrapper.emitted('open')).toBeTruthy();
-    expect(wrapper.emitted('close')).toBeFalsy();
+    expect(events).toContain('open');
+    expect(events).not.toContain('close');
   });
 
   it('emits close when visible transitions true→false', async () => {
-    const wrapper = mount(LubanModal, { props: { visible: true } });
+    const events: string[] = [];
+    const wrapper = mount(LubanModal, {
+      props: {
+        visible: true,
+        onClose: () => events.push('close'),
+      },
+    });
     await wrapper.setProps({ visible: false });
-    expect(wrapper.emitted('close')).toBeTruthy();
+    expect(events).toContain('close');
   });
 
   it('emits update:visible=false and close button click', async () => {
-    const wrapper = mount(LubanModal, { props: { visible: true } });
+    let lastEmitted: unknown = undefined;
+    const wrapper = mount(LubanModal, {
+      props: {
+        visible: true,
+        'onUpdate:visible': (v: boolean) => {
+          lastEmitted = v;
+        },
+      },
+    });
     const closeBtn = document.body.querySelector(
       '.lb-modal__close'
     ) as HTMLElement;
     closeBtn.dispatchEvent(new Event('click', { bubbles: true }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.emitted('update:visible')).toBeTruthy();
-    expect(wrapper.emitted('update:visible')![0][0]).toBe(false);
+    expect(lastEmitted).toBe(false);
   });
 
   it('emits update:visible=false on mask click', async () => {
-    const wrapper = mount(LubanModal, { props: { visible: true } });
+    let lastEmitted: unknown = undefined;
+    const wrapper = mount(LubanModal, {
+      props: {
+        visible: true,
+        'onUpdate:visible': (v: boolean) => {
+          lastEmitted = v;
+        },
+      },
+    });
     const mask = document.body.querySelector(
       '.lb-modal__mask'
     ) as HTMLElement;
     mask.dispatchEvent(new Event('click', { bubbles: true }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.emitted('update:visible')![0][0]).toBe(false);
+    expect(lastEmitted).toBe(false);
   });
 
   it('does not close when clicking inside the panel (stop propagation)', async () => {
-    const wrapper = mount(LubanModal, { props: { visible: true } });
+    let lastEmitted: unknown = 'untouched';
+    const wrapper = mount(LubanModal, {
+      props: {
+        visible: true,
+        'onUpdate:visible': (v: boolean) => {
+          lastEmitted = v;
+        },
+      },
+    });
     const panel = document.body.querySelector('.lb-modal') as HTMLElement;
     panel.dispatchEvent(new Event('click', { bubbles: true }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.emitted('update:visible')).toBeFalsy();
+    expect(lastEmitted).toBe('untouched');
+  });
+
+  it('emits update:visible=false on ESC keydown (a11y)', async () => {
+    let lastEmitted: unknown = undefined;
+    const wrapper = mount(LubanModal, {
+      props: {
+        visible: true,
+        'onUpdate:visible': (v: boolean) => {
+          lastEmitted = v;
+        },
+      },
+    });
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await wrapper.vm.$nextTick();
+    expect(lastEmitted).toBe(false);
   });
 
   it('renders footer slot when provided', () => {
