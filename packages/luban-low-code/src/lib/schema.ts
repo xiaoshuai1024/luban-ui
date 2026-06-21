@@ -41,6 +41,30 @@ export interface NodeSchema {
    * 无 animation 字段时不输出任何 CSS（零开销）。
    */
   animation?: NodeAnimation;
+  /**
+   * V2-T7 CMS 绑定：把该节点绑定到一个 collection 的字段，
+   * 运行态由 host（website）拉取 collection items 并把字段值注入组件 props。
+   * 设计态（engine）用 mock 数据预览。
+   */
+  cmsBinding?: NodeCmsBinding;
+}
+
+/**
+ * V2-T7 节点 CMS 绑定配置。
+ * collectionId + fieldKey 决定从哪个 collection 的哪个字段取值。
+ * mode：'single'（取首条 item 的字段值）/ 'list'（整个 items 数组注入，供列表组件循环）。
+ */
+export interface NodeCmsBinding {
+  collectionId: string;
+  /** single 模式：取 item[fieldKey]；list 模式：忽略，注入整个 items */
+  fieldKey?: string;
+  mode?: 'single' | 'list';
+  /** 排序字段（默认 updatedAt） */
+  sortBy?: string;
+  /** 排序方向 */
+  sortOrder?: 'asc' | 'desc';
+  /** 限制条数（list 模式，默认全部） */
+  limit?: number;
 }
 
 /**

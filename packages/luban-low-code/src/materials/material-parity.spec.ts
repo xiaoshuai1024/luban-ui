@@ -24,8 +24,8 @@ import { CONTAINER_TYPES, FORM_CONTROL_TYPES } from '../lib/constants';
 describe('material registry parity', () => {
   const all = materialRegistry.getAll();
 
-  it('registers all 33 materials', () => {
-    expect(all.length).toBe(33);
+  it('registers all 34 materials', () => {
+    expect(all.length).toBe(34);
   });
 
   it('includes SidePanel (首次纳入)', () => {
@@ -135,7 +135,7 @@ describe('material registry parity', () => {
     }
   });
 
-  it('getComponent resolves all 33 materials via registry (no undefined)', () => {
+  it('getComponent resolves all 34 materials via registry (no undefined)', () => {
     // 验证 registry.ts getComponent 经 materialRegistry 取到全部物料的 component
     for (const def of all) {
       const comp = getComponent(def.name);
@@ -143,10 +143,10 @@ describe('material registry parity', () => {
     }
   });
 
-  it('getComponentMeta derives ComponentMeta for all 33 materials', () => {
+  it('getComponentMeta derives ComponentMeta for all 34 materials', () => {
     // 验证 componentMeta.ts 经 compat.toLegacyComponentMeta 派生旧 ComponentMeta
     const metas = getAllComponentMeta();
-    expect(metas.length).toBe(33);
+    expect(metas.length).toBe(34);
     for (const meta of metas) {
       expect(meta.type).toBeTruthy();
       expect(meta.component).toBeDefined();

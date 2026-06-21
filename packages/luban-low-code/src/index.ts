@@ -1,4 +1,4 @@
-export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource, PageSeo, NodeResponsive, ResponsiveBreakpoint, NodeAnimation, AnimationType, AnimationTrigger } from './lib/schema';
+export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource, PageSeo, NodeResponsive, ResponsiveBreakpoint, NodeAnimation, AnimationType, AnimationTrigger, NodeCmsBinding } from './lib/schema';
 export type { ValidationRule } from './lib/validation';
 export { validate } from './lib/validation';
 export { default as LubanDesigner } from './lib/LubanDesigner.vue';
@@ -46,6 +46,14 @@ export {
   dedupeGuides,
 } from './lib/alignGuides';
 export type { Rect, GuideLine, AlignResult } from './lib/alignGuides';
+
+// === V2-T7 CMS 绑定解析（纯逻辑）===
+export {
+  resolveCmsProps,
+  sortAndLimitItems,
+  collectBoundCollectionIds,
+} from './lib/cmsBinding';
+export type { CollectionItemData, ResolvedCollectionItem } from './lib/cmsBinding';
 export {
   getPaletteGroups,
   getPaletteItems,

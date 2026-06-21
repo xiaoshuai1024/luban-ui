@@ -146,14 +146,30 @@ function componentProps(
   node: NodeSchema
 ): Record<string, unknown> {
   // 节点级 style/className 即使 props 为空也要透传（inheritAttrs 落到组件根）
-  if (nodeProps == null) return nodeStyleProps(node);
+  if (nodeProps == null) return { ...cmsPropsFor(node), ...nodeStyleProps(node) };
   const { content: _c, text: _t, rules: _r, ...rest } = nodeProps;
   // 字符串 props 做 {{}} 插值（数据驱动：props 可引用 ctx/$form 变量）
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(rest)) {
     out[k] = typeof v === 'string' ? interpolate(v, evalCtx.value) : v;
   }
-  return { ...out, ...nodeStyleProps(node) };
+  // V2-T7：CMS 绑定解析后的 props 注入（覆盖同名静态 prop，绑定优先）
+  return { ...out, ...cmsPropsFor(node), ...nodeStyleProps(node) };
+}
+
+/**
+ * V2-T7 CMS 绑定：从 inject('lb-cms-resolved') 取本节点已解析的注入 props。
+ * host（LubanPage）拉取 collection items 后，按 nodeId 预计算 resolveCmsProps，
+ * 通过 provide 注入；RuntimeRenderer 读出合并。无绑定时返回 {}。
+ */
+const CMS_RESOLVED_KEY = 'lb-cms-resolved';
+const cmsResolvedMap = inject<Readonly<Record<string, Record<string, unknown>>> | null>(
+  CMS_RESOLVED_KEY,
+  null
+);
+function cmsPropsFor(node: NodeSchema): Record<string, unknown> {
+  if (!cmsResolvedMap || !node.cmsBinding) return {};
+  return cmsResolvedMap[node.id] ?? {};
 }
 
 /**

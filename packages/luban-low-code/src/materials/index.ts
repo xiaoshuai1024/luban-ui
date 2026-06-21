@@ -25,6 +25,7 @@ import type { MaterialDefinition } from '../lib/material/defineMaterial';
 import { buttonMaterial } from './general/button/material';
 // === content 组 ===
 import { bannerMaterial } from './content/banner/material';
+import { contentListMaterial } from './content/content-list/material';
 // === layout 组（含首次纳入的 SidePanel）===
 import { containerMaterial } from './layout/container/material';
 import { rowMaterial } from './layout/row/material';
@@ -74,6 +75,7 @@ export const materials: MaterialDefinition[] = [
   buttonMaterial,
   textMaterial,
   bannerMaterial,
+  contentListMaterial,
   containerMaterial,
   rowMaterial,
   colMaterial,
@@ -132,6 +134,7 @@ registerAll();
 export { buttonMaterial } from './general/button/material';
 export { textMaterial } from './general/text/material';
 export { bannerMaterial } from './content/banner/material';
+export { contentListMaterial } from './content/content-list/material';
 export { containerMaterial } from './layout/container/material';
 export { rowMaterial } from './layout/row/material';
 export { colMaterial } from './layout/col/material';

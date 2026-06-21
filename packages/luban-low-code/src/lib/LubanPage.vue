@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, ref, watch, onMounted, nextTick } from 'vue';
+import { computed, ref, watch, onMounted, nextTick, provide } from 'vue';
 import RuntimeRenderer from './RuntimeRenderer.vue';
 import type { PageSchema, NodeSchema } from './schema';
 import { treeResponsiveCss } from './responsiveStyle';
 import { treeAnimationCss } from './animation';
 import { useAnimationObserver } from './animationObserver';
+import { collectBoundCollectionIds, resolveCmsProps, type ResolvedCollectionItem } from './cmsBinding';
 
 const props = defineProps<{
   schema: PageSchema | null | undefined;
@@ -16,6 +17,11 @@ const props = defineProps<{
     datasourceId: string,
     params?: Record<string, unknown>,
   ) => Promise<unknown>;
+  /**
+   * V2-T7 CMS 拉取器：按 collectionId 拉取 items（host 注入，如调 collection items 公开端点）。
+   * 缺省则 CMS 绑定节点不渲染数据（静态 props 仍生效）。
+   */
+  collectionFetcher?: (collectionId: string) => Promise<ResolvedCollectionItem[]>;
 }>();
 
 const formState = computed(() => props.schema?.formState ?? {});
@@ -23,6 +29,47 @@ const formErrors = ref<Record<string, string>>({});
 const datasourceCtx = ref<Record<string, unknown>>({});
 
 const pageWrapRef = ref<HTMLElement | null>(null);
+
+/**
+ * V2-T7 CMS 解析结果：nodeId → 注入 props 映射。
+ * collectionFetcher 拉取各 collection items 后，遍历有 cmsBinding 的节点，
+ * 调 resolveCmsProps 计算注入 props，provide 给 RuntimeRenderer。
+ */
+const cmsResolvedMap = ref<Record<string, Record<string, unknown>>>({});
+provide('lb-cms-resolved', computed(() => cmsResolvedMap.value));
+
+/** 拉取所有绑定的 collection 并解析注入 props */
+async function loadCmsBindings(): Promise<void> {
+  const root = props.schema?.root;
+  if (!root || !props.collectionFetcher) return;
+  const collectionIds = collectBoundCollectionIds(root);
+  if (collectionIds.length === 0) return;
+  // 收集所有绑定节点（nodeId → binding）
+  const bindings: { nodeId: string; binding: NonNullable<NodeSchema['cmsBinding']> }[] = [];
+  function walk(node: NodeSchema): void {
+    if (node.cmsBinding) bindings.push({ nodeId: node.id, binding: node.cmsBinding });
+    if (node.children) for (const c of node.children) walk(c);
+  }
+  walk(root);
+  // 按 collectionId 拉取（去重，并发）
+  const itemsByCollection = new Map<string, ResolvedCollectionItem[]>();
+  await Promise.all(
+    collectionIds.map(async (cid) => {
+      try {
+        itemsByCollection.set(cid, await props.collectionFetcher!(cid));
+      } catch {
+        itemsByCollection.set(cid, []);
+      }
+    })
+  );
+  // 逐节点解析
+  const out: Record<string, Record<string, unknown>> = {};
+  for (const { nodeId, binding } of bindings) {
+    const items = itemsByCollection.get(binding.collectionId) ?? [];
+    out[nodeId] = resolveCmsProps(binding, items);
+  }
+  cmsResolvedMap.value = out;
+}
 
 /**
  * V2-T4：整树响应式 @media CSS（website SSR 运行态按视口自动应用断点样式）。
@@ -109,12 +156,14 @@ watch(
   () => {
     formErrors.value = {};
     loadDatasources();
+    loadCmsBindings();
     // V2-T5：schema 变更后重新观察 in-view 动画节点（等 DOM 更新）
     nextTick(() => observeAnimations());
   },
 );
 
 onMounted(() => {
+  loadCmsBindings();
   nextTick(() => observeAnimations());
 });
 </script>

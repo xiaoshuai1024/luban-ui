@@ -12,6 +12,7 @@ export { default as LubanHero } from './lib/content/LubanHero.vue';
 export { default as LubanCTA } from './lib/content/LubanCTA.vue';
 export { default as LubanTestimonial } from './lib/content/LubanTestimonial.vue';
 export { default as LubanLeadCapture } from './lib/content/LubanLeadCapture.vue';
+export { default as LubanContentList } from './lib/content/LubanContentList.vue';
 
 // === D15-E1 营销建站组件（marketing/ 子目录）===
 export { default as LubanNavbar } from './lib/marketing/LubanNavbar.vue';
