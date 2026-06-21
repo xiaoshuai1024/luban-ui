@@ -42,10 +42,11 @@ export {
 // === V2-T12 拖拽对齐辅助线（纯逻辑计算 + DOM rect 收集）===
 export {
   computeAlignGuides,
+  computeSpacingHints,
   collectNodeRects,
   dedupeGuides,
 } from './lib/alignGuides';
-export type { Rect, GuideLine, AlignResult } from './lib/alignGuides';
+export type { Rect, GuideLine, AlignResult, SpacingHint } from './lib/alignGuides';
 
 // === V2-T7 CMS 绑定解析（纯逻辑）===
 export {

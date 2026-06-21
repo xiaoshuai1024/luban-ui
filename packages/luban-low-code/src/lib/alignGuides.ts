@@ -32,10 +32,26 @@ export interface GuideLine {
   end: number
 }
 
+/** V2-T12 间距提示：两节点间的距离数值标签 */
+export interface SpacingHint {
+  /** 水平间距（x 方向像素差）或垂直间距（y 方向） */
+  orientation: 'vertical' | 'horizontal'
+  /** 距离值（px） */
+  distance: number
+  /** 标签中心 x（vertical）或 y（horizontal）坐标 */
+  cx: number
+  cy: number
+  /** 两节点 id（仅记录，UI 用不上） */
+  a: string
+  b: string
+}
+
 /** 对齐计算结果 */
 export interface AlignResult {
   /** 需要显示的辅助线 */
   guides: GuideLine[]
+  /** V2-T12 间距提示（相邻节点的距离数值） */
+  spacingHints: SpacingHint[]
   /** 吸附建议：若拖动节点应吸附，返回 {x?, y?} 目标坐标（与 guides 对应） */
   snap?: { x?: number; y?: number }
 }
@@ -131,8 +147,85 @@ export function computeAlignGuides(
 
   return {
     guides,
+    spacingHints: computeSpacingHints(dragging, others, threshold),
     snap: snapX !== undefined || snapY !== undefined ? { x: snapX, y: snapY } : undefined,
   }
+}
+
+/**
+ * V2-T12 计算间距提示：拖动节点与其他节点的水平/垂直间距数值。
+ * 当两节点在某轴上重叠（投影相交）时，计算另一轴上的间距并生成标签。
+ * 仅对 threshold 内的邻近节点生成（避免噪音）。
+ */
+export function computeSpacingHints(
+  dragging: Rect,
+  others: Rect[],
+  threshold = 12
+): SpacingHint[] {
+  const hints: SpacingHint[] = []
+  for (const other of others) {
+    const dRight = dragging.left + dragging.width
+    const dBottom = dragging.top + dragging.height
+    const oRight = other.left + other.width
+    const oBottom = other.top + other.height
+
+    // 水平间距（两节点在 y 轴有投影重叠，x 轴有间隙）
+    const yOverlap = !(dBottom < other.top || dragging.top > oBottom)
+    if (yOverlap) {
+      // dragging 在 other 右侧：间距 = dragging.left - oRight
+      const gapRight = dragging.left - oRight
+      if (gapRight > 0 && gapRight <= threshold * 4) {
+        hints.push({
+          orientation: 'vertical',
+          distance: Math.round(gapRight),
+          cx: oRight + gapRight / 2,
+          cy: (Math.max(dragging.top, other.top) + Math.min(dBottom, oBottom)) / 2,
+          a: dragging.id,
+          b: other.id,
+        })
+      }
+      // dragging 在 other 左侧
+      const gapLeft = other.left - dRight
+      if (gapLeft > 0 && gapLeft <= threshold * 4) {
+        hints.push({
+          orientation: 'vertical',
+          distance: Math.round(gapLeft),
+          cx: dRight + gapLeft / 2,
+          cy: (Math.max(dragging.top, other.top) + Math.min(dBottom, oBottom)) / 2,
+          a: dragging.id,
+          b: other.id,
+        })
+      }
+    }
+
+    // 垂直间距（两节点在 x 轴有投影重叠，y 轴有间隙）
+    const xOverlap = !(dRight < other.left || dragging.left > oRight)
+    if (xOverlap) {
+      const gapBelow = dragging.top - oBottom
+      if (gapBelow > 0 && gapBelow <= threshold * 4) {
+        hints.push({
+          orientation: 'horizontal',
+          distance: Math.round(gapBelow),
+          cx: (Math.max(dragging.left, other.left) + Math.min(dRight, oRight)) / 2,
+          cy: oBottom + gapBelow / 2,
+          a: dragging.id,
+          b: other.id,
+        })
+      }
+      const gapAbove = other.top - dBottom
+      if (gapAbove > 0 && gapAbove <= threshold * 4) {
+        hints.push({
+          orientation: 'horizontal',
+          distance: Math.round(gapAbove),
+          cx: (Math.max(dragging.left, other.left) + Math.min(dRight, oRight)) / 2,
+          cy: dBottom + gapAbove / 2,
+          a: dragging.id,
+          b: other.id,
+        })
+      }
+    }
+  }
+  return hints
 }
 
 /**

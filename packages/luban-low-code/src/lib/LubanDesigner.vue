@@ -5,7 +5,7 @@ import RuntimeRenderer from './RuntimeRenderer.vue';
 import DesignRenderer from './DesignRenderer.vue';
 import { getComponent } from './registry';
 import type { PageSchema, ResponsiveBreakpoint } from './schema';
-import { computeAlignGuides, collectNodeRects, dedupeGuides, type GuideLine } from './alignGuides';
+import { computeAlignGuides, collectNodeRects, dedupeGuides, computeSpacingHints, type GuideLine, type SpacingHint } from './alignGuides';
 
 /**
  * V2-T12 拖拽对齐辅助线。
@@ -14,44 +14,107 @@ import { computeAlignGuides, collectNodeRects, dedupeGuides, type GuideLine } fr
  */
 const alignGuidesEnabled = ref(true);
 const activeGuides = ref<GuideLine[]>([]);
+/** V2-T12 间距提示 */
+const activeSpacingHints = ref<SpacingHint[]>([]);
+/** V2-T11 框选：拖框矩形 {start, end}（画布坐标） */
+const frameSelect = ref<{ startX: number; startY: number; endX: number; endY: number } | null>(null);
 const canvasRef = ref<HTMLElement | null>(null);
 
-/** hover 节点时显示对齐辅助线（dragging 节点 = hovered） */
+/** hover 节点时显示对齐辅助线 + 间距提示（dragging 节点 = hovered） */
 function onCanvasMouseMove(e: MouseEvent): void {
   if (!alignGuidesEnabled.value || !canvasRef.value) {
-    activeGuides.value = [];
-    return;
+    activeGuides.value = []
+    activeSpacingHints.value = []
+    return
   }
-  const target = (e.target as HTMLElement)?.closest('[data-lb-node]') as HTMLElement | null;
+  const target = (e.target as HTMLElement)?.closest('[data-lb-node]') as HTMLElement | null
   if (!target) {
-    activeGuides.value = [];
-    return;
+    activeGuides.value = []
+    activeSpacingHints.value = []
+    return
   }
-  const draggingId = target.dataset.lbNode;
+  const draggingId = target.dataset.lbNode
   if (!draggingId) {
-    activeGuides.value = [];
-    return;
+    activeGuides.value = []
+    activeSpacingHints.value = []
+    return
   }
-  const others = collectNodeRects(canvasRef.value, draggingId);
+  const others = collectNodeRects(canvasRef.value, draggingId)
   if (others.length === 0) {
-    activeGuides.value = [];
-    return;
+    activeGuides.value = []
+    activeSpacingHints.value = []
+    return
   }
-  const containerRect = canvasRef.value.getBoundingClientRect();
-  const r = target.getBoundingClientRect();
+  const containerRect = canvasRef.value.getBoundingClientRect()
+  const r = target.getBoundingClientRect()
   const draggingRect = {
     id: draggingId,
     left: r.left - containerRect.left,
     top: r.top - containerRect.top,
     width: r.width,
     height: r.height,
-  };
-  const result = computeAlignGuides(draggingRect, others);
-  activeGuides.value = dedupeGuides(result.guides);
+  }
+  const result = computeAlignGuides(draggingRect, others)
+  activeGuides.value = dedupeGuides(result.guides)
+  activeSpacingHints.value = result.spacingHints
+}
+
+/** V2-T11 框选：mousedown 空白处开始拖框 */
+function onCanvasMouseDown(e: MouseEvent): void {
+  // 仅在设计态 + 点空白（非节点）时启动框选
+  if (!designMode) return
+  const target = (e.target as HTMLElement)?.closest('[data-lb-node]')
+  if (target) return // 点在节点上，不框选
+  if (!canvasRef.value) return
+  const rect = canvasRef.value.getBoundingClientRect()
+  frameSelect.value = {
+    startX: e.clientX - rect.left,
+    startY: e.clientY - rect.top,
+    endX: e.clientX - rect.left,
+    endY: e.clientY - rect.top,
+  }
+}
+
+/** 框选拖动中：更新框矩形 */
+function onCanvasDragMove(e: MouseEvent): void {
+  if (!frameSelect.value || !canvasRef.value) return
+  const rect = canvasRef.value.getBoundingClientRect()
+  frameSelect.value.endX = e.clientX - rect.left
+  frameSelect.value.endY = e.clientY - rect.top
+}
+
+/** 框选结束：收集框内节点 id，emit multi-select */
+function onCanvasMouseUp(): void {
+  if (!frameSelect.value) return
+  const { startX, startY, endX, endY } = frameSelect.value
+  const minX = Math.min(startX, endX)
+  const maxX = Math.max(startX, endX)
+  const minY = Math.min(startY, endY)
+  const maxY = Math.max(startY, endY)
+  frameSelect.value = null
+  // 框太小（<5px）视为点击，忽略
+  if (maxX - minX < 5 && maxY - minY < 5) return
+  if (!canvasRef.value) return
+  const containerRect = canvasRef.value.getBoundingClientRect()
+  const allRects = collectNodeRects(canvasRef.value, null)
+  // 选中中心点落在框内的节点
+  const selected: string[] = []
+  for (const r of allRects) {
+    const cx = r.left + r.width / 2
+    const cy = r.top + r.height / 2
+    if (cx >= minX && cx <= maxX && cy >= minY && cy <= maxY) {
+      selected.push(r.id)
+    }
+  }
+  if (selected.length > 0) {
+    emit('multi-select', selected)
+  }
+  void containerRect // 容器 ref 已用于坐标转换
 }
 
 function clearGuides(): void {
-  activeGuides.value = [];
+  activeGuides.value = []
+  activeSpacingHints.value = []
 }
 
 onBeforeUnmount(clearGuides);
@@ -72,6 +135,8 @@ const props = withDefaults(
 const emit = defineEmits<{
   'update:schema': [value: PageSchema | null | undefined];
   select: [nodeId: string | null];
+  /** V2-T11 框选多选：emit 框内所有节点 id */
+  'multi-select': [nodeIds: string[]];
   /** Emit when a node type is dropped from palette; parentId 未传表示追加到 root.children，否则追加到该 id 对应节点（如表单）的 children */
   'add-node': [type: string, parentId?: string];
   /** Emit when root.children are reordered (fromIndex, toIndex); parent may call reorderRootChildren */
@@ -168,8 +233,10 @@ watch(
       :class="{ 'luban-designer__canvas--design': designMode }"
       @dragover="designMode ? onPaletteDragOver : undefined"
       @drop="designMode ? onPaletteDrop : undefined"
-      @mousemove="designMode ? onCanvasMouseMove : undefined"
+      @mousemove="(designMode ? onCanvasMouseMove : undefined); frameSelect ? onCanvasDragMove($event) : undefined"
       @mouseleave="clearGuides"
+      @mousedown="designMode ? onCanvasMouseDown : undefined"
+      @mouseup="frameSelect ? onCanvasMouseUp() : undefined"
     >
       <template v-if="designMode">
         <component
@@ -237,6 +304,26 @@ watch(
           />
         </template>
       </div>
+      <!-- V2-T12 间距提示 overlay -->
+      <div v-if="activeSpacingHints.length" class="luban-designer__spacing" aria-hidden="true">
+        <div
+          v-for="(h, i) in activeSpacingHints"
+          :key="'sp'+i"
+          class="luban-designer__spacing-label"
+          :style="{ left: h.cx + 'px', top: h.cy + 'px' }"
+        >{{ h.distance }}</div>
+      </div>
+      <!-- V2-T11 框选矩形 overlay -->
+      <div
+        v-if="frameSelect"
+        class="luban-designer__frame-box"
+        :style="{
+          left: Math.min(frameSelect.startX, frameSelect.endX) + 'px',
+          top: Math.min(frameSelect.startY, frameSelect.endY) + 'px',
+          width: Math.abs(frameSelect.endX - frameSelect.startX) + 'px',
+          height: Math.abs(frameSelect.endY - frameSelect.startY) + 'px'
+        }"
+      />
     </div>
     <div v-else class="luban-designer__placeholder">
       {{ placeholder }}
@@ -291,5 +378,32 @@ watch(
 }
 .luban-designer__guide--horizontal {
   height: 1px;
+}
+
+/* V2-T12 间距提示 */
+.luban-designer__spacing {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 101;
+}
+.luban-designer__spacing-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: #4090ff;
+  color: #fff;
+  font-size: 11px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* V2-T11 框选矩形 */
+.luban-designer__frame-box {
+  position: absolute;
+  border: 1px solid #4090ff;
+  background: rgba(64, 144, 255, 0.12);
+  pointer-events: none;
+  z-index: 99;
 }
 </style>

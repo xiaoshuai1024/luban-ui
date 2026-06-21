@@ -14,6 +14,7 @@ import {
   computeAlignGuides,
   dedupeGuides,
   collectNodeRects,
+  computeSpacingHints,
   type Rect,
 } from '../../src/lib/alignGuides';
 
@@ -127,5 +128,40 @@ describe('V2-T12 collectNodeRects', () => {
 
   it('null container 返回空数组', () => {
     expect(collectNodeRects(null, null)).toEqual([]);
+  });
+});
+
+describe('V2-T12 computeSpacingHints', () => {
+  it('水平相邻节点生成垂直间距（y 投影重叠）', () => {
+    const dragging: Rect = { id: 'd', left: 120, top: 50, width: 80, height: 40 };
+    // other 在 dragging 左侧，x 间隙 = 120-100 = 20，y 投影重叠
+    const others: Rect[] = [{ id: 'o', left: 20, top: 50, width: 80, height: 40 }];
+    const hints = computeSpacingHints(dragging, others);
+    const vHints = hints.filter((h) => h.orientation === 'vertical');
+    expect(vHints.length).toBeGreaterThan(0);
+    expect(vHints[0].distance).toBe(20);
+  });
+
+  it('垂直相邻节点生成水平间距（x 投影重叠）', () => {
+    const dragging: Rect = { id: 'd', left: 50, top: 120, width: 80, height: 40 };
+    // other 在 dragging 上方，y 间隙 = 120-90 = 30，x 投影重叠
+    const others: Rect[] = [{ id: 'o', left: 50, top: 50, width: 80, height: 40 }];
+    const hints = computeSpacingHints(dragging, others);
+    const hHints = hints.filter((h) => h.orientation === 'horizontal');
+    expect(hHints.length).toBeGreaterThan(0);
+    expect(hHints[0].distance).toBe(30);
+  });
+
+  it('无投影重叠（对角错开）不生成间距', () => {
+    const dragging: Rect = { id: 'd', left: 500, top: 500, width: 80, height: 40 };
+    const others: Rect[] = [{ id: 'o', left: 20, top: 20, width: 80, height: 40 }];
+    expect(computeSpacingHints(dragging, others).length).toBe(0);
+  });
+
+  it('computeAlignGuides 返回 spacingHints 字段', () => {
+    const dragging: Rect = { id: 'd', left: 120, top: 50, width: 80, height: 40 };
+    const others: Rect[] = [{ id: 'o', left: 20, top: 50, width: 80, height: 40 }];
+    const result = computeAlignGuides(dragging, others);
+    expect(Array.isArray(result.spacingHints)).toBe(true);
   });
 });
