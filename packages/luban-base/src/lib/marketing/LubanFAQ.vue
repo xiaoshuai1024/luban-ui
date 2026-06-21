@@ -10,7 +10,7 @@ withDefaults(
     heading: "常见问题",
     items: () => [],
     defaultOpenIndex: -1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "var(--lb-bg)",
   }
 );
 </script>
@@ -58,10 +58,10 @@ withDefaults(
   gap: 12px;
 }
 .lb-faq__item {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--lb-border);
   border-radius: 8px;
   padding: 0 20px;
-  background: #fff;
+  background: var(--lb-bg);
 }
 .lb-faq__question {
   cursor: pointer;
@@ -72,7 +72,7 @@ withDefaults(
 }
 .lb-faq__answer {
   font-size: 0.9rem;
-  color: #4b5563;
+  color: var(--lb-text-body);
   line-height: 1.6;
   padding: 0 0 16px;
 }

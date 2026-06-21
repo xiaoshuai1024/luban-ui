@@ -43,7 +43,7 @@ const props = withDefaults(
     description: '',
     submitText: '提交',
     placeholder: '请输入您的联系方式',
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'var(--lb-bg-muted)',
     showName: true,
     showPhone: true,
     showEmail: false,
@@ -183,18 +183,18 @@ function onSubmit(): void {
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0 0 8px;
-  color: #111827;
+  color: var(--lb-text-heading);
 }
 .lb-lead-capture__description {
   font-size: 0.95rem;
-  color: #6b7280;
+  color: var(--lb-text-muted);
   margin: 0 0 20px;
   line-height: 1.5;
 }
 .lb-lead-capture__success {
   padding: 20px;
-  background: #ecfdf5;
-  color: #065f46;
+  background: var(--lb-success-bg);
+  color: var(--lb-success-text);
   border-radius: 6px;
   font-size: 0.95rem;
 }
@@ -210,14 +210,14 @@ function onSubmit(): void {
 }
 .lb-lead-capture__input {
   padding: 10px 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--lb-border-strong);
   border-radius: 6px;
   font-size: 0.95rem;
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
   box-sizing: border-box;
-  &:focus { border-color: #4361ee; }
+  &:focus { border-color: var(--lb-accent); }
   &--wide { flex: 1; }
 }
 .lb-lead-capture__action {
@@ -226,8 +226,8 @@ function onSubmit(): void {
 }
 .lb-lead-capture__submit {
   padding: 10px 24px;
-  background: #4361ee;
-  color: #fff;
+  background: var(--lb-accent);
+  color: var(--lb-accent-contrast);
   border: none;
   border-radius: 6px;
   font-size: 0.95rem;

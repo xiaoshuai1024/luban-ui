@@ -296,14 +296,14 @@ onBeforeUnmount(() => {
   transition: outline-color 0.15s ease;
 }
 .design-renderer__wrapper:hover {
-  outline-color: rgba(30, 136, 229, 0.35);
+  outline-color: color-mix(in srgb, var(--lb-primary, #1976d2) 35%, transparent);
 }
 .design-renderer__wrapper--selected {
-  outline: 2px solid #1e88e5;
+  outline: 2px solid var(--lb-primary, #1e88e5);
   outline-offset: 0;
 }
 .design-renderer__wrapper--locked {
-  outline: 2px dashed #9ca3af;
+  outline: 2px dashed var(--lb-text-muted, #9ca3af);
   cursor: not-allowed;
 }
 .design-renderer__wrapper--hidden {
@@ -314,7 +314,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
+  color: var(--lb-text-muted, #9ca3af);
   font-size: 13px;
   border: 2px dashed rgba(0, 0, 0, 0.15);
   border-radius: 6px;

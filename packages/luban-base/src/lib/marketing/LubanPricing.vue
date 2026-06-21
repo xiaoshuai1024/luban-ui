@@ -17,7 +17,7 @@ withDefaults(
     heading: "选择方案",
     plans: () => [],
     highlightIndex: -1,
-    backgroundColor: "#f9fafb",
+    backgroundColor: "var(--lb-bg-muted)",
   }
 );
 </script>
@@ -82,11 +82,11 @@ withDefaults(
 }
 .lb-pricing__plan {
   padding: 32px 28px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--lb-border);
   border-radius: 16px;
-  background: #fff;
+  background: var(--lb-bg);
   &--highlight {
-    border-color: #1a1a2e;
+    border-color: var(--lb-bg-dark);
     box-shadow: 0 8px 24px rgba(26, 26, 46, 0.12);
   }
 }
@@ -122,8 +122,8 @@ withDefaults(
   display: block;
   text-align: center;
   padding: 12px;
-  background: #1a1a2e;
-  color: #fff;
+  background: var(--lb-bg-dark);
+  color: var(--lb-text-on-dark);
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;

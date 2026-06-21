@@ -12,8 +12,8 @@ withDefaults(
   {
     columns: () => [],
     copyright: "© 2026",
-    backgroundColor: "#1a1a2e",
-    textColor: "#ffffff",
+    backgroundColor: "var(--lb-bg-dark)",
+    textColor: "var(--lb-text-on-dark)",
   }
 );
 </script>

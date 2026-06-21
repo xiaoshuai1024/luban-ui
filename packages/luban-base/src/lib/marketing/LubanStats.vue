@@ -7,8 +7,8 @@ withDefaults(
   }>(),
   {
     stats: () => [],
-    backgroundColor: "#f9fafb",
-    textColor: "#111827",
+    backgroundColor: "var(--lb-bg-muted)",
+    textColor: "var(--lb-text-heading)",
   }
 );
 </script>

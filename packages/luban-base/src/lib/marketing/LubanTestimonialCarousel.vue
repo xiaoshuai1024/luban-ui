@@ -18,7 +18,7 @@ const props = withDefaults(
     testimonials: () => [],
     interval: 5000,
     autoplay: true,
-    backgroundColor: "#ffffff",
+    backgroundColor: "var(--lb-bg)",
   }
 );
 
@@ -100,11 +100,11 @@ onBeforeUnmount(() => {
   margin-bottom: 16px;
 }
 .lb-testimonial-carousel__star {
-  color: #d1d5db;
+  color: var(--lb-border-strong);
   font-size: 1.25rem;
   margin: 0 2px;
   &--on {
-    color: #f59e0b;
+    color: var(--lb-star-active);
   }
 }
 .lb-testimonial-carousel__quote {
@@ -143,11 +143,11 @@ onBeforeUnmount(() => {
   height: 8px;
   border-radius: 50%;
   border: none;
-  background: #d1d5db;
+  background: var(--lb-border-strong);
   cursor: pointer;
   padding: 0;
   &--on {
-    background: #1a1a2e;
+    background: var(--lb-bg-dark);
   }
 }
 </style>

@@ -21,7 +21,7 @@ const props = withDefaults(
     role: '',
     avatarUrl: '',
     rating: 0,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'var(--lb-bg)',
   }
 );
 
@@ -63,17 +63,17 @@ const clampedRating = computed(() => {
   margin-bottom: 12px;
 }
 .lb-testimonial__star {
-  color: #ddd;
+  color: var(--lb-star-inactive);
   font-size: 18px;
-  &--active { color: #f59e0b; }
+  &--active { color: var(--lb-star-active); }
 }
 .lb-testimonial__quote {
   margin: 0 0 16px;
   font-size: 1rem;
   line-height: 1.6;
-  color: #374151;
+  color: var(--lb-text-body);
   p { margin: 0; }
-  &::before { content: '\201C'; font-size: 2em; color: #4361ee; line-height: 0; vertical-align: -0.4em; }
+  &::before { content: '\201C'; font-size: 2em; color: var(--lb-accent); line-height: 0; vertical-align: -0.4em; }
 }
 .lb-testimonial__author {
   display: flex;
@@ -92,11 +92,11 @@ const clampedRating = computed(() => {
 }
 .lb-testimonial__author-name {
   font-weight: 600;
-  color: #111827;
+  color: var(--lb-text-heading);
   font-size: 0.9rem;
 }
 .lb-testimonial__author-role {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--lb-text-muted);
 }
 </style>

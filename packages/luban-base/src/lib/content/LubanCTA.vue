@@ -28,8 +28,9 @@ withDefaults(
     buttonUrl: '',
     secondaryButtonText: '',
     secondaryButtonUrl: '',
-    backgroundColor: '#4361ee',
-    textColor: '#ffffff',
+    // V2-T1: 默认值用 CSS 变量，支持运行时换肤；消费者仍可传字面量覆盖
+    backgroundColor: 'var(--lb-accent)',
+    textColor: 'var(--lb-accent-contrast)',
     buttonVariant: 'primary',
     fullWidth: false,
   }
@@ -108,24 +109,24 @@ withDefaults(
   cursor: pointer;
   transition: all 0.2s;
   &--primary {
-    background: #fff;
-    color: #4361ee;
+    background: var(--lb-bg);
+    color: var(--lb-accent);
     &:hover { opacity: 0.9; }
   }
   &--outline {
     background: transparent;
-    color: #fff;
-    border: 2px solid #fff;
+    color: var(--lb-accent-contrast);
+    border: 2px solid var(--lb-accent-contrast);
     &:hover { background: rgba(255,255,255,0.1); }
   }
   &--ghost {
     background: transparent;
-    color: #fff;
+    color: var(--lb-accent-contrast);
     &:hover { text-decoration: underline; }
   }
   &--secondary {
     background: transparent;
-    color: #fff;
+    color: var(--lb-accent-contrast);
     border: 2px solid rgba(255,255,255,0.6);
     &:hover { background: rgba(255,255,255,0.1); }
   }

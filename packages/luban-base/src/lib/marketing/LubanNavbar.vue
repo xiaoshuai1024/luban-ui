@@ -10,8 +10,8 @@ withDefaults(
   {
     brand: "Luban",
     links: () => [],
-    backgroundColor: "#ffffff",
-    textColor: "#1a1a2e",
+    backgroundColor: "var(--lb-bg)",
+    textColor: "var(--lb-bg-dark)",
     sticky: true,
   }
 );

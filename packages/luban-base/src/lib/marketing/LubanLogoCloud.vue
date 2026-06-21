@@ -10,7 +10,7 @@ withDefaults(
     heading: "他们都在使用",
     logos: () => [],
     grayscale: true,
-    backgroundColor: "#f9fafb",
+    backgroundColor: "var(--lb-bg-muted)",
   }
 );
 </script>

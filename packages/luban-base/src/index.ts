@@ -36,3 +36,22 @@ export type {
   LubanSelectOption,
   LubanRadioOption,
 } from './lib/form/form-types';
+
+// === V2-T1 主题系统（运行时换肤 API）===
+// 顶层导入即触发 _variables.scss 的 :root 默认注入（由消费方 vite/webpack 处理 scss）。
+// 这里只导出 JS API；CSS 变量层由 luban-base 的 styles 入口统一注入。
+export {
+  applyTheme,
+  applyThemePreset,
+  resetTheme,
+  getCurrentTheme,
+  getCurrentPreset,
+  onThemeChange,
+  LIGHT_PRESET,
+  DARK_PRESET,
+} from './theme';
+export type {
+  LubanThemeTokens,
+  PartialThemeTokens,
+  LubanThemeName,
+} from './theme';

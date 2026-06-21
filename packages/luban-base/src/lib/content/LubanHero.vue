@@ -38,8 +38,8 @@ withDefaults(
     secondaryCtaText: '',
     secondaryCtaUrl: '',
     backgroundImage: '',
-    backgroundColor: '#1a1a2e',
-    textColor: '#ffffff',
+    backgroundColor: 'var(--lb-bg-dark)',
+    textColor: 'var(--lb-text-on-dark)',
     height: '400px',
     align: 'center',
     layout: 'centered',
@@ -147,8 +147,8 @@ withDefaults(
   padding: 12px 32px;
   font-size: 1rem;
   font-weight: 600;
-  background: #fff;
-  color: #1a1a2e;
+  background: var(--lb-bg);
+  color: var(--lb-bg-dark);
   border-radius: 6px;
   text-decoration: none;
   transition: opacity 0.2s;
@@ -156,7 +156,7 @@ withDefaults(
   &:hover { opacity: 0.9; }
   &--secondary {
     background: transparent;
-    color: #fff;
+    color: var(--lb-text-on-dark);
     border: 2px solid rgba(255,255,255,0.7);
     &:hover { background: rgba(255,255,255,0.1); opacity: 1; }
   }

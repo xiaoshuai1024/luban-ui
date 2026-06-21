@@ -10,7 +10,7 @@ withDefaults(
     images: () => [],
     columns: 3,
     gap: "16px",
-    backgroundColor: "#ffffff",
+    backgroundColor: "var(--lb-bg)",
   }
 );
 </script>
@@ -59,7 +59,7 @@ withDefaults(
   margin: 0;
   overflow: hidden;
   border-radius: 8px;
-  background: #f3f4f6;
+  background: var(--lb-bg-muted);
 }
 .lb-gallery__img {
   display: block;
@@ -70,7 +70,7 @@ withDefaults(
 .lb-gallery__caption {
   padding: 8px 12px;
   font-size: 0.85rem;
-  color: #4b5563;
+  color: var(--lb-text-body);
   text-align: center;
 }
 </style>

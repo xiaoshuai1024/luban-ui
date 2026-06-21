@@ -10,7 +10,7 @@ withDefaults(
     heading: "核心特性",
     columns: 3,
     features: () => [],
-    backgroundColor: "#ffffff",
+    backgroundColor: "var(--lb-bg)",
   }
 );
 </script>
@@ -62,9 +62,9 @@ withDefaults(
 }
 .lb-feature-grid__card {
   padding: 28px 24px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--lb-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--lb-bg);
 }
 .lb-feature-grid__icon {
   font-size: 2rem;
@@ -77,7 +77,7 @@ withDefaults(
 }
 .lb-feature-grid__desc {
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--lb-text-muted);
   line-height: 1.6;
   margin: 0;
 }
