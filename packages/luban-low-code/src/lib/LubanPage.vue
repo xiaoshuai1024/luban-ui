@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted, nextTick } from 'vue';
 import RuntimeRenderer from './RuntimeRenderer.vue';
 import type { PageSchema, NodeSchema } from './schema';
 import { treeResponsiveCss } from './responsiveStyle';
+import { treeAnimationCss } from './animation';
+import { useAnimationObserver } from './animationObserver';
 
 const props = defineProps<{
   schema: PageSchema | null | undefined;
@@ -20,6 +22,8 @@ const formState = computed(() => props.schema?.formState ?? {});
 const formErrors = ref<Record<string, string>>({});
 const datasourceCtx = ref<Record<string, unknown>>({});
 
+const pageWrapRef = ref<HTMLElement | null>(null);
+
 /**
  * V2-T4：整树响应式 @media CSS（website SSR 运行态按视口自动应用断点样式）。
  * 仅含 tablet/mobile 覆盖；desktop 内联样式由 RuntimeRenderer nodeStyleProps 直接应用。
@@ -27,6 +31,30 @@ const datasourceCtx = ref<Record<string, unknown>>({});
  */
 const responsiveCss = computed(() =>
   props.schema?.root ? treeResponsiveCss(props.schema.root) : ''
+);
+
+/**
+ * V2-T5：整树动画 CSS（@keyframes + 选择器规则）。
+ * 无动画节点不输出（零开销）。load/hover/in-view 三种触发由 CSS + IO 处理。
+ */
+const animationCss = computed(() =>
+  props.schema?.root ? treeAnimationCss(props.schema.root) : ''
+);
+
+const extraCss = computed(() => {
+  const parts: string[] = [];
+  if (responsiveCss.value) parts.push(responsiveCss.value);
+  if (animationCss.value) parts.push(animationCss.value);
+  return parts.join('\n');
+});
+
+/**
+ * V2-T5：in-view 动画观察器（进入视口触发动画）。
+ * observe() 在 schema 变更 + DOM 渲染后调用。
+ */
+const { observe: observeAnimations } = useAnimationObserver(
+  () => pageWrapRef.value,
+  () => props.schema?.root ?? null
 );
 
 /** 递归收集 schema 中所有 node.datasource 绑定（含 params） */
@@ -81,14 +109,20 @@ watch(
   () => {
     formErrors.value = {};
     loadDatasources();
+    // V2-T5：schema 变更后重新观察 in-view 动画节点（等 DOM 更新）
+    nextTick(() => observeAnimations());
   },
 );
+
+onMounted(() => {
+  nextTick(() => observeAnimations());
+});
 </script>
 
 <template>
-  <div class="luban-page">
-    <!-- V2-T4 响应式 @media CSS：整树收集，按视口自动应用断点样式 -->
-    <component :is="'style'" v-if="responsiveCss" v-html="responsiveCss" />
+  <div ref="pageWrapRef" class="luban-page">
+    <!-- V2-T4/T5 响应式 @media + 动画 @keyframes CSS：整树收集注入 -->
+    <component :is="'style'" v-if="extraCss" v-html="extraCss" />
     <RuntimeRenderer
       v-if="schema?.root"
       :root="schema.root"

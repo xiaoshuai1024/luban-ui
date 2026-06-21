@@ -35,7 +35,35 @@ export interface NodeSchema {
    * SSR 输出三断点 @media CSS。
    */
   responsive?: NodeResponsive;
+  /**
+   * V2-T5 动画：入场/hover/scroll 触发的过渡动画。
+   * 渲染器注入 @keyframes CSS；trigger 决定触发时机。
+   * 无 animation 字段时不输出任何 CSS（零开销）。
+   */
+  animation?: NodeAnimation;
 }
+
+/**
+ * V2-T5 节点动画配置。
+ * type 映射预定义 @keyframes；trigger 区分触发时机。
+ */
+export interface NodeAnimation {
+  /** 动画类型 */
+  type?: AnimationType;
+  /** 持续时间（ms） */
+  duration?: number;
+  /** 延迟（ms） */
+  delay?: number;
+  /** CSS 缓动函数（如 ease/ease-in-out/cubic-bezier(...)） */
+  easing?: string;
+  /** 触发时机 */
+  trigger?: AnimationTrigger;
+  /** scroll 触发时是否每次进入视口重播（默认 false 只播一次） */
+  scrollRepeat?: boolean;
+}
+
+export type AnimationType = 'fade' | 'slide-up' | 'slide-left' | 'zoom' | 'flip';
+export type AnimationTrigger = 'in-view' | 'hover' | 'load';
 
 /**
  * V2-T4 节点响应式样式覆盖。

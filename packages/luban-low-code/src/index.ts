@@ -1,4 +1,4 @@
-export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource, PageSeo, NodeResponsive, ResponsiveBreakpoint } from './lib/schema';
+export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource, PageSeo, NodeResponsive, ResponsiveBreakpoint, NodeAnimation, AnimationType, AnimationTrigger } from './lib/schema';
 export type { ValidationRule } from './lib/validation';
 export { validate } from './lib/validation';
 export { default as LubanDesigner } from './lib/LubanDesigner.vue';
@@ -27,6 +27,17 @@ export {
   hasResponsiveOverrides,
 } from './lib/responsive';
 export { nodeResponsiveCss, treeResponsiveCss } from './lib/responsiveStyle';
+
+// === V2-T5 动画系统（@keyframes CSS + IntersectionObserver scroll 触发）===
+export {
+  buildAnimationCss,
+  treeAnimationCss,
+  isValidAnimation,
+} from './lib/animation';
+export {
+  useAnimationObserver,
+  collectInViewNodes,
+} from './lib/animationObserver';
 export {
   getPaletteGroups,
   getPaletteItems,
