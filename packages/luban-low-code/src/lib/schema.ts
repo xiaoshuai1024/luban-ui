@@ -55,4 +55,31 @@ export interface NodeDatasource {
 export interface PageSchema {
   root: NodeSchema;
   formState?: Record<string, unknown>;
+  /** V2-T2 SEO 元信息（页面级，SSR 注入 useSeoMeta） */
+  seo?: PageSeo;
+}
+
+/**
+ * V2-T2 页面级 SEO 元信息。
+ *
+ * 归属 low-code PageSchema（engine 透明消费、website 注入）。
+ * 所有字段可选；后端 seo_json JSON 列承载同名结构。
+ */
+export interface PageSeo {
+  /** <title> 与 og:title */
+  title?: string;
+  /** meta description / og:description */
+  description?: string;
+  /** meta keywords（部分搜索引擎仍消费） */
+  keywords?: string[];
+  /** og:title 覆盖（不填回退 title） */
+  ogTitle?: string;
+  /** og:description 覆盖（不填回退 description） */
+  ogDescription?: string;
+  /** og:image 绝对/相对 URL */
+  ogImage?: string;
+  /** canonical link */
+  canonical?: string;
+  /** noindex：true 时 robots 设 noindex,nofollow */
+  noIndex?: boolean;
 }

@@ -1,4 +1,4 @@
-export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource } from './lib/schema';
+export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource, PageSeo } from './lib/schema';
 export type { ValidationRule } from './lib/validation';
 export { validate } from './lib/validation';
 export { default as LubanDesigner } from './lib/LubanDesigner.vue';
