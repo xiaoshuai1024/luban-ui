@@ -212,5 +212,6 @@ export function toLegacyComponentMeta(def: MaterialDefinition): ComponentMeta {
     events: (def.events ?? []).map((e: MaterialEvent) => e.name),
     isContainer: def.isContainer,
     acceptTypes: def.acceptTypes,
+    capabilities: def.capabilities,
   };
 }

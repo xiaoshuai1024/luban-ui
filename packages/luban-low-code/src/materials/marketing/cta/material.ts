@@ -42,6 +42,9 @@ export const ctaMaterial: MaterialDefinition = defineMaterial({
       fullWidth: { type: 'boolean', default: false, label: '占满宽度' },
     },
   },
+  capabilities: {
+    animationTriggers: ['in-view', 'load'],
+  },
 });
 
 export default ctaMaterial;

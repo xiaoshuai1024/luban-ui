@@ -53,6 +53,9 @@ export const heroMaterial: MaterialDefinition = defineMaterial({
       sideImage: { type: 'string', default: '', label: 'split 布局右侧图' },
     },
   },
+  capabilities: {
+    animationTriggers: ['in-view', 'load', 'hover'],
+  },
 });
 
 export default heroMaterial;

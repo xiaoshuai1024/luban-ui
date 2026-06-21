@@ -97,6 +97,18 @@ export interface MaterialDefinition {
   events?: MaterialEvent[];
   /** 对外暴露的插槽。 */
   slots?: MaterialSlot[];
+  /**
+   * V2-T5 物料能力声明：该物料支持哪些能力（动画触发类型等）。
+   * PropertyPanel 据此决定是否显示动画分区 + 限定可选 trigger。
+   * 未声明则默认支持全部动画 trigger（向后兼容）。
+   */
+  capabilities?: MaterialCapabilities;
+}
+
+/** V2-T5 物料能力配置 */
+export interface MaterialCapabilities {
+  /** 支持的动画触发类型；未定义 = 全部支持 */
+  animationTriggers?: Array<'in-view' | 'hover' | 'load'>;
 }
 
 /**

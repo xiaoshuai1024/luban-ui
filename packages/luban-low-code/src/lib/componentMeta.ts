@@ -68,6 +68,8 @@ export interface ComponentMeta {
   isContainer?: boolean;
   /** Allowed child types when isContainer; empty = any registered. */
   acceptTypes?: string[];
+  /** V2-T5 物料能力声明（动画触发类型等）；未定义 = 全部支持 */
+  capabilities?: { animationTriggers?: Array<'in-view' | 'hover' | 'load'> };
 }
 
 /**
