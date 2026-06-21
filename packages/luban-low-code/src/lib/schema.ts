@@ -23,11 +23,33 @@ export interface NodeSchema {
    * 设计态由 PropertyPanel 样式分区写入；DesignRenderer 在 wrapper div 绑 :style，
    * RuntimeRenderer 经 componentProps 注入到组件根（inheritAttrs 透传）。
    * 值在写入前由 PropertyPanel 做安全过滤（拒绝 expression()/javascript: 等危险协议）。
+   * V2-T4: 本字段作为 desktop（默认）断点的样式；tablet/mobile 在 node.responsive 覆盖。
    */
   style?: Record<string, string>;
   /** 节点级自定义 class（空格分隔），与 style 一样由属性面板配置。 */
   className?: string;
+  /**
+   * V2-T4 响应式：per-breakpoint style 覆盖。
+   * desktop 为默认（用 node.style），tablet/mobile 浅合并覆盖 desktop。
+   * 渲染时 resolveResponsiveProps 按 desktop→tablet→mobile 折叠，
+   * SSR 输出三断点 @media CSS。
+   */
+  responsive?: NodeResponsive;
 }
+
+/**
+ * V2-T4 节点响应式样式覆盖。
+ * 每个断点为 CSS 属性 → 值的浅合并覆盖（非深合并）。
+ */
+export interface NodeResponsive {
+  /** 平板断点（768-1023px）覆盖 desktop */
+  tablet?: Record<string, string>;
+  /** 手机断点（<768px）覆盖 desktop+tablet */
+  mobile?: Record<string, string>;
+}
+
+/** V2-T4 断点枚举（设计态 + 运行态统一） */
+export type ResponsiveBreakpoint = 'desktop' | 'tablet' | 'mobile';
 
 /** 循环渲染配置 */
 export interface NodeLoop {

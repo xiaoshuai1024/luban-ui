@@ -4,7 +4,7 @@ import Sortable from 'sortablejs';
 import RuntimeRenderer from './RuntimeRenderer.vue';
 import DesignRenderer from './DesignRenderer.vue';
 import { getComponent } from './registry';
-import type { PageSchema } from './schema';
+import type { PageSchema, ResponsiveBreakpoint } from './schema';
 
 const props = withDefaults(
   defineProps<{
@@ -13,8 +13,10 @@ const props = withDefaults(
     placeholder?: string;
     /** When true, use DesignRenderer (selectable nodes, empty placeholders, Sortable reorder) and emit select/add-node/reorder */
     designMode?: boolean;
+    /** V2-T4 设计态当前断点：透传给 DesignRenderer 渲染对应断点 style */
+    breakpoint?: ResponsiveBreakpoint;
   }>(),
-  { showToolbar: true, placeholder: '从左侧拖拽组件到此处', designMode: false }
+  { showToolbar: true, placeholder: '从左侧拖拽组件到此处', designMode: false, breakpoint: 'desktop' }
 );
 
 const emit = defineEmits<{
@@ -139,6 +141,7 @@ watch(
                 :form-errors="formErrors"
                 :selected-node-id="selectedNodeId"
                 :placeholder-text="placeholder"
+                :breakpoint="breakpoint"
                 @select="onSelect"
                 @add-node="(type, parentId) => emit('add-node', type, parentId)"
                 @move-node="(nodeId, from, to, idx) => emit('move-node', nodeId, from, to, idx)"

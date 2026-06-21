@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { getComponent } from './registry';
-import type { NodeSchema } from './schema';
+import type { NodeSchema, ResponsiveBreakpoint } from './schema';
 import { validate, type ValidationRule } from './validation';
 import { evaluate, evaluateBoolean, interpolate } from './expression';
 import { createActionRunner, type ActionContext } from './action';
+import { treeResponsiveCss } from './responsiveStyle';
 import { computed, inject } from 'vue';
 
 /** Optional form submit handler provided by the host app (e.g. website DynamicPage) */
@@ -161,6 +162,8 @@ function componentProps(
  * 从 node.style（CSS 属性→值）+ node.className 派生 { style, class }，
  * 经 componentProps 合并后由 v-bind 流入组件；Vue inheritAttrs 自动把
  * style/class 合并到组件根元素。仅返回有值的键，避免空对象污染。
+ *
+ * V2-T4：附 data-lb-node 属性，供 @media CSS 选择器定位节点根元素。
  */
 function nodeStyleProps(node: NodeSchema): Record<string, unknown> {
   const out: Record<string, unknown> = {};
@@ -170,6 +173,8 @@ function nodeStyleProps(node: NodeSchema): Record<string, unknown> {
   if (node.className) {
     out.class = node.className;
   }
+  // V2-T4：始终挂 data-lb-node，使 treeResponsiveCss 的 @media 选择器能命中组件根
+  out['data-lb-node'] = node.id;
   return out;
 }
 

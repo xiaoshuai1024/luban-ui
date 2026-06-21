@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { getComponent } from './registry';
-import type { NodeSchema } from './schema';
+import type { NodeSchema, ResponsiveBreakpoint } from './schema';
 import { isContainerType } from './constants';
 import { validate, type ValidationRule } from './validation';
+import { resolveResponsiveProps } from './responsive';
 import Sortable from 'sortablejs';
-import { onMounted, onBeforeUnmount, ref as vueRef } from 'vue';
+import { onMounted, onBeforeUnmount, ref as vueRef, computed } from 'vue';
 import DesignRendererSelf from './DesignRenderer.vue';
 
 const FORM_VALUE_TYPES = new Set([
@@ -23,8 +24,10 @@ const props = withDefaults(
     formErrors?: Record<string, string>;
     selectedNodeId: string | null;
     placeholderText?: string;
+    /** V2-T4 设计态当前断点：按断点取 resolveResponsiveProps 渲染对应 style */
+    breakpoint?: ResponsiveBreakpoint;
   }>(),
-  { formErrors: () => ({}), placeholderText: '拖拽组件到此处' }
+  { formErrors: () => ({}), placeholderText: '拖拽组件到此处', breakpoint: 'desktop' }
 );
 
 const emit = defineEmits<{
@@ -44,6 +47,13 @@ function onPlaceholderClick(e: Event): void {
   e.stopPropagation();
   emit('select', props.root.id);
 }
+
+/**
+ * V2-T4：按当前断点折叠节点 style。
+ * desktop = node.style；tablet/mobile 浅合并覆盖。
+ * 设计态直接用内联 :style 渲染对应断点（无需 @media）。
+ */
+const resolvedStyle = computed(() => resolveResponsiveProps(props.root, props.breakpoint));
 
 const isEmptyContainer = (): boolean =>
   isContainerType(props.root.type) &&
@@ -183,6 +193,7 @@ onBeforeUnmount(() => {
     <div
       class="design-renderer__wrapper"
       :data-node-id="root.id"
+      :data-lb-node="root.id"
       :class="[
         {
           'design-renderer__wrapper--selected': selectedNodeId === root.id,
@@ -191,7 +202,7 @@ onBeforeUnmount(() => {
         },
         root.className,
       ]"
-      :style="root.style"
+      :style="resolvedStyle"
       @click="onWrapperClick($event, root.id)"
     >
       <template v-if="isEmptyContainer()">
@@ -235,6 +246,7 @@ onBeforeUnmount(() => {
             :form-errors="formErrors"
             :selected-node-id="selectedNodeId"
             :placeholder-text="placeholderText"
+            :breakpoint="breakpoint"
             @select="emit('select', $event)"
             @add-node="emit('add-node', $event[0], $event[1])"
           />
@@ -260,6 +272,7 @@ onBeforeUnmount(() => {
                 :form-errors="formErrors"
                 :selected-node-id="selectedNodeId"
                 :placeholder-text="placeholderText"
+                :breakpoint="breakpoint"
                 @select="emit('select', $event)"
                 @add-node="emit('add-node', $event[0], $event[1])"
                 @move-node="(nodeId, from, to, idx) => emit('move-node', nodeId, from, to, idx)"
@@ -277,6 +290,7 @@ onBeforeUnmount(() => {
             :form-errors="formErrors"
             :selected-node-id="selectedNodeId"
             :placeholder-text="placeholderText"
+            :breakpoint="breakpoint"
             @select="emit('select', $event)"
             @add-node="emit('add-node', $event[0], $event[1])"
           />

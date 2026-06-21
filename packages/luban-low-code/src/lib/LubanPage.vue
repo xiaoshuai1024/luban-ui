@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import RuntimeRenderer from './RuntimeRenderer.vue';
 import type { PageSchema, NodeSchema } from './schema';
+import { treeResponsiveCss } from './responsiveStyle';
 
 const props = defineProps<{
   schema: PageSchema | null | undefined;
@@ -18,6 +19,15 @@ const props = defineProps<{
 const formState = computed(() => props.schema?.formState ?? {});
 const formErrors = ref<Record<string, string>>({});
 const datasourceCtx = ref<Record<string, unknown>>({});
+
+/**
+ * V2-T4：整树响应式 @media CSS（website SSR 运行态按视口自动应用断点样式）。
+ * 仅含 tablet/mobile 覆盖；desktop 内联样式由 RuntimeRenderer nodeStyleProps 直接应用。
+ * 节点用 data-lb-node="<id>" 选择器隔离，避免全局污染。无响应式覆盖时为空串。
+ */
+const responsiveCss = computed(() =>
+  props.schema?.root ? treeResponsiveCss(props.schema.root) : ''
+);
 
 /** 递归收集 schema 中所有 node.datasource 绑定（含 params） */
 function collectDatasources(
@@ -77,6 +87,8 @@ watch(
 
 <template>
   <div class="luban-page">
+    <!-- V2-T4 响应式 @media CSS：整树收集，按视口自动应用断点样式 -->
+    <component :is="'style'" v-if="responsiveCss" v-html="responsiveCss" />
     <RuntimeRenderer
       v-if="schema?.root"
       :root="schema.root"

@@ -1,4 +1,4 @@
-export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource, PageSeo } from './lib/schema';
+export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource, PageSeo, NodeResponsive, ResponsiveBreakpoint } from './lib/schema';
 export type { ValidationRule } from './lib/validation';
 export { validate } from './lib/validation';
 export { default as LubanDesigner } from './lib/LubanDesigner.vue';
@@ -19,6 +19,14 @@ export {
   canAcceptChild,
 } from './lib/constants';
 export { reorderRootChildren } from './lib/schemaUtils';
+
+// === V2-T4 响应式断点（per-breakpoint style + @media CSS 输出）===
+export {
+  BREAKPOINTS,
+  resolveResponsiveProps,
+  hasResponsiveOverrides,
+} from './lib/responsive';
+export { nodeResponsiveCss, treeResponsiveCss } from './lib/responsiveStyle';
 export {
   getPaletteGroups,
   getPaletteItems,
