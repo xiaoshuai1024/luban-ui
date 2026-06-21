@@ -1,10 +1,60 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import Sortable from 'sortablejs';
 import RuntimeRenderer from './RuntimeRenderer.vue';
 import DesignRenderer from './DesignRenderer.vue';
 import { getComponent } from './registry';
 import type { PageSchema, ResponsiveBreakpoint } from './schema';
+import { computeAlignGuides, collectNodeRects, dedupeGuides, type GuideLine } from './alignGuides';
+
+/**
+ * V2-T12 拖拽对齐辅助线。
+ * hover 节点时计算与其他节点的边缘/中线对齐，显示辅助线 overlay。
+ * alignGuidesEnabled 运行时可关（默认开）。
+ */
+const alignGuidesEnabled = ref(true);
+const activeGuides = ref<GuideLine[]>([]);
+const canvasRef = ref<HTMLElement | null>(null);
+
+/** hover 节点时显示对齐辅助线（dragging 节点 = hovered） */
+function onCanvasMouseMove(e: MouseEvent): void {
+  if (!alignGuidesEnabled.value || !canvasRef.value) {
+    activeGuides.value = [];
+    return;
+  }
+  const target = (e.target as HTMLElement)?.closest('[data-lb-node]') as HTMLElement | null;
+  if (!target) {
+    activeGuides.value = [];
+    return;
+  }
+  const draggingId = target.dataset.lbNode;
+  if (!draggingId) {
+    activeGuides.value = [];
+    return;
+  }
+  const others = collectNodeRects(canvasRef.value, draggingId);
+  if (others.length === 0) {
+    activeGuides.value = [];
+    return;
+  }
+  const containerRect = canvasRef.value.getBoundingClientRect();
+  const r = target.getBoundingClientRect();
+  const draggingRect = {
+    id: draggingId,
+    left: r.left - containerRect.left,
+    top: r.top - containerRect.top,
+    width: r.width,
+    height: r.height,
+  };
+  const result = computeAlignGuides(draggingRect, others);
+  activeGuides.value = dedupeGuides(result.guides);
+}
+
+function clearGuides(): void {
+  activeGuides.value = [];
+}
+
+onBeforeUnmount(clearGuides);
 
 const props = withDefaults(
   defineProps<{
@@ -113,10 +163,13 @@ watch(
     <slot v-if="showToolbar" name="toolbar" />
     <div
       v-if="schema?.root"
+      ref="canvasRef"
       class="luban-designer__canvas"
       :class="{ 'luban-designer__canvas--design': designMode }"
       @dragover="designMode ? onPaletteDragOver : undefined"
       @drop="designMode ? onPaletteDrop : undefined"
+      @mousemove="designMode ? onCanvasMouseMove : undefined"
+      @mouseleave="clearGuides"
     >
       <template v-if="designMode">
         <component
@@ -169,6 +222,21 @@ watch(
         :form-state="formState"
         :form-errors="formErrors"
       />
+      <!-- V2-T12 对齐辅助线 overlay -->
+      <div v-if="activeGuides.length" class="luban-designer__guides" aria-hidden="true">
+        <template v-for="(g, i) in activeGuides" :key="i">
+          <div
+            v-if="g.orientation === 'vertical'"
+            class="luban-designer__guide luban-designer__guide--vertical"
+            :style="{ left: g.position + 'px', top: g.start + 'px', height: (g.end - g.start) + 'px' }"
+          />
+          <div
+            v-else
+            class="luban-designer__guide luban-designer__guide--horizontal"
+            :style="{ top: g.position + 'px', left: g.start + 'px', width: (g.end - g.start) + 'px' }"
+          />
+        </template>
+      </div>
     </div>
     <div v-else class="luban-designer__placeholder">
       {{ placeholder }}
@@ -177,6 +245,9 @@ watch(
 </template>
 
 <style scoped>
+.luban-designer__canvas {
+  position: relative;
+}
 .luban-designer__canvas--design {
   min-height: 200px;
 }
@@ -202,5 +273,23 @@ watch(
 }
 .luban-designer__canvas-spacer {
   min-height: 160px;
+}
+
+/* V2-T12 对齐辅助线 */
+.luban-designer__guides {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+.luban-designer__guide {
+  position: absolute;
+  background: #ff3b30;
+}
+.luban-designer__guide--vertical {
+  width: 1px;
+}
+.luban-designer__guide--horizontal {
+  height: 1px;
 }
 </style>

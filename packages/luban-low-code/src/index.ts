@@ -38,6 +38,14 @@ export {
   useAnimationObserver,
   collectInViewNodes,
 } from './lib/animationObserver';
+
+// === V2-T12 拖拽对齐辅助线（纯逻辑计算 + DOM rect 收集）===
+export {
+  computeAlignGuides,
+  collectNodeRects,
+  dedupeGuides,
+} from './lib/alignGuides';
+export type { Rect, GuideLine, AlignResult } from './lib/alignGuides';
 export {
   getPaletteGroups,
   getPaletteItems,
