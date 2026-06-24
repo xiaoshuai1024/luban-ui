@@ -1,52 +1,80 @@
 <script setup lang="ts">
-interface NavLink { text: string; href: string }
-defineProps<{ brand?: string; links: NavLink[] }>();
+withDefaults(
+  defineProps<{
+    brand?: string;
+    links?: Array<{ label: string; url: string }>;
+    backgroundColor?: string;
+    textColor?: string;
+    sticky?: boolean;
+  }>(),
+  {
+    brand: "Luban",
+    links: () => [],
+    backgroundColor: "var(--lb-bg)",
+    textColor: "var(--lb-bg-dark)",
+    sticky: true,
+  }
+);
 </script>
 
 <template>
-  <nav class="lb-navbar">
+  <header
+    class="lb-navbar"
+    :class="{ 'lb-navbar--sticky': sticky }"
+    :style="{ backgroundColor, color: textColor }"
+  >
     <div class="lb-navbar__inner">
-      <span v-if="brand" class="lb-navbar__brand">{{ brand }}</span>
-      <ul class="lb-navbar__links">
-        <li v-for="(link, i) in links" :key="i">
-          <a :href="link.href">{{ link.text }}</a>
-        </li>
-      </ul>
+      <a class="lb-navbar__brand" href="#">{{ brand }}</a>
+      <nav class="lb-navbar__nav" v-if="links.length">
+        <a
+          v-for="(link, i) in links"
+          :key="i"
+          class="lb-navbar__link"
+          :href="link.url"
+          >{{ link.label }}</a
+        >
+      </nav>
     </div>
-  </nav>
+  </header>
 </template>
 
 <style scoped lang="scss">
 .lb-navbar {
-  background: #304156;
-  color: #fff;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  &--sticky {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 }
 .lb-navbar__inner {
   display: flex;
   align-items: center;
-  gap: 24px;
+  justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px;
-  height: 56px;
+  padding: 0 24px;
+  height: 64px;
 }
 .lb-navbar__brand {
+  font-size: 1.25rem;
   font-weight: 700;
-  font-size: 18px;
+  text-decoration: none;
+  color: inherit;
 }
-.lb-navbar__links {
-  list-style: none;
+.lb-navbar__nav {
   display: flex;
-  gap: 20px;
-  margin: 0;
-  padding: 0;
-  a {
-    color: #bfcbd8;
-    text-decoration: none;
-    font-size: 14px;
-    &:hover {
-      color: #fff;
-    }
+  gap: 24px;
+}
+.lb-navbar__link {
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+  &:hover {
+    opacity: 1;
   }
 }
 </style>
