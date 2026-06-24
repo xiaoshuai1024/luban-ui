@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, onBeforeUnmount, ref as vueRef } from 'vue';
 import { getComponent } from './registry';
-import type { NodeSchema } from './schema';
+import type { NodeSchema, ResponsiveBreakpoint } from './schema';
 import { isContainerType, isFormValueType } from './constants';
 import { validate, type ValidationRule } from './validation';
+import { resolveResponsiveProps } from './responsive';
+import Sortable from 'sortablejs';
 import DesignRendererSelf from './DesignRenderer.vue';
 import NodeToolbar from './NodeToolbar.vue';
 
@@ -18,8 +20,10 @@ const props = withDefaults(
     placeholderText?: string;
     /** 是否可被删除/复制（root 节点为 false） */
     isRoot?: boolean;
+    /** V2-T4 设计态当前断点：按断点取 resolveResponsiveProps 渲染对应 style */
+    breakpoint?: ResponsiveBreakpoint;
   }>(),
-  { formErrors: () => ({}), placeholderText: '拖拽组件到此处', isRoot: false }
+  { formErrors: () => ({}), placeholderText: '拖拽组件到此处', isRoot: false, breakpoint: 'desktop' }
 );
 
 const emit = defineEmits<{
@@ -32,6 +36,8 @@ const emit = defineEmits<{
   delete: [nodeId: string];
   /** 右键菜单（坐标 + 节点 id） */
   'context-menu': [x: number, y: number, nodeId: string];
+  /** 跨容器拖拽冒泡（来自子容器 Sortable onEnd） */
+  'move-node': [nodeId: string, fromParentId: string | null, toParentId: string | null, toIndex: number];
 }>();
 
 // hover 态用于显示 NodeToolbar（即便未选中）
@@ -50,6 +56,13 @@ function onPlaceholderClick(e: Event): void {
   e.stopPropagation();
   emit('select', props.root.id);
 }
+
+/**
+ * V2-T4：按当前断点折叠节点 style。
+ * desktop = node.style；tablet/mobile 浅合并覆盖。
+ * 设计态直接用内联 :style 渲染对应断点（无需 @media）。
+ */
+const resolvedStyle = computed(() => resolveResponsiveProps(props.root, props.breakpoint));
 
 const isEmptyContainer = (): boolean =>
   isContainerType(props.root.type) &&
@@ -129,12 +142,14 @@ function slotContent(): string {
 }
 
 function onContainerDragOver(e: DragEvent): void {
+  if (props.root.locked) return; // locked 容器不接受拖入
   e.preventDefault();
   e.stopPropagation();
   if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
 }
 
 function onContainerDrop(e: DragEvent): void {
+  if (props.root.locked) return; // locked 容器不接受 drop
   e.preventDefault();
   e.stopPropagation();
   const raw = e.dataTransfer?.getData('application/json');
@@ -163,16 +178,63 @@ function onCopy(): void {
 function onDelete(): void {
   emit('delete', props.root.id);
 }
+
+// === 容器内 Sortable（group: luban-nodes，支持跨容器拖拽） ===
+const containerDropRef = vueRef<HTMLElement | null>(null);
+let containerSortable: Sortable | null = null;
+
+function handleContainerSortEnd(ev: Sortable.SortableEvent): void {
+  const oldIndex = ev.oldIndex;
+  const newIndex = ev.newIndex;
+  if (oldIndex == null || newIndex == null) return;
+  const fromParent = (ev.from as HTMLElement).dataset.parentId ?? '';
+  const toParent = (ev.to as HTMLElement).dataset.parentId ?? '';
+  const nodeId = (ev.item as HTMLElement).dataset.nodeId ?? '';
+  // revert DOM：跨容器时还原，交由 Vue 按 schema 重渲染
+  if (ev.from !== ev.to && ev.item.parentNode === ev.to) {
+    ev.from.insertBefore(ev.item, ev.from.children[oldIndex] ?? null);
+  }
+  if (!nodeId) return;
+  emit('move-node', nodeId, fromParent || null, toParent || null, newIndex);
+}
+
+onMounted(() => {
+  if (containerDropRef.value) {
+    containerDropRef.value.dataset.parentId = props.root.id;
+    containerSortable = Sortable.create(containerDropRef.value, {
+      animation: 150,
+      group: 'luban-nodes',
+      // FINDING-1: reject drag-start on locked nodes (plan §4.2: locked 不可拖/删/改).
+      // The `--locked` class is applied to the wrapper above; Sortable's filter option
+      // makes items matching the selector non-draggable.
+      filter: '.design-renderer__wrapper--locked',
+      preventOnFilter: false,
+      onEnd: handleContainerSortEnd,
+    });
+  }
+});
+onBeforeUnmount(() => {
+  containerSortable?.destroy();
+  containerSortable = null;
+});
 </script>
 
 <template>
   <template v-if="root">
     <div
       class="design-renderer__wrapper"
-      :class="{
-        'design-renderer__wrapper--selected': selectedNodeId === root.id,
-        'design-renderer__wrapper--root': isRoot,
-      }"
+      :data-node-id="root.id"
+      :data-lb-node="root.id"
+      :class="[
+        {
+          'design-renderer__wrapper--selected': selectedNodeId === root.id,
+          'design-renderer__wrapper--root': isRoot,
+          'design-renderer__wrapper--locked': root.locked,
+          'design-renderer__wrapper--hidden': root.hidden,
+        },
+        root.className,
+      ]"
+      :style="resolvedStyle"
       @click="onWrapperClick($event, root.id)"
       @mouseenter="hovered = true"
       @mouseleave="hovered = false"
@@ -226,6 +288,7 @@ function onDelete(): void {
             :form-errors="formErrors"
             :selected-node-id="selectedNodeId"
             :placeholder-text="placeholderText"
+            :breakpoint="breakpoint"
             @select="emit('select', $event)"
             @add-node="emit('add-node', $event[0], $event[1])"
             @copy="emit('copy', $event)"
@@ -242,6 +305,7 @@ function onDelete(): void {
         >
           <template v-if="(root.children ?? []).length">
             <div
+              ref="containerDropRef"
               class="design-renderer__container-drop"
               @dragover.prevent="onContainerDragOver"
               @drop="onContainerDrop"
@@ -254,11 +318,13 @@ function onDelete(): void {
                 :form-errors="formErrors"
                 :selected-node-id="selectedNodeId"
                 :placeholder-text="placeholderText"
+                :breakpoint="breakpoint"
                 @select="emit('select', $event)"
                 @add-node="emit('add-node', $event[0], $event[1])"
                 @copy="emit('copy', $event)"
                 @delete="emit('delete', $event)"
                 @context-menu="emit('context-menu', $event[0], $event[1], $event[2])"
+                @move-node="(nodeId, from, to, idx) => emit('move-node', nodeId, from, to, idx)"
               />
             </div>
           </template>
@@ -273,6 +339,7 @@ function onDelete(): void {
             :form-errors="formErrors"
             :selected-node-id="selectedNodeId"
             :placeholder-text="placeholderText"
+            :breakpoint="breakpoint"
             @select="emit('select', $event)"
             @add-node="emit('add-node', $event[0], $event[1])"
             @copy="emit('copy', $event)"
@@ -295,10 +362,10 @@ function onDelete(): void {
   transition: outline-color 0.15s ease;
 }
 .design-renderer__wrapper:hover {
-  outline-color: rgba(30, 136, 229, 0.35);
+  outline-color: color-mix(in srgb, var(--lb-primary, #1976d2) 35%, transparent);
 }
 .design-renderer__wrapper--selected {
-  outline: 2px solid #1e88e5;
+  outline: 2px solid var(--lb-primary, #1e88e5);
   outline-offset: 0;
 }
 /* root 节点不显示 hover 外框 */
@@ -310,12 +377,19 @@ function onDelete(): void {
   opacity: 1;
   pointer-events: auto;
 }
+.design-renderer__wrapper--locked {
+  outline: 2px dashed var(--lb-text-muted, #9ca3af);
+  cursor: not-allowed;
+}
+.design-renderer__wrapper--hidden {
+  opacity: 0.4;
+}
 .design-renderer__placeholder {
   min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
+  color: var(--lb-text-muted, #9ca3af);
   font-size: 13px;
   border: 2px dashed rgba(0, 0, 0, 0.15);
   border-radius: 6px;
