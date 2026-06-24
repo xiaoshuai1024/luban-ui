@@ -1,42 +1,27 @@
-/// <reference types='vitest' />
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import dts from 'vite-plugin-dts';
-import * as path from 'path';
+import { resolve } from 'path';
 
-export default defineConfig(() => ({
-  root: import.meta.dirname,
-  cacheDir: '../../node_modules/.vite/packages/luban-low-code',
-  resolve: {
-    alias: {
-      '@luban-low-code/luban-base': path.resolve(
-        import.meta.dirname,
-        '../luban-base/src/index.ts',
-      ),
-    },
-  },
+export default defineConfig({
   plugins: [
     vue(),
     dts({
       entryRoot: 'src',
-      tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json'),
+      outDir: 'dist/types',
+      tsconfigPath: 'tsconfig.lib.json',
+      staticImport: true,
+      insertTypesEntry: true,
     }),
   ],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [],
-  // },
-  // Configuration for building your library.
-  // See: https://vite.dev/guide/build.html#library-mode
-  build: {
-    outDir: './dist',
-    emptyOutDir: true,
-    reportCompressedSize: true,
-    commonjsOptions: {
-      transformMixedEsModules: true,
+  resolve: {
+    alias: {
+      '@luban-low-code/luban-base': resolve(__dirname, '../luban-base/src'),
     },
+  },
+  build: {
     lib: {
-      // Could also be a dictionary or array of multiple entry points.
       entry: 'src/index.ts',
       name: 'luban-low-code',
       fileName: 'index',
@@ -45,8 +30,8 @@ export default defineConfig(() => ({
       formats: ['es' as const],
     },
     rollupOptions: {
-      // 将 vue 和 scoped luban-base 作为外部依赖，由使用方或 workspace 提供
-      external: ['vue', '@luban-low-code/luban-base'],
+      // 仅 vue 外部化；luban-base 内联进 dist（修复外部消费者 resolver 失败）
+      external: ['vue'],
     },
   },
   test: {
@@ -62,4 +47,4 @@ export default defineConfig(() => ({
       provider: 'v8' as const,
     },
   },
-}));
+});

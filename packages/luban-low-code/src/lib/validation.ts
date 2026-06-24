@@ -21,6 +21,9 @@ export interface ValidationRule {
   message?: string;
 }
 
+import type { NodeSchema, PageSchema } from './schema';
+import { FORM_VALUE_TYPES, BOOLEAN_FORM_VALUE_TYPES } from './constants';
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TEL_RE = /^[\d\s\-+()]+$/;
 const URL_RE = /^https?:\/\/.+/;
@@ -116,4 +119,72 @@ export function validate(value: unknown, rules: ValidationRule[] | undefined): s
   }
 
   return null;
+}
+
+// ---- 全表单校验 + formState 初始化（T-ui-3）----
+
+/** 深度优先遍历 schema 节点（含 children 递归）。 */
+function walkNodes(node: NodeSchema | undefined, cb: (n: NodeSchema) => void): void {
+  if (!node) return;
+  cb(node);
+  if (node.children?.length) {
+    for (const child of node.children) walkNodes(child, cb);
+  }
+}
+
+/**
+ * 初始化整页表单状态：遍历 schema.root，对每个表单值节点按类型生成默认值。
+ * 键为节点 id（与 validateAll 对齐）。
+ * 复合类型（数组/对象）按组件类型给正确的空值（修复 initFormState 🔴）。
+ */
+const ARRAY_FORM_VALUE_TYPES = new Set<string>(['LubanTagInput']);
+const OBJECT_FORM_VALUE_TYPES = new Set<string>([
+  'LubanDateRange',
+  'LubanRegionSelect',
+]);
+const NUMBER_FORM_VALUE_TYPES = new Set<string>(['LubanRating', 'LubanSlider']);
+
+export function initFormState(schema: PageSchema): Record<string, unknown> {
+  const state: Record<string, unknown> = {};
+  walkNodes(schema.root, (n) => {
+    if (!FORM_VALUE_TYPES.has(n.type)) return;
+    const v = n.props?.value;
+    if (BOOLEAN_FORM_VALUE_TYPES.has(n.type)) {
+      state[n.id] = false;
+    } else if (ARRAY_FORM_VALUE_TYPES.has(n.type)) {
+      state[n.id] = v != null ? v : [];
+    } else if (OBJECT_FORM_VALUE_TYPES.has(n.type)) {
+      if (n.type === 'LubanDateRange') {
+        const dv = v as { start?: string; end?: string } | undefined;
+        state[n.id] = { start: dv?.start ?? '', end: dv?.end ?? '' };
+      } else {
+        state[n.id] = v != null ? v : {};
+      }
+    } else if (NUMBER_FORM_VALUE_TYPES.has(n.type)) {
+      state[n.id] = v != null ? v : 0;
+    } else {
+      state[n.id] = v != null ? v : '';
+    }
+  });
+  return state;
+}
+
+/**
+ * 全表单提交校验：遍历 schema.root，对每个带 rules 的表单值节点执行 validate，
+ * 返回 { [nodeId]: errorMessage }（空对象表示全部通过）。
+ */
+export function validateAll(
+  schema: PageSchema,
+  formState: Record<string, unknown>
+): Record<string, string> {
+  const errors: Record<string, string> = {};
+  walkNodes(schema.root, (n) => {
+    if (!FORM_VALUE_TYPES.has(n.type)) return;
+    const rules = n.props?.rules;
+    if (!Array.isArray(rules) || rules.length === 0) return; // 无规则跳过
+    const value = formState[n.id];
+    const msg = validate(value, rules as ValidationRule[]);
+    if (msg) errors[n.id] = msg;
+  });
+  return errors;
 }

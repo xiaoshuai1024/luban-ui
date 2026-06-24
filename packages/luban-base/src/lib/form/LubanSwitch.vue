@@ -5,10 +5,13 @@ withDefaults(
     label?: string;
     name?: string;
     disabled?: boolean;
+    error?: boolean;
+    errorMessage?: string;
   }>(),
   {
     modelValue: false,
     disabled: false,
+    error: false,
   }
 );
 
@@ -25,6 +28,7 @@ const emit = defineEmits<{
         role="switch"
         :aria-checked="modelValue"
         :aria-disabled="disabled"
+        :aria-invalid="error"
         class="lb-switch__track"
         :class="{
           'lb-switch__track--checked': modelValue,
@@ -38,6 +42,7 @@ const emit = defineEmits<{
       <span v-if="label" class="lb-form-field__label">{{ label }}</span>
     </div>
     <input v-if="name" type="hidden" :name="name" :value="modelValue ? 'on' : ''" />
+    <p v-if="error && errorMessage" class="lb-form-field__error">{{ errorMessage }}</p>
   </div>
 </template>
 
