@@ -14,21 +14,10 @@ export default defineConfig(() => ({
       tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json'),
     }),
   ],
-  // 测试期将 luban-base 别名指向其 dist（构建产物），而非 @luban-ui/source
-  // 条件解析的 src。原因：vitest 源码模式下经 src barrel 再导出 .vue 时，
-  // 部分 marketing 物料 component 静默为 undefined（monorepo 源码条件解析
-  // 与 vitest vue 插件交互的边缘情况）。dist 是真实发布产物，组件完整。
-  // 仅影响测试解析，不影响构建（build.rollupOptions.external 仍排除 luban-base）。
-  resolve: {
-    alias: {
-      'luban-base': path.resolve(import.meta.dirname, '../luban-base/dist/index.js'),
-    },
-  },
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [],
-  // },
-  // 测试时将 luban-base 别名指向源码（构建时通过 rollupOptions.external 外部化）
+  // 测试期将 luban-base 别名指向源码（构建时内联进 dist，不再 external）。
+  // v02 修复：原 external: ['luban-base'] 导致 dist 含 bare specifier 'from "luban-base"'，
+  // 外部消费者（website/engine）Vite7 commonjs resolver 解析 luban-base 包入口失败。
+  // 改为内联：luban-low-code dist 自包含 luban-base 组件，消费者无需再解析 luban-base。
   resolve: {
     alias: {
       'luban-base': path.resolve(import.meta.dirname, '../luban-base/src/index.ts'),
@@ -53,8 +42,8 @@ export default defineConfig(() => ({
       formats: ['es' as const],
     },
     rollupOptions: {
-      // 将 vue 和 luban-base 作为外部依赖，由使用方或 workspace 提供
-      external: ['vue', 'luban-base'],
+      // 仅 vue 外部化；luban-base 内联进 dist（修复外部消费者 resolver 失败）
+      external: ['vue'],
     },
   },
   test: {
