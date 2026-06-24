@@ -1,4 +1,4 @@
-import type { PageSchema } from '@luban-ui/luban-low-code';
+import type { PageSchema } from '@luban-low-code/luban-low-code';
 
 /**
  * Default demo schema: layout + buttons + form, aligned with original demo page.

@@ -1,0 +1,63 @@
+name: Publish Packages
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+    paths:
+      - "packages/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "nx.json"
+      - ".github/workflows/publish-packages.yml"
+
+concurrency:
+  group: publish-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --link-workspace-packages
+
+      - name: Set publish tag
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "master" ]; then
+            echo "PUBLISH_TAG=latest" >> "$GITHUB_ENV"
+          elif [ "${GITHUB_REF_NAME}" = "dev" ]; then
+            echo "PUBLISH_TAG=beta" >> "$GITHUB_ENV"
+          else
+            echo "Unsupported branch: ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+
+      - name: Build packages (Nx)
+        run: pnpm exec nx run-many --target=build --projects=luban-base,luban-low-code --skip-nx-cache
+
+      - name: Test packages (Nx)
+        run: pnpm exec nx run-many --target=test --projects=luban-base,luban-low-code --skip-nx-cache
+
+      - name: Publish packages (Nx)
+        run: pnpm exec nx run-many --target=publish --projects=luban-base,luban-low-code --skip-nx-cache

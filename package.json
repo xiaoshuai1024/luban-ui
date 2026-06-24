@@ -13,7 +13,10 @@
     "test:base:component": "cd packages/luban-base && vitest run -c vitest.component.config.mts",
     "test:lowcode": "nx test luban-low-code",
     "test:lowcode:component": "cd packages/luban-low-code && vitest run -c vitest.component.config.mts",
-    "release:packages": "pnpm exec nx run-many --target=build --projects=luban-base,luban-low-code && cd packages/luban-base && npm publish --access public && cd ../luban-low-code && npm publish --access public"
+    "test:lowcode:e2e": "cd packages/luban-low-code && vitest run -c vitest.e2e.config.mts",
+    "version:packages": "pnpm exec nx run-many --target=version --projects=luban-base,luban-low-code",
+    "release:nx:latest": "PUBLISH_TAG=latest pnpm exec nx run-many --target=publish --projects=luban-base,luban-low-code --skip-nx-cache",
+    "release:nx:beta": "PUBLISH_TAG=beta pnpm exec nx run-many --target=publish --projects=luban-base,luban-low-code --skip-nx-cache"
   },
   "private": true,
   "dependencies": {

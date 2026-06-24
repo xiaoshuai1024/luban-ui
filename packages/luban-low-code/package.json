@@ -1,5 +1,5 @@
 {
-  "name": "luban-low-code",
+  "name": "@luban-low-code/luban-low-code",
   "version": "0.0.15",
   "private": false,
   "type": "module",
@@ -37,13 +37,13 @@
         ],
         "options": {
           "cwd": "packages/luban-low-code",
-          "command": "npm publish --access public"
+          "command": "npm publish --access public --tag ${PUBLISH_TAG:-latest}"
         }
       }
     }
   },
   "dependencies": {
-    "luban-base": "^0.0.2",
+    "@luban-low-code/luban-base": "^0.0.18",
     "sortablejs": "^1.15.3",
     "vue": "^3.5.13"
   }
