@@ -7,6 +7,13 @@ import RichTextSetter from './RichTextSetter.vue';
 import CarouselSetter from './CarouselSetter.vue';
 import TabsSetter from './TabsSetter.vue';
 import LinkListSetter from './LinkListSetter.vue';
+import NumberSetter from './NumberSetter.vue';
+import SliderSetter from './SliderSetter.vue';
+import CodeSetter from './CodeSetter.vue';
+import IconSetter from './IconSetter.vue';
+import ExpressionSetter from './ExpressionSetter.vue';
+import EffectSetter from './EffectSetter.vue';
+import ScrubInput from './ScrubInput.vue';
 
 /**
  * 自定义设置器注册表（T-ui-d17 / T-ui-d18）。
@@ -46,6 +53,14 @@ setterRegistry.set('carousel', CarouselSetter as SetterComponent);
 setterRegistry.set('tabs', TabsSetter as SetterComponent);
 setterRegistry.set('linklist', LinkListSetter as SetterComponent);
 
+// ---- T-ui-7 扩展设置器 ----
+setterRegistry.set('number', NumberSetter as SetterComponent);
+setterRegistry.set('slider', SliderSetter as SetterComponent);
+setterRegistry.set('code', CodeSetter as SetterComponent);
+setterRegistry.set('icon', IconSetter as SetterComponent);
+setterRegistry.set('expression', ExpressionSetter as SetterComponent);
+setterRegistry.set('effect', EffectSetter as SetterComponent);
+
 export type { PropSchemaItem };
 export {
   ColorSetter,
@@ -55,4 +70,11 @@ export {
   CarouselSetter,
   TabsSetter,
   LinkListSetter,
+  NumberSetter,
+  SliderSetter,
+  CodeSetter,
+  IconSetter,
+  ExpressionSetter,
+  EffectSetter,
+  ScrubInput,
 };

@@ -61,11 +61,18 @@ watch(searchQuery, (q) => {
 
 // 过滤 propEntries
 const filteredPropEntries = computed(() => {
-  if (!searchQuery.value.trim()) return propEntries.value;
-  const q = searchQuery.value.toLowerCase();
-  return propEntries.value.filter(([key, schema]) =>
-    (schema.label ?? key).toLowerCase().includes(q) || key.toLowerCase().includes(q)
-  );
+  const q = searchQuery.value.trim().toLowerCase();
+  return propEntries.value.filter(([key, schema]) => {
+    // T-ui-9：visibleWhen 联动可见性
+    if (schema.visibleWhen) {
+      const cond = schema.visibleWhen;
+      const actual = props.modelValue[cond.prop];
+      if (cond.equals !== undefined && actual !== cond.equals) return false;
+      if (cond.notEquals !== undefined && actual === cond.notEquals) return false;
+    }
+    if (!q) return true;
+    return (schema.label ?? key).toLowerCase().includes(q) || key.toLowerCase().includes(q);
+  });
 });
 const filteredStyleEntries = computed(() => {
   if (!searchQuery.value.trim()) return styleEntries.value;

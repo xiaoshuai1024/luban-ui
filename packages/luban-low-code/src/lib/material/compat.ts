@@ -24,6 +24,13 @@ import type { ComponentMeta, PropSchemaItem, PropSchema } from '../componentMeta
 
 /** JSON Schema property → 旧 PropSchemaItem 单字段映射。 */
 function toPropSchemaItem(prop: JSONSchemaProperty): PropSchemaItem {
+  const item = toPropSchemaItemInner(prop);
+  // T-ui-9：传递 visibleWhen 联动条件
+  if (prop.visibleWhen) item.visibleWhen = prop.visibleWhen;
+  return item;
+}
+
+function toPropSchemaItemInner(prop: JSONSchemaProperty): PropSchemaItem {
   // enum 优先：有限取值集合映射为 select。
   if (Array.isArray(prop.enum) && prop.enum.length > 0) {
     const enumValues: (string | number)[] = prop.enum;

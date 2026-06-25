@@ -48,6 +48,12 @@ export interface JSONSchemaProperty {
    * 此前未在类型上显式声明；此处补全以支持数组可视化编辑器（compat.ts 据此派生 itemFields）。
    */
   properties?: Record<string, JSONSchemaProperty>;
+  /** 字段可见性条件（联动）：当指定 prop 等于/不等于某值时显示 */
+  visibleWhen?: {
+    prop: string;
+    equals?: unknown;
+    notEquals?: unknown;
+  };
 }
 
 /** propsSchema 顶层对象：properties 为字段表，required 为必填字段列表。 */
