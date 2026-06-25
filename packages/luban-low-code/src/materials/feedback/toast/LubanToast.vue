@@ -23,7 +23,7 @@ const props = withDefaults(
     message: '',
     type: 'info',
     duration: 3000,
-  }
+  },
 );
 
 const visible = ref(false);
@@ -41,11 +41,7 @@ function clearTimer(): void {
   }
 }
 
-function show(
-  msg?: string,
-  type?: ToastType,
-  duration?: number
-): void {
+function show(msg?: string, type?: ToastType, duration?: number): void {
   clearTimer();
   hidden.value = false;
   currentMessage.value = msg ?? props.message;
@@ -71,13 +67,13 @@ watch(
   (m) => {
     currentMessage.value = m;
     hidden.value = false;
-  }
+  },
 );
 watch(
   () => props.type,
   (t) => {
     currentType.value = t;
-  }
+  },
 );
 
 onBeforeUnmount(() => clearTimer());
@@ -93,7 +89,9 @@ defineExpose({ show, hide });
       :class="`lb-toast--${currentType}`"
       role="alert"
     >
-      <span class="lb-toast__icon">{{ { success: '✓', warning: '!', error: '×', info: 'i' }[currentType] }}</span>
+      <span class="lb-toast__icon">{{
+        { success: '✓', warning: '!', error: '×', info: 'i' }[currentType]
+      }}</span>
       <span class="lb-toast__message">{{ currentMessage }}</span>
     </div>
   </transition>
@@ -146,7 +144,9 @@ defineExpose({ show, hide });
 
 .lb-toast-enter-active,
 .lb-toast-leave-active {
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
 
 .lb-toast-enter-from,

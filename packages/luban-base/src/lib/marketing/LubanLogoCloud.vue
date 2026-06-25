@@ -7,21 +7,20 @@ withDefaults(
     backgroundColor?: string;
   }>(),
   {
-    heading: "他们都在使用",
+    heading: '他们都在使用',
     logos: () => [],
     grayscale: true,
-    backgroundColor: "var(--lb-bg-muted)",
-  }
+    backgroundColor: 'var(--lb-bg-muted)',
+  },
 );
 </script>
 
 <template>
-  <section
-    class="lb-logo-cloud"
-    :style="{ backgroundColor }"
-  >
+  <section class="lb-logo-cloud" :style="{ backgroundColor }">
     <div class="lb-logo-cloud__inner">
-      <h2 v-if="heading" class="lb-logo-cloud__heading">{{ heading }}</h2>
+      <h2 v-if="heading" class="lb-logo-cloud__heading">
+        {{ heading }}
+      </h2>
       <div v-if="logos.length" class="lb-logo-cloud__list">
         <a
           v-for="(logo, i) in logos"

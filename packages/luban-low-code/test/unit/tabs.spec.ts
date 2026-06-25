@@ -72,7 +72,9 @@ describe('LubanTabs component — rendering', () => {
     const wrapper = mount(LubanTabs, {
       props: { tabs, type: 'border-card' },
     });
-    expect(wrapper.find('.lb-tabs').classes()).toContain('lb-tabs--border-card');
+    expect(wrapper.find('.lb-tabs').classes()).toContain(
+      'lb-tabs--border-card',
+    );
   });
 
   it('highlights active tab via activeKey', () => {

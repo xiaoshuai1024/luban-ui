@@ -19,7 +19,8 @@ export const colMaterial = defineMaterial({
   name: 'LubanCol',
   version: '0.1.0',
   category: 'layout',
-  description: 'flex 列：作为 LubanRow 子项，控制弹性增长、基础宽度与自身对齐。',
+  description:
+    'flex 列：作为 LubanRow 子项，控制弹性增长、基础宽度与自身对齐。',
   component: LubanCol,
   isContainer: true,
   acceptTypes: ['LubanRow'],
@@ -41,7 +42,8 @@ export const colMaterial = defineMaterial({
       },
       alignSelf: {
         type: 'string',
-        description: '自身在交叉轴上的对齐，覆盖父级 align-items。auto 表示继承。',
+        description:
+          '自身在交叉轴上的对齐，覆盖父级 align-items。auto 表示继承。',
         enum: ['auto', 'start', 'center', 'end', 'stretch'],
         default: 'auto',
         label: '自身对齐',

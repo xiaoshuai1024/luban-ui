@@ -7,7 +7,7 @@ import type { PageSchema, NodeSchema } from './schema';
 export function reorderRootChildren(
   schema: PageSchema,
   fromIndex: number,
-  toIndex: number
+  toIndex: number,
 ): void {
   const children = schema.root.children ?? [];
   if (
@@ -33,7 +33,11 @@ export function genNodeId(type: string): string {
 /** 深拷贝节点（structuredClone 优先，fallback JSON） */
 export function cloneNode<T>(node: T): T {
   if (typeof structuredClone === 'function') {
-    try { return structuredClone(node); } catch { /* fallback */ }
+    try {
+      return structuredClone(node);
+    } catch {
+      /* fallback */
+    }
   }
   return JSON.parse(JSON.stringify(node));
 }
@@ -57,7 +61,10 @@ export function findNode(root: NodeSchema, id: string): NodeSchema | null {
  * 查找节点的父节点 by child id。
  * @returns 父节点或 null（id 为 root 时返回 null）
  */
-export function findParent(root: NodeSchema, childId: string): NodeSchema | null {
+export function findParent(
+  root: NodeSchema,
+  childId: string,
+): NodeSchema | null {
   if (!root.children) return null;
   for (const child of root.children) {
     if (child.id === childId) return root;
@@ -113,7 +120,11 @@ function reassignIds(node: NodeSchema): void {
  * 在同级 siblings 中上下移动节点。
  * @returns 是否成功移动
  */
-export function moveNode(root: NodeSchema, id: string, direction: 'up' | 'down'): boolean {
+export function moveNode(
+  root: NodeSchema,
+  id: string,
+  direction: 'up' | 'down',
+): boolean {
   const parent = findParent(root, id);
   if (!parent || !parent.children) return false;
   const idx = parent.children.findIndex((c) => c.id === id);
@@ -137,9 +148,12 @@ export function insertNode(
   root: NodeSchema,
   node: NodeSchema,
   parentId: string,
-  index?: number
+  index?: number,
 ): boolean {
-  const parent = parentId === 'root' || root.id === parentId ? root : findNode(root, parentId);
+  const parent =
+    parentId === 'root' || root.id === parentId
+      ? root
+      : findNode(root, parentId);
   if (!parent) return false;
   if (!parent.children) parent.children = [];
   if (index == null || index < 0 || index > parent.children.length) {
@@ -157,7 +171,7 @@ export function insertNode(
 export function updateNodeProps(
   root: NodeSchema,
   id: string,
-  patch: Record<string, unknown>
+  patch: Record<string, unknown>,
 ): boolean {
   const node = findNode(root, id);
   if (!node) return false;

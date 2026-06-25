@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { getPaletteGroups, getPaletteItems, isPaletteType } from '../../src/lib/palette';
-import { getComponentMeta, getAllComponentMeta } from '../../src/lib/componentMeta';
+import {
+  getPaletteGroups,
+  getPaletteItems,
+  isPaletteType,
+} from '../../src/lib/palette';
+import {
+  getComponentMeta,
+  getAllComponentMeta,
+} from '../../src/lib/componentMeta';
 
 /**
  * T-ui-12/13: 验证全量物料注册 + 面板分组 + componentMeta 完整性。
@@ -9,16 +16,41 @@ import { getComponentMeta, getAllComponentMeta } from '../../src/lib/componentMe
 describe('materials registry (T-ui-12/13)', () => {
   const NEW_TYPES = [
     // 营销
-    'LubanCountdown', 'LubanCoupon', 'LubanModal', 'LubanCarousel', 'LubanNavBar', 'LubanFooter',
+    'LubanCountdown',
+    'LubanCoupon',
+    'LubanModal',
+    'LubanCarousel',
+    'LubanNavBar',
+    'LubanFooter',
     // 网站
-    'LubanImage', 'LubanHeading', 'LubanLink', 'LubanCard', 'LubanDivider', 'LubanIcon',
-    'LubanList', 'LubanRichText', 'LubanVideo', 'LubanTabs', 'LubanCollapse',
+    'LubanImage',
+    'LubanHeading',
+    'LubanLink',
+    'LubanCard',
+    'LubanDivider',
+    'LubanIcon',
+    'LubanList',
+    'LubanRichText',
+    'LubanVideo',
+    'LubanTabs',
+    'LubanCollapse',
     // 留资
-    'LubanPhoneInput', 'LubanRegionSelect', 'LubanDatePicker', 'LubanFileUpload', 'LubanRating', 'LubanSlider',
+    'LubanPhoneInput',
+    'LubanRegionSelect',
+    'LubanDatePicker',
+    'LubanFileUpload',
+    'LubanRating',
+    'LubanSlider',
     // 海报
-    'LubanPoster', 'LubanPosterText', 'LubanPosterImage', 'LubanShape', 'LubanQRCode',
+    'LubanPoster',
+    'LubanPosterText',
+    'LubanPosterImage',
+    'LubanShape',
+    'LubanQRCode',
     // 表单补全
-    'LubanDateRange', 'LubanTimePicker', 'LubanTagInput',
+    'LubanDateRange',
+    'LubanTimePicker',
+    'LubanTagInput',
   ];
 
   it('all new material types are in palette', () => {
@@ -29,15 +61,15 @@ describe('materials registry (T-ui-12/13)', () => {
 
   it('palette has 5 categories including 营销/网站/海报', () => {
     const groups = getPaletteGroups();
-    const cats = groups.map(g => g.category);
+    const cats = groups.map((g) => g.category);
     expect(cats).toContain('营销');
     expect(cats).toContain('网站');
     expect(cats).toContain('海报');
     // 营销族 6 项
-    const marketing = groups.find(g => g.category === '营销');
+    const marketing = groups.find((g) => g.category === '营销');
     expect(marketing?.items).toHaveLength(6);
     // 网站族 11 项
-    const website = groups.find(g => g.category === '网站');
+    const website = groups.find((g) => g.category === '网站');
     expect(website?.items).toHaveLength(11);
   });
 

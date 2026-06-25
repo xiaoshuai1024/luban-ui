@@ -1,11 +1,25 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import {
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+} from 'vue';
 import Sortable from 'sortablejs';
 import RuntimeRenderer from './RuntimeRenderer.vue';
 import DesignRenderer from './DesignRenderer.vue';
 import { getComponent } from './registry';
 import type { PageSchema, ResponsiveBreakpoint } from './schema';
-import { computeAlignGuides, collectNodeRects, dedupeGuides, computeSpacingHints, type GuideLine, type SpacingHint } from './alignGuides';
+import {
+  computeAlignGuides,
+  collectNodeRects,
+  dedupeGuides,
+  computeSpacingHints,
+  type GuideLine,
+  type SpacingHint,
+} from './alignGuides';
 
 /**
  * V2-T12 拖拽对齐辅助线。
@@ -17,7 +31,12 @@ const activeGuides = ref<GuideLine[]>([]);
 /** V2-T12 间距提示 */
 const activeSpacingHints = ref<SpacingHint[]>([]);
 /** V2-T11 框选：拖框矩形 {start, end}（画布坐标） */
-const frameSelect = ref<{ startX: number; startY: number; endX: number; endY: number } | null>(null);
+const frameSelect = ref<{
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+} | null>(null);
 const canvasRef = ref<HTMLElement | null>(null);
 /** 视口 ref：缩放后的内容容器，对齐/框选以此 ref 计算坐标 */
 const viewportRef = ref<HTMLElement | null>(null);
@@ -168,8 +187,12 @@ function snapValue(v: number): number {
   return Math.round(v / GRID_SIZE) * GRID_SIZE;
 }
 
-function toggleGrid(): void { showGrid.value = !showGrid.value; }
-function toggleSnap(): void { snapToGrid.value = !snapToGrid.value; }
+function toggleGrid(): void {
+  showGrid.value = !showGrid.value;
+}
+function toggleSnap(): void {
+  snapToGrid.value = !snapToGrid.value;
+}
 
 /** hover 节点时显示对齐辅助线 + 间距提示（dragging 节点 = hovered） */
 function onCanvasMouseMove(e: MouseEvent): void {
@@ -178,7 +201,9 @@ function onCanvasMouseMove(e: MouseEvent): void {
     activeSpacingHints.value = [];
     return;
   }
-  const target = (e.target as HTMLElement)?.closest('[data-lb-node]') as HTMLElement | null;
+  const target = (e.target as HTMLElement)?.closest(
+    '[data-lb-node]',
+  ) as HTMLElement | null;
   if (!target) {
     activeGuides.value = [];
     activeSpacingHints.value = [];
@@ -190,14 +215,18 @@ function onCanvasMouseMove(e: MouseEvent): void {
     activeSpacingHints.value = [];
     return;
   }
-  const others = collectNodeRects(canvasRef.value ?? viewportRef.value, draggingId);
+  const others = collectNodeRects(
+    canvasRef.value ?? viewportRef.value,
+    draggingId,
+  );
   if (others.length === 0) {
     activeGuides.value = [];
     activeSpacingHints.value = [];
     return;
   }
   // 使用 canvasRef 做坐标参考（稳定，不受 viewport transform 影响）
-  const containerRect = (canvasRef.value ?? viewportRef.value)!.getBoundingClientRect();
+  const containerRect = (canvasRef.value ??
+    viewportRef.value)!.getBoundingClientRect();
   const r = target.getBoundingClientRect();
   const draggingRect = {
     id: draggingId,
@@ -315,7 +344,7 @@ const props = withDefaults(
     designMode: false,
     selectedNodeId: null,
     breakpoint: 'desktop',
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -335,7 +364,12 @@ const emit = defineEmits<{
   /** 右键菜单（x, y, nodeId） */
   'context-menu': [x: number, y: number, nodeId: string];
   /** 跨容器拖拽：nodeId 从 fromParentId 移到 toParentId 的 toIndex（null=root 级） */
-  'move-node': [nodeId: string, fromParentId: string | null, toParentId: string | null, toIndex: number];
+  'move-node': [
+    nodeId: string,
+    fromParentId: string | null,
+    toParentId: string | null,
+    toIndex: number,
+  ];
 }>();
 
 const formState = computed(() => props.schema?.formState ?? {});
@@ -350,14 +384,14 @@ watch(
   () => props.selectedNodeId,
   (val) => {
     if (val !== internalSelected.value) internalSelected.value = val;
-  }
+  },
 );
 
 watch(
   () => props.schema?.root?.id,
   () => {
     formErrors.value = {};
-  }
+  },
 );
 
 function syncSelected(nodeId: string | null): void {
@@ -387,7 +421,10 @@ function onPaletteDragOver(e: DragEvent): void {
   for (let i = 0; i < items.length; i++) {
     const rect = items[i].getBoundingClientRect();
     const centerY = rect.top - refRect.top + rect.height / 2;
-    if (closestY === null || Math.abs(mouseY - centerY) < Math.abs(mouseY - closestY)) {
+    if (
+      closestY === null ||
+      Math.abs(mouseY - centerY) < Math.abs(mouseY - closestY)
+    ) {
       closestY = centerY;
       closestIdx = i;
     }
@@ -492,7 +529,13 @@ function initSortable(): void {
       if (fromParent === toParent) {
         emit('reorder', oldIndex, newIndex);
       } else {
-        emit('move-node', nodeId, fromParent || null, toParent || null, newIndex);
+        emit(
+          'move-node',
+          nodeId,
+          fromParent || null,
+          toParent || null,
+          newIndex,
+        );
       }
     },
   });
@@ -511,12 +554,12 @@ watch(
   () => props.schema?.root?.children?.length,
   () => {
     nextTick(() => initSortable());
-  }
+  },
 );
 
 // 空态判定：root 无子节点
 const isEmpty = computed(
-  () => !props.schema?.root || (props.schema.root.children ?? []).length === 0
+  () => !props.schema?.root || (props.schema.root.children ?? []).length === 0,
 );
 </script>
 
@@ -530,8 +573,14 @@ const isEmpty = computed(
           title="缩小 (Ctrl+滚轮)"
           :disabled="zoom <= ZOOM_MIN"
           @click="onZoomOut"
-        >−</button>
-        <span class="luban-designer__zoom-label" @click="onZoomReset" title="重置缩放">
+        >
+          −
+        </button>
+        <span
+          class="luban-designer__zoom-label"
+          title="重置缩放"
+          @click="onZoomReset"
+        >
           {{ Math.round(zoom * 100) }}%
         </span>
         <button
@@ -539,12 +588,16 @@ const isEmpty = computed(
           title="放大 (Ctrl+滚轮)"
           :disabled="zoom >= ZOOM_MAX"
           @click="onZoomIn"
-        >+</button>
+        >
+          +
+        </button>
         <button
           class="luban-designer__zoom-btn luban-designer__zoom-btn--fit"
           title="适应画布"
           @click="onZoomFit"
-        >⊡</button>
+        >
+          ⊡
+        </button>
       </div>
       <div class="luban-designer__toggles">
         <button
@@ -552,13 +605,17 @@ const isEmpty = computed(
           :class="{ 'luban-designer__toggle-btn--active': showGrid }"
           title="显示网格"
           @click="toggleGrid"
-        >⊞</button>
+        >
+          ⊞
+        </button>
         <button
           class="luban-designer__toggle-btn"
           :class="{ 'luban-designer__toggle-btn--active': snapToGrid }"
           title="吸附网格"
           @click="toggleSnap"
-        >⊟</button>
+        >
+          ⊟
+        </button>
       </div>
     </div>
 
@@ -571,19 +628,36 @@ const isEmpty = computed(
         'luban-designer__canvas--drop-active': dropZoneActive,
         'luban-designer__canvas--grid': showGrid && designMode,
       }"
+      :style="
+        spaceHeld && designMode
+          ? { cursor: isPanning ? 'grabbing' : 'grab' }
+          : undefined
+      "
       @dragover.prevent="onPaletteDragOver"
       @dragenter="onCanvasDragEnter"
       @dragleave="onCanvasDragLeave"
       @drop="onPaletteDrop"
       @wheel="designMode ? onCanvasWheel : undefined"
-      @mousemove="(designMode ? onCanvasMouseMove : undefined); frameSelect ? onCanvasDragMove($event) : undefined; isPanning ? onCanvasPanMove($event) : undefined"
+      @mousemove="
+        designMode ? onCanvasMouseMove : undefined;
+        frameSelect ? onCanvasDragMove($event) : undefined;
+        isPanning ? onCanvasPanMove($event) : undefined;
+      "
       @mouseleave="clearGuides"
       @mousedown="designMode ? onCanvasMouseDown : undefined"
-      @mouseup="frameSelect ? onCanvasMouseUp() : undefined; isPanning ? onCanvasPanEnd() : undefined"
-      :style="spaceHeld && designMode ? { cursor: isPanning ? 'grabbing' : 'grab' } : undefined"
+      @mouseup="
+        frameSelect ? onCanvasMouseUp() : undefined;
+        isPanning ? onCanvasPanEnd() : undefined;
+      "
     >
       <template v-if="designMode">
-        <div ref="viewportRef" class="luban-designer__viewport" :style="viewportStyle" @dragover.prevent="onPaletteDragOver" @drop="onPaletteDrop">
+        <div
+          ref="viewportRef"
+          class="luban-designer__viewport"
+          :style="viewportStyle"
+          @dragover.prevent="onPaletteDragOver"
+          @drop="onPaletteDrop"
+        >
           <component
             :is="getComponent(schema.root.type)"
             v-bind="(schema.root.props ?? {}) as Record<string, unknown>"
@@ -608,11 +682,16 @@ const isEmpty = computed(
                   :placeholder-text="placeholder"
                   :breakpoint="breakpoint"
                   @select="syncSelected"
-                  @add-node="(type, parentId) => emit('add-node', type, parentId)"
+                  @add-node="
+                    (type, parentId) => emit('add-node', type, parentId)
+                  "
                   @copy="emit('copy', $event)"
                   @delete="emit('delete', $event)"
                   @context-menu="(x, y, id) => emit('context-menu', x, y, id)"
-                  @move-node="(nodeId, from, to, idx) => emit('move-node', nodeId, from, to, idx)"
+                  @move-node="
+                    (nodeId, from, to, idx) =>
+                      emit('move-node', nodeId, from, to, idx)
+                  "
                 />
               </div>
             </div>
@@ -643,28 +722,46 @@ const isEmpty = computed(
           />
 
           <!-- V2-T12 对齐辅助线 overlay -->
-          <div v-if="activeGuides.length" class="luban-designer__guides" aria-hidden="true">
+          <div
+            v-if="activeGuides.length"
+            class="luban-designer__guides"
+            aria-hidden="true"
+          >
             <template v-for="(g, i) in activeGuides" :key="i">
               <div
                 v-if="g.orientation === 'vertical'"
                 class="luban-designer__guide luban-designer__guide--vertical"
-                :style="{ left: g.position + 'px', top: g.start + 'px', height: (g.end - g.start) + 'px' }"
+                :style="{
+                  left: g.position + 'px',
+                  top: g.start + 'px',
+                  height: g.end - g.start + 'px',
+                }"
               />
               <div
                 v-else
                 class="luban-designer__guide luban-designer__guide--horizontal"
-                :style="{ top: g.position + 'px', left: g.start + 'px', width: (g.end - g.start) + 'px' }"
+                :style="{
+                  top: g.position + 'px',
+                  left: g.start + 'px',
+                  width: g.end - g.start + 'px',
+                }"
               />
             </template>
           </div>
           <!-- V2-T12 间距提示 overlay -->
-          <div v-if="activeSpacingHints.length" class="luban-designer__spacing" aria-hidden="true">
+          <div
+            v-if="activeSpacingHints.length"
+            class="luban-designer__spacing"
+            aria-hidden="true"
+          >
             <div
               v-for="(h, i) in activeSpacingHints"
-              :key="'sp'+i"
+              :key="'sp' + i"
               class="luban-designer__spacing-label"
               :style="{ left: h.cx + 'px', top: h.cy + 'px' }"
-            >{{ h.distance }}</div>
+            >
+              {{ h.distance }}
+            </div>
           </div>
           <!-- V2-T11 框选矩形 overlay -->
           <div
@@ -674,7 +771,7 @@ const isEmpty = computed(
               left: Math.min(frameSelect.startX, frameSelect.endX) + 'px',
               top: Math.min(frameSelect.startY, frameSelect.endY) + 'px',
               width: Math.abs(frameSelect.endX - frameSelect.startX) + 'px',
-              height: Math.abs(frameSelect.endY - frameSelect.startY) + 'px'
+              height: Math.abs(frameSelect.endY - frameSelect.startY) + 'px',
             }"
           />
         </div>
@@ -752,7 +849,8 @@ const isEmpty = computed(
 }
 
 .luban-designer__canvas--drop-active.luban-designer__canvas--grid {
-  background-image: radial-gradient(circle, #d4d4d8 1px, transparent 1px),
+  background-image:
+    radial-gradient(circle, #d4d4d8 1px, transparent 1px),
     linear-gradient(rgba(64, 158, 255, 0.06), rgba(64, 158, 255, 0.06));
 }
 
@@ -773,7 +871,9 @@ const isEmpty = computed(
   min-height: 600px;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.04);
   padding: 24px;
   box-sizing: border-box;
 }
@@ -800,7 +900,9 @@ const isEmpty = computed(
   border: 2px dashed #dcdfe6;
   border-radius: 8px;
   background: #fafbfc;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 .luban-designer__placeholder:hover {
   border-color: #409eff;
@@ -821,7 +923,9 @@ const isEmpty = computed(
   border: 2px dashed transparent;
   border-radius: 8px;
   margin-top: 16px;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
 }
 
 .luban-designer__canvas-spacer--active {
@@ -928,7 +1032,9 @@ const isEmpty = computed(
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .luban-designer__toggle-btn:hover {

@@ -44,7 +44,11 @@ function onAddNode(type: string, parentId?: string) {
     const parent = findNodeById(schema.value.root, parentId);
     if (!parent) return;
     const acceptTypes = getComponentMeta(parent.type)?.acceptTypes;
-    if (acceptTypes != null && acceptTypes.length > 0 && !acceptTypes.includes(type))
+    if (
+      acceptTypes != null &&
+      acceptTypes.length > 0 &&
+      !acceptTypes.includes(type)
+    )
       return;
   }
   schema.value = appendNodeToSchema(schema.value, type, parentId);
@@ -111,9 +115,7 @@ function updateProp(key: string, value: unknown) {
       size="medium"
     >
       <template #header>
-        <h3 class="designer-test__props-title">
-          {{ selectedMeta.label }}配置
-        </h3>
+        <h3 class="designer-test__props-title">{{ selectedMeta.label }}配置</h3>
       </template>
       <template #body>
         <luban-form size="medium">
@@ -152,7 +154,7 @@ function updateProp(key: string, value: unknown) {
                   @input="
                     updateProp(
                       key,
-                      Number(($event.target as HTMLInputElement).value)
+                      Number(($event.target as HTMLInputElement).value),
                     )
                   "
                 />
@@ -168,10 +170,7 @@ function updateProp(key: string, value: unknown) {
                   type="checkbox"
                   :checked="(selectedNode!.props ?? {})[key]"
                   @change="
-                    updateProp(
-                      key,
-                      ($event.target as HTMLInputElement).checked
-                    )
+                    updateProp(key, ($event.target as HTMLInputElement).checked)
                   "
                 />
               </label>

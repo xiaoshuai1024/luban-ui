@@ -6,7 +6,7 @@ const props = withDefaults(
     /** Form width size; controls max-width, default medium (~800px) */
     size?: FormSize;
   }>(),
-  { size: 'medium' }
+  { size: 'medium' },
 );
 
 defineEmits<{

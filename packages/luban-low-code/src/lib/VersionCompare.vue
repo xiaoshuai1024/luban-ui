@@ -31,7 +31,7 @@ const props = withDefaults(
     currentVersionId?: number | null;
     loading?: boolean;
   }>(),
-  { currentVersionId: null, loading: false }
+  { currentVersionId: null, loading: false },
 );
 
 const emit = defineEmits<{
@@ -73,11 +73,16 @@ const diffResult = computed(() => {
 });
 
 /** LCS 行级 diff：返回对齐后的行序列，标注每行的 diff 类型 */
-function lcsDiff(a: string[], b: string[]): { a: string; b: string; diff: 'same' | 'changed' | 'added' | 'removed' }[] {
+function lcsDiff(
+  a: string[],
+  b: string[],
+): { a: string; b: string; diff: 'same' | 'changed' | 'added' | 'removed' }[] {
   const n = a.length;
   const m = b.length;
   // dp[i][j] = a[0..i) 与 b[0..j) 的 LCS 长度
-  const dp: number[][] = Array.from({ length: n + 1 }, () => new Array<number>(m + 1).fill(0));
+  const dp: number[][] = Array.from({ length: n + 1 }, () =>
+    new Array<number>(m + 1).fill(0),
+  );
   for (let i = 1; i <= n; i++) {
     for (let j = 1; j <= m; j++) {
       if (a[i - 1] === b[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;
@@ -85,13 +90,18 @@ function lcsDiff(a: string[], b: string[]): { a: string; b: string; diff: 'same'
     }
   }
   // 回溯生成对齐序列（从尾部）
-  const rows: { a: string; b: string; diff: 'same' | 'changed' | 'added' | 'removed' }[] = [];
+  const rows: {
+    a: string;
+    b: string;
+    diff: 'same' | 'changed' | 'added' | 'removed';
+  }[] = [];
   let i = n;
   let j = m;
   while (i > 0 && j > 0) {
     if (a[i - 1] === b[j - 1]) {
       rows.unshift({ a: a[i - 1], b: b[j - 1], diff: 'same' });
-      i--; j--;
+      i--;
+      j--;
     } else if (dp[i - 1][j] >= dp[i][j - 1]) {
       // a 有 b 无：removed
       rows.unshift({ a: a[i - 1], b: '', diff: 'removed' });
@@ -122,7 +132,7 @@ function stringify(val: unknown): string {
 }
 
 const changedCount = computed(
-  () => diffResult.value?.filter((r) => r.diff !== 'same').length ?? 0
+  () => diffResult.value?.filter((r) => r.diff !== 'same').length ?? 0,
 );
 
 function isSelected(id: number): boolean {
@@ -146,10 +156,18 @@ function formatTime(iso: string): string {
     <div class="lb-version-compare__list">
       <div class="lb-version-compare__list-header">
         <span class="lb-version-compare__title">版本历史</span>
-        <button class="lb-version-compare__icon-btn" title="刷新" @click="emit('refresh')">⟳</button>
+        <button
+          class="lb-version-compare__icon-btn"
+          title="刷新"
+          @click="emit('refresh')"
+        >
+          ⟳
+        </button>
       </div>
       <div v-if="loading" class="lb-version-compare__empty">加载中...</div>
-      <div v-else-if="versions.length === 0" class="lb-version-compare__empty">暂无历史版本</div>
+      <div v-else-if="versions.length === 0" class="lb-version-compare__empty">
+        暂无历史版本
+      </div>
       <ul v-else class="lb-version-compare__versions">
         <li
           v-for="v in versions"
@@ -164,13 +182,21 @@ function formatTime(iso: string): string {
         >
           <div class="lb-version-compare__version-main">
             <span class="lb-version-compare__version-label">{{ v.label }}</span>
-            <span v-if="v.id === currentVersionId" class="lb-version-compare__current-tag">当前</span>
+            <span
+              v-if="v.id === currentVersionId"
+              class="lb-version-compare__current-tag"
+              >当前</span
+            >
           </div>
           <div class="lb-version-compare__version-meta">
             <span>{{ formatTime(v.createdAt) }}</span>
-            <span v-if="v.operator" class="lb-version-compare__operator">{{ v.operator }}</span>
+            <span v-if="v.operator" class="lb-version-compare__operator">{{
+              v.operator
+            }}</span>
           </div>
-          <div v-if="v.note" class="lb-version-compare__version-note">{{ v.note }}</div>
+          <div v-if="v.note" class="lb-version-compare__version-note">
+            {{ v.note }}
+          </div>
         </li>
       </ul>
       <p v-if="versions.length > 0" class="lb-version-compare__hint">
@@ -184,7 +210,9 @@ function formatTime(iso: string): string {
         <span class="lb-version-compare__diff-title">
           差异对比（{{ changedCount }} 处不同）
         </span>
-        <button class="lb-version-compare__btn" @click="clearSelection">清除</button>
+        <button class="lb-version-compare__btn" @click="clearSelection">
+          清除
+        </button>
         <button
           v-if="compareVersions"
           class="lb-version-compare__btn lb-version-compare__btn--primary"
@@ -195,7 +223,9 @@ function formatTime(iso: string): string {
       </div>
       <div class="lb-version-compare__diff-panels">
         <div class="lb-version-compare__panel">
-          <div class="lb-version-compare__panel-head">{{ compareVersions?.a.label }}</div>
+          <div class="lb-version-compare__panel-head">
+            {{ compareVersions?.a.label }}
+          </div>
           <pre class="lb-version-compare__code"><code
             v-for="(row, i) in diffResult"
             :key="i"
@@ -204,7 +234,9 @@ function formatTime(iso: string): string {
           >{{ row.a || ' ' }}</code></pre>
         </div>
         <div class="lb-version-compare__panel">
-          <div class="lb-version-compare__panel-head">{{ compareVersions?.b.label }}</div>
+          <div class="lb-version-compare__panel-head">
+            {{ compareVersions?.b.label }}
+          </div>
           <pre class="lb-version-compare__code"><code
             v-for="(row, i) in diffResult"
             :key="i"

@@ -13,7 +13,7 @@ withDefaults(
     direction: 'row',
     gap: 0,
     wrap: true,
-  }
+  },
 );
 </script>
 

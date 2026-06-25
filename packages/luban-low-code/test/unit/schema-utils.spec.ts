@@ -1,7 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import {
-  findNode, findParent, removeNode, duplicateNode, moveNode, insertNode,
-  updateNodeProps, bringToFront, sendToBack, reorderRootChildren,
+  findNode,
+  findParent,
+  removeNode,
+  duplicateNode,
+  moveNode,
+  insertNode,
+  updateNodeProps,
+  bringToFront,
+  sendToBack,
+  reorderRootChildren,
 } from '../../src/lib/schemaUtils';
 import type { PageSchema, NodeSchema } from '../../src/lib/schema';
 
@@ -14,7 +22,10 @@ function makeSchema(): PageSchema {
       children: [
         { id: 'a', type: 'LubanText', props: { content: 'A' } },
         {
-          id: 'b', type: 'LubanForm', props: {}, children: [
+          id: 'b',
+          type: 'LubanForm',
+          props: {},
+          children: [
             { id: 'b1', type: 'LubanInput', props: { label: 'B1' } },
             { id: 'b2', type: 'LubanInput', props: { label: 'B2' } },
           ],
@@ -143,7 +154,9 @@ describe('schemaUtils', () => {
   describe('updateNodeProps', () => {
     it('merges patch into props', () => {
       const s = makeSchema();
-      expect(updateNodeProps(s.root, 'a', { content: 'updated', extra: 1 })).toBe(true);
+      expect(
+        updateNodeProps(s.root, 'a', { content: 'updated', extra: 1 }),
+      ).toBe(true);
       expect(findNode(s.root, 'a')?.props?.content).toBe('updated');
       expect(findNode(s.root, 'a')?.props?.extra).toBe(1);
     });

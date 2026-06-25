@@ -5,7 +5,7 @@ withDefaults(
     basis?: number | string;
     alignSelf?: 'auto' | 'start' | 'center' | 'end' | 'stretch';
   }>(),
-  { grow: 0, basis: 'auto', alignSelf: 'auto' }
+  { grow: 0, basis: 'auto', alignSelf: 'auto' },
 );
 </script>
 

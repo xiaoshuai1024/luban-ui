@@ -18,7 +18,7 @@ const props = withDefaults(
     modelValue: true,
     size: 'medium',
     closable: true,
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -88,7 +88,8 @@ function closePanel() {
   height: 100%;
   background-color: v.$lb-surface;
   color: v.$lb-text-primary;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06),
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
     0 10px 24px rgba(0, 0, 0, 0.16);
   display: flex;
   flex-direction: column;
@@ -168,4 +169,3 @@ function closePanel() {
   }
 }
 </style>
-

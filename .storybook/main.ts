@@ -18,7 +18,11 @@ const config: StorybookConfig = {
   viteFinal(config) {
     // Ensure Vue plugin runs so .vue files in packages are compiled (framework may not cover them)
     const pluginNames = new Set(
-      (config.plugins ?? []).map((p) => p && typeof p === 'object' && 'name' in p ? (p as { name?: string }).name : '')
+      (config.plugins ?? []).map((p) =>
+        p && typeof p === 'object' && 'name' in p
+          ? (p as { name?: string }).name
+          : '',
+      ),
     );
     if (!pluginNames.has('vite:vue')) {
       config.plugins = config.plugins ?? [];
@@ -38,4 +42,3 @@ const config: StorybookConfig = {
 };
 
 export default config;
-

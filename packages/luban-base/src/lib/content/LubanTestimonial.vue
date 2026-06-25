@@ -22,7 +22,7 @@ const props = withDefaults(
     avatarUrl: '',
     rating: 0,
     backgroundColor: 'var(--lb-bg)',
-  }
+  },
 );
 
 /** 评分夹紧到 [0,5] 区间（D15-E2 完善：防 rating 越界导致星数异常）。 */
@@ -36,16 +36,33 @@ const clampedRating = computed(() => {
 
 <template>
   <div class="lb-testimonial" :style="{ backgroundColor }">
-    <div v-if="clampedRating > 0" class="lb-testimonial__stars" :aria-label="`评分 ${clampedRating} / 5`">
-      <span v-for="i in 5" :key="i" class="lb-testimonial__star" :class="{ 'lb-testimonial__star--active': i <= clampedRating }">★</span>
+    <div
+      v-if="clampedRating > 0"
+      class="lb-testimonial__stars"
+      :aria-label="`评分 ${clampedRating} / 5`"
+    >
+      <span
+        v-for="i in 5"
+        :key="i"
+        class="lb-testimonial__star"
+        :class="{ 'lb-testimonial__star--active': i <= clampedRating }"
+        >★</span
+      >
     </div>
     <blockquote class="lb-testimonial__quote">
       <p>{{ quote }}</p>
     </blockquote>
     <div class="lb-testimonial__author">
-      <img v-if="avatarUrl" :src="avatarUrl" :alt="author" class="lb-testimonial__avatar" />
+      <img
+        v-if="avatarUrl"
+        :src="avatarUrl"
+        :alt="author"
+        class="lb-testimonial__avatar"
+      />
       <div class="lb-testimonial__author-info">
-        <span v-if="author" class="lb-testimonial__author-name">{{ author }}</span>
+        <span v-if="author" class="lb-testimonial__author-name">{{
+          author
+        }}</span>
         <span v-if="role" class="lb-testimonial__author-role">{{ role }}</span>
       </div>
     </div>
@@ -56,7 +73,7 @@ const clampedRating = computed(() => {
 .lb-testimonial {
   padding: 24px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   width: 100%;
 }
 .lb-testimonial__stars {
@@ -65,15 +82,25 @@ const clampedRating = computed(() => {
 .lb-testimonial__star {
   color: var(--lb-star-inactive);
   font-size: 18px;
-  &--active { color: var(--lb-star-active); }
+  &--active {
+    color: var(--lb-star-active);
+  }
 }
 .lb-testimonial__quote {
   margin: 0 0 16px;
   font-size: 1rem;
   line-height: 1.6;
   color: var(--lb-text-body);
-  p { margin: 0; }
-  &::before { content: '\201C'; font-size: 2em; color: var(--lb-accent); line-height: 0; vertical-align: -0.4em; }
+  p {
+    margin: 0;
+  }
+  &::before {
+    content: '\201C';
+    font-size: 2em;
+    color: var(--lb-accent);
+    line-height: 0;
+    vertical-align: -0.4em;
+  }
 }
 .lb-testimonial__author {
   display: flex;

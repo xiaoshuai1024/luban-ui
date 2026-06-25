@@ -25,13 +25,19 @@ export interface ResolvedCollectionItem {
 /** 排序 + limit 裁剪（纯函数） */
 export function sortAndLimitItems(
   items: ResolvedCollectionItem[],
-  binding: NodeCmsBinding
+  binding: NodeCmsBinding,
 ): ResolvedCollectionItem[] {
   const sortBy = binding.sortBy ?? 'updatedAt';
   const order = binding.sortOrder ?? 'desc';
   const sorted = [...items].sort((a, b) => {
-    const av = sortBy === 'updatedAt' ? a.updatedAt : (a.data[sortBy] as string | number | undefined);
-    const bv = sortBy === 'updatedAt' ? b.updatedAt : (b.data[sortBy] as string | number | undefined);
+    const av =
+      sortBy === 'updatedAt'
+        ? a.updatedAt
+        : (a.data[sortBy] as string | number | undefined);
+    const bv =
+      sortBy === 'updatedAt'
+        ? b.updatedAt
+        : (b.data[sortBy] as string | number | undefined);
     if (av == null && bv == null) return 0;
     if (av == null) return 1;
     if (bv == null) return -1;
@@ -42,7 +48,9 @@ export function sortAndLimitItems(
     const bs = String(bv);
     return order === 'asc' ? as.localeCompare(bs) : bs.localeCompare(as);
   });
-  return binding.limit && binding.limit > 0 ? sorted.slice(0, binding.limit) : sorted;
+  return binding.limit && binding.limit > 0
+    ? sorted.slice(0, binding.limit)
+    : sorted;
 }
 
 /**
@@ -58,7 +66,7 @@ export function sortAndLimitItems(
 export function resolveCmsProps(
   binding: NodeCmsBinding | undefined,
   items: ResolvedCollectionItem[],
-  injectProp?: string
+  injectProp?: string,
 ): Record<string, unknown> {
   if (!binding || !binding.collectionId) return {};
   const sorted = sortAndLimitItems(items, binding);
@@ -83,7 +91,10 @@ export function collectBoundCollectionIds(root: {
   children?: unknown[];
 }): string[] {
   const ids = new Set<string>();
-  function walk(node: { cmsBinding?: NodeCmsBinding; children?: unknown[] }): void {
+  function walk(node: {
+    cmsBinding?: NodeCmsBinding;
+    children?: unknown[];
+  }): void {
     if (node.cmsBinding?.collectionId) {
       ids.add(node.cmsBinding.collectionId);
     }

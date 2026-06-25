@@ -20,7 +20,11 @@ export const contentListMaterial: MaterialDefinition = defineMaterial({
   propsSchema: {
     type: 'object',
     properties: {
-      items: { type: 'array', default: [], label: '内容项（CMS 绑定自动注入）' },
+      items: {
+        type: 'array',
+        default: [],
+        label: '内容项（CMS 绑定自动注入）',
+      },
       titleKey: { type: 'string', default: 'title', label: '标题字段' },
       bodyKey: { type: 'string', default: 'body', label: '正文字段' },
       imageKey: { type: 'string', default: 'image', label: '图片字段' },

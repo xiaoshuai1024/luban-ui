@@ -59,7 +59,7 @@ describe('LubanModal component — rendering & events', () => {
     const el = document.body.querySelector('.lb-modal');
     expect(el).not.toBeNull();
     expect(document.body.querySelector('.lb-modal__title')!.textContent).toBe(
-      '提示'
+      '提示',
     );
   });
 
@@ -108,7 +108,7 @@ describe('LubanModal component — rendering & events', () => {
       },
     });
     const closeBtn = document.body.querySelector(
-      '.lb-modal__close'
+      '.lb-modal__close',
     ) as HTMLElement;
     closeBtn.dispatchEvent(new Event('click', { bubbles: true }));
     await wrapper.vm.$nextTick();
@@ -125,9 +125,7 @@ describe('LubanModal component — rendering & events', () => {
         },
       },
     });
-    const mask = document.body.querySelector(
-      '.lb-modal__mask'
-    ) as HTMLElement;
+    const mask = document.body.querySelector('.lb-modal__mask') as HTMLElement;
     mask.dispatchEvent(new Event('click', { bubbles: true }));
     await wrapper.vm.$nextTick();
     expect(lastEmitted).toBe(false);

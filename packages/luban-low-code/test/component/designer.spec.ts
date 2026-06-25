@@ -36,4 +36,3 @@ describe('LubanDesigner e2e', () => {
     expect(schema.root.children.length).toBe(1);
   });
 });
-

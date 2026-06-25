@@ -10,7 +10,11 @@
  * 设计态：PageEditor 切断点 → DesignRenderer 接收 breakpoint → 调本函数取该断点 style。
  * 运行态：RuntimeRenderer 不切单断点，而是 toResponsiveCss 输出三断点 @media。
  */
-import type { NodeSchema, NodeResponsive, ResponsiveBreakpoint } from './schema';
+import type {
+  NodeSchema,
+  NodeResponsive,
+  ResponsiveBreakpoint,
+} from './schema';
 
 /** 断点像素宽度（max-width 触发，mobile < 768 < tablet < 1024） */
 export const BREAKPOINTS = {
@@ -24,7 +28,7 @@ export const BREAKPOINTS = {
  */
 export function resolveResponsiveProps(
   node: NodeSchema,
-  breakpoint: ResponsiveBreakpoint
+  breakpoint: ResponsiveBreakpoint,
 ): Record<string, string> {
   const desktop = { ...(node.style ?? {}) };
   if (breakpoint === 'desktop') return desktop;

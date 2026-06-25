@@ -20,8 +20,16 @@ import {
 
 describe('V2-T12 computeAlignGuides', () => {
   it('左边缘对齐触发垂直辅助线', () => {
-    const dragging: Rect = { id: 'd', left: 100, top: 50, width: 80, height: 40 };
-    const others: Rect[] = [{ id: 'o', left: 100, top: 200, width: 60, height: 40 }];
+    const dragging: Rect = {
+      id: 'd',
+      left: 100,
+      top: 50,
+      width: 80,
+      height: 40,
+    };
+    const others: Rect[] = [
+      { id: 'o', left: 100, top: 200, width: 60, height: 40 },
+    ];
     const result = computeAlignGuides(dragging, others);
     const vGuides = result.guides.filter((g) => g.orientation === 'vertical');
     expect(vGuides.length).toBeGreaterThan(0);
@@ -29,32 +37,62 @@ describe('V2-T12 computeAlignGuides', () => {
   });
 
   it('水平中线对齐触发水平辅助线', () => {
-    const dragging: Rect = { id: 'd', left: 100, top: 50, width: 80, height: 40 };
+    const dragging: Rect = {
+      id: 'd',
+      left: 100,
+      top: 50,
+      width: 80,
+      height: 40,
+    };
     // 其他节点 top+height/2 = 50+20 = 70 = dragging center 70
-    const others: Rect[] = [{ id: 'o', left: 300, top: 50, width: 60, height: 40 }];
+    const others: Rect[] = [
+      { id: 'o', left: 300, top: 50, width: 60, height: 40 },
+    ];
     const result = computeAlignGuides(dragging, others);
     const hGuides = result.guides.filter((g) => g.orientation === 'horizontal');
     expect(hGuides.length).toBeGreaterThan(0);
   });
 
   it('阈值外（所有 6 轴都不对齐）不触发辅助线', () => {
-    const dragging: Rect = { id: 'd', left: 100, top: 50, width: 80, height: 40 };
+    const dragging: Rect = {
+      id: 'd',
+      left: 100,
+      top: 50,
+      width: 80,
+      height: 40,
+    };
     // 所有边缘都对不齐：left/centerX/right 与 top/centerY/bottom 均差 >6
-    const others: Rect[] = [{ id: 'o', left: 500, top: 600, width: 73, height: 63 }];
+    const others: Rect[] = [
+      { id: 'o', left: 500, top: 600, width: 73, height: 63 },
+    ];
     const result = computeAlignGuides(dragging, others);
     expect(result.guides.length).toBe(0);
     expect(result.snap).toBeUndefined();
   });
 
   it('返回吸附坐标（snap.x 让左边缘对齐）', () => {
-    const dragging: Rect = { id: 'd', left: 102, top: 50, width: 80, height: 40 };
-    const others: Rect[] = [{ id: 'o', left: 100, top: 200, width: 60, height: 40 }];
+    const dragging: Rect = {
+      id: 'd',
+      left: 102,
+      top: 50,
+      width: 80,
+      height: 40,
+    };
+    const others: Rect[] = [
+      { id: 'o', left: 100, top: 200, width: 60, height: 40 },
+    ];
     const result = computeAlignGuides(dragging, others, 6);
     expect(result.snap?.x).toBe(100); // 吸附到 o.left，dragging.left 应移到 100
   });
 
   it('多节点同时产生辅助线', () => {
-    const dragging: Rect = { id: 'd', left: 100, top: 50, width: 80, height: 40 };
+    const dragging: Rect = {
+      id: 'd',
+      left: 100,
+      top: 50,
+      width: 80,
+      height: 40,
+    };
     const others: Rect[] = [
       { id: 'o1', left: 100, top: 200, width: 60, height: 40 },
       { id: 'o2', left: 250, top: 50, width: 60, height: 40 }, // top 对齐
@@ -65,10 +103,22 @@ describe('V2-T12 computeAlignGuides', () => {
 
   it('右边缘对齐', () => {
     // dragging right = 100+80 = 180; other right = 120+60 = 180
-    const dragging: Rect = { id: 'd', left: 100, top: 50, width: 80, height: 40 };
-    const others: Rect[] = [{ id: 'o', left: 120, top: 200, width: 60, height: 40 }];
+    const dragging: Rect = {
+      id: 'd',
+      left: 100,
+      top: 50,
+      width: 80,
+      height: 40,
+    };
+    const others: Rect[] = [
+      { id: 'o', left: 120, top: 200, width: 60, height: 40 },
+    ];
     const result = computeAlignGuides(dragging, others);
-    expect(result.guides.some((g) => g.orientation === 'vertical' && g.position === 180)).toBe(true);
+    expect(
+      result.guides.some(
+        (g) => g.orientation === 'vertical' && g.position === 180,
+      ),
+    ).toBe(true);
   });
 });
 
@@ -133,9 +183,17 @@ describe('V2-T12 collectNodeRects', () => {
 
 describe('V2-T12 computeSpacingHints', () => {
   it('水平相邻节点生成垂直间距（y 投影重叠）', () => {
-    const dragging: Rect = { id: 'd', left: 120, top: 50, width: 80, height: 40 };
+    const dragging: Rect = {
+      id: 'd',
+      left: 120,
+      top: 50,
+      width: 80,
+      height: 40,
+    };
     // other 在 dragging 左侧，x 间隙 = 120-100 = 20，y 投影重叠
-    const others: Rect[] = [{ id: 'o', left: 20, top: 50, width: 80, height: 40 }];
+    const others: Rect[] = [
+      { id: 'o', left: 20, top: 50, width: 80, height: 40 },
+    ];
     const hints = computeSpacingHints(dragging, others);
     const vHints = hints.filter((h) => h.orientation === 'vertical');
     expect(vHints.length).toBeGreaterThan(0);
@@ -143,9 +201,17 @@ describe('V2-T12 computeSpacingHints', () => {
   });
 
   it('垂直相邻节点生成水平间距（x 投影重叠）', () => {
-    const dragging: Rect = { id: 'd', left: 50, top: 120, width: 80, height: 40 };
+    const dragging: Rect = {
+      id: 'd',
+      left: 50,
+      top: 120,
+      width: 80,
+      height: 40,
+    };
     // other 在 dragging 上方，y 间隙 = 120-90 = 30，x 投影重叠
-    const others: Rect[] = [{ id: 'o', left: 50, top: 50, width: 80, height: 40 }];
+    const others: Rect[] = [
+      { id: 'o', left: 50, top: 50, width: 80, height: 40 },
+    ];
     const hints = computeSpacingHints(dragging, others);
     const hHints = hints.filter((h) => h.orientation === 'horizontal');
     expect(hHints.length).toBeGreaterThan(0);
@@ -153,14 +219,30 @@ describe('V2-T12 computeSpacingHints', () => {
   });
 
   it('无投影重叠（对角错开）不生成间距', () => {
-    const dragging: Rect = { id: 'd', left: 500, top: 500, width: 80, height: 40 };
-    const others: Rect[] = [{ id: 'o', left: 20, top: 20, width: 80, height: 40 }];
+    const dragging: Rect = {
+      id: 'd',
+      left: 500,
+      top: 500,
+      width: 80,
+      height: 40,
+    };
+    const others: Rect[] = [
+      { id: 'o', left: 20, top: 20, width: 80, height: 40 },
+    ];
     expect(computeSpacingHints(dragging, others).length).toBe(0);
   });
 
   it('computeAlignGuides 返回 spacingHints 字段', () => {
-    const dragging: Rect = { id: 'd', left: 120, top: 50, width: 80, height: 40 };
-    const others: Rect[] = [{ id: 'o', left: 20, top: 50, width: 80, height: 40 }];
+    const dragging: Rect = {
+      id: 'd',
+      left: 120,
+      top: 50,
+      width: 80,
+      height: 40,
+    };
+    const others: Rect[] = [
+      { id: 'o', left: 20, top: 50, width: 80, height: 40 },
+    ];
     const result = computeAlignGuides(dragging, others);
     expect(Array.isArray(result.spacingHints)).toBe(true);
   });

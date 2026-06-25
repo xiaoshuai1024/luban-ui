@@ -13,10 +13,15 @@ describe('LubanSidePanel e2e', () => {
             LubanSidePanel,
             {
               modelValue: visible.value,
-              'onUpdate:modelValue': (v: boolean) => { visible.value = v; },
+              'onUpdate:modelValue': (v: boolean) => {
+                visible.value = v;
+              },
               title: '配置',
             },
-            { body: () => h('div', { 'data-test': 'panel-body' }, 'Body Content') }
+            {
+              body: () =>
+                h('div', { 'data-test': 'panel-body' }, 'Body Content'),
+            },
           );
       },
     });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onBeforeUnmount, ref as vueRef } from 'vue';
+import { computed, ref, onMounted, onUpdated, onBeforeUnmount, ref as vueRef } from 'vue';
 import { getComponent } from './registry';
 import type { NodeSchema, ResponsiveBreakpoint } from './schema';
 import { isContainerType, isFormValueType } from './constants';
@@ -46,6 +46,18 @@ const isSelected = computed(() => props.selectedNodeId === props.root.id);
 const showToolbar = computed(
   () => !props.isRoot && (isSelected.value || hovered.value)
 );
+
+// T-ui-1：选中态尺寸标注 overlay（W×H 像素，对标 Framer）
+const wrapperRef = vueRef<HTMLElement | null>(null);
+const sizeLabel = ref('');
+function updateSizeLabel(): void {
+  if (!isSelected.value || !wrapperRef.value) {
+    sizeLabel.value = '';
+    return;
+  }
+  const rect = wrapperRef.value.getBoundingClientRect();
+  sizeLabel.value = `${Math.round(rect.width)} × ${Math.round(rect.height)}`;
+}
 
 function onWrapperClick(e: Event, nodeId: string): void {
   e.stopPropagation();
@@ -212,7 +224,9 @@ onMounted(() => {
       onEnd: handleContainerSortEnd,
     });
   }
+  updateSizeLabel();
 });
+onUpdated(updateSizeLabel);
 onBeforeUnmount(() => {
   containerSortable?.destroy();
   containerSortable = null;
@@ -222,6 +236,7 @@ onBeforeUnmount(() => {
 <template>
   <template v-if="root">
     <div
+      ref="wrapperRef"
       class="design-renderer__wrapper"
       :data-node-id="root.id"
       :data-lb-node="root.id"
@@ -246,6 +261,8 @@ onBeforeUnmount(() => {
         @copy="onCopy"
         @delete="onDelete"
       />
+      <!-- T-ui-1：选中态尺寸标注（W×H 像素） -->
+      <span v-if="isSelected" class="design-renderer__size-badge">{{ sizeLabel }}</span>
       <template v-if="isEmptyContainer()">
         <div
           class="design-renderer__placeholder"
@@ -400,5 +417,20 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+/* T-ui-1：选中态尺寸标注 */
+.design-renderer__size-badge {
+  position: absolute;
+  bottom: -24px;
+  right: 0;
+  font-size: 10px;
+  line-height: 1;
+  padding: 2px 6px;
+  background: #409eff;
+  color: #fff;
+  border-radius: 3px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
 }
 </style>

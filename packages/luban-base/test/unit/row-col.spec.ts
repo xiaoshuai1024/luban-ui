@@ -20,4 +20,3 @@ describe('LubanRow & LubanCol', () => {
     expect(wrapper.findAllComponents(LubanCol)).toHaveLength(2);
   });
 });
-

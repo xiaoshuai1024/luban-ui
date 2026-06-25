@@ -31,7 +31,7 @@ const props = withDefaults(
     items: () => [],
     mode: 'horizontal',
     activeKey: '',
-  }
+  },
 );
 
 const emit = defineEmits<{

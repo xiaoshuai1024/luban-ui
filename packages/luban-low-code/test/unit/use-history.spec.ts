@@ -4,9 +4,12 @@ import type { PageSchema } from '../../src/lib/schema';
 
 function schema(label: string): PageSchema {
   return {
-    root: { id: 'root', type: 'LubanContainer', props: {}, children: [
-      { id: 'n1', type: 'LubanText', props: { content: label } },
-    ] },
+    root: {
+      id: 'root',
+      type: 'LubanContainer',
+      props: {},
+      children: [{ id: 'n1', type: 'LubanText', props: { content: label } }],
+    },
   };
 }
 

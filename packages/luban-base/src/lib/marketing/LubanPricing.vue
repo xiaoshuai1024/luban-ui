@@ -14,21 +14,20 @@ withDefaults(
     backgroundColor?: string;
   }>(),
   {
-    heading: "选择方案",
+    heading: '选择方案',
     plans: () => [],
     highlightIndex: -1,
-    backgroundColor: "var(--lb-bg-muted)",
-  }
+    backgroundColor: 'var(--lb-bg-muted)',
+  },
 );
 </script>
 
 <template>
-  <section
-    class="lb-pricing"
-    :style="{ backgroundColor }"
-  >
+  <section class="lb-pricing" :style="{ backgroundColor }">
     <div class="lb-pricing__inner">
-      <h2 v-if="heading" class="lb-pricing__heading">{{ heading }}</h2>
+      <h2 v-if="heading" class="lb-pricing__heading">
+        {{ heading }}
+      </h2>
       <div v-if="plans.length" class="lb-pricing__list">
         <div
           v-for="(plan, i) in plans"
@@ -36,9 +35,14 @@ withDefaults(
           class="lb-pricing__plan"
           :class="{ 'lb-pricing__plan--highlight': i === highlightIndex }"
         >
-          <h3 class="lb-pricing__name">{{ plan.name }}</h3>
+          <h3 class="lb-pricing__name">
+            {{ plan.name }}
+          </h3>
           <div class="lb-pricing__price">
-            {{ plan.price }}<span v-if="plan.period" class="lb-pricing__period">/{{ plan.period }}</span>
+            {{ plan.price
+            }}<span v-if="plan.period" class="lb-pricing__period"
+              >/{{ plan.period }}</span
+            >
           </div>
           <ul v-if="plan.features?.length" class="lb-pricing__features">
             <li
@@ -46,13 +50,16 @@ withDefaults(
               :key="j"
               class="lb-pricing__feature"
               :class="{ 'lb-pricing__feature--off': !f.included }"
-            >{{ f.text }}</li>
+            >
+              {{ f.text }}
+            </li>
           </ul>
           <a
             v-if="plan.ctaText"
             class="lb-pricing__cta"
             :href="plan.ctaUrl ? plan.ctaUrl : '#'"
-          >{{ plan.ctaText }}</a>
+            >{{ plan.ctaText }}</a
+          >
         </div>
       </div>
     </div>

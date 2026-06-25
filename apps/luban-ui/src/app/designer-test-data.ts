@@ -9,8 +9,12 @@ function nextId(): string {
 /** 根据组件类型生成新节点的默认 props，并返回需写入 formState 的 name（若有） */
 export function defaultPropsForType(
   type: string,
-  id: string
-): { props: Record<string, unknown>; formStateKey?: string; formStateValue?: unknown } {
+  id: string,
+): {
+  props: Record<string, unknown>;
+  formStateKey?: string;
+  formStateValue?: unknown;
+} {
   const name = `field_${id}`;
   const base = { name };
   switch (type) {
@@ -24,7 +28,9 @@ export function defaultPropsForType(
         },
       };
     case 'LubanButton':
-      return { props: { content: '按钮', variant: 'contained', color: 'primary' } };
+      return {
+        props: { content: '按钮', variant: 'contained', color: 'primary' },
+      };
     case 'LubanInput':
       return {
         props: { ...base, label: '输入框', placeholder: '请输入' },
@@ -109,7 +115,7 @@ export function createEmptyDesignerSchema(): PageSchema {
 export function appendNodeToSchema(
   schema: PageSchema,
   type: string,
-  parentId?: string
+  parentId?: string,
 ): PageSchema {
   const id = nextId();
   const { props, formStateKey, formStateValue } = defaultPropsForType(type, id);
@@ -150,7 +156,7 @@ export function findNodeById(root: NodeSchema, id: string): NodeSchema | null {
 export function updateNodeProps(
   root: NodeSchema,
   nodeId: string,
-  props: Record<string, unknown>
+  props: Record<string, unknown>,
 ): boolean {
   if (root.id === nodeId) {
     root.props = { ...(root.props ?? {}), ...props };

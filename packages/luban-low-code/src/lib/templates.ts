@@ -59,7 +59,11 @@ const marketingTemplate: PageSchema = {
       {
         id: 'tpl-mkt-cta',
         type: 'LubanButton',
-        props: { content: '🛒 立即下单', variant: 'contained', color: 'primary' },
+        props: {
+          content: '🛒 立即下单',
+          variant: 'contained',
+          color: 'primary',
+        },
         children: [],
       },
     ],
@@ -83,18 +87,32 @@ const formTemplate: PageSchema = {
       {
         id: 'tpl-form-body',
         type: 'LubanForm',
-        props: { formId: 'tpl-form-placeholder', submitText: '提交', layout: 'vertical' },
+        props: {
+          formId: 'tpl-form-placeholder',
+          submitText: '提交',
+          layout: 'vertical',
+        },
         children: [
           {
             id: 'tpl-form-name',
             type: 'LubanInput',
-            props: { name: 'name', label: '姓名', placeholder: '请输入姓名', required: true },
+            props: {
+              name: 'name',
+              label: '姓名',
+              placeholder: '请输入姓名',
+              required: true,
+            },
             children: [],
           },
           {
             id: 'tpl-form-phone',
             type: 'LubanPhoneInput',
-            props: { name: 'phone', label: '手机号', placeholder: '请输入手机号', required: true },
+            props: {
+              name: 'phone',
+              label: '手机号',
+              placeholder: '请输入手机号',
+              required: true,
+            },
             children: [],
           },
           {
@@ -115,30 +133,61 @@ const posterTemplate: PageSchema = {
   root: {
     id: 'tpl-root-poster',
     type: 'LubanPoster',
-    props: { width: 750, height: 1334, background: 'linear-gradient(135deg, #667eea, #764ba2)' },
+    props: {
+      width: 750,
+      height: 1334,
+      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+    },
     children: [
       {
         id: 'tpl-poster-title',
         type: 'LubanPosterText',
-        props: { text: '邀请函', fontSize: 64, color: '#ffffff', fontWeight: 'bold', top: 120, left: 0, align: 'center' },
+        props: {
+          text: '邀请函',
+          fontSize: 64,
+          color: '#ffffff',
+          fontWeight: 'bold',
+          top: 120,
+          left: 0,
+          align: 'center',
+        },
         children: [],
       },
       {
         id: 'tpl-poster-sub',
         type: 'LubanPosterText',
-        props: { text: '诚邀您参加年度盛典', fontSize: 32, color: '#ffffff', top: 220, left: 0, align: 'center' },
+        props: {
+          text: '诚邀您参加年度盛典',
+          fontSize: 32,
+          color: '#ffffff',
+          top: 220,
+          left: 0,
+          align: 'center',
+        },
         children: [],
       },
       {
         id: 'tpl-poster-image',
         type: 'LubanPosterImage',
-        props: { src: '', width: 400, height: 400, top: 320, left: 175, borderRadius: 12 },
+        props: {
+          src: '',
+          width: 400,
+          height: 400,
+          top: 320,
+          left: 175,
+          borderRadius: 12,
+        },
         children: [],
       },
       {
         id: 'tpl-poster-qrcode',
         type: 'LubanQRCode',
-        props: { value: 'https://example.com', size: 160, top: 1100, left: 295 },
+        props: {
+          value: 'https://example.com',
+          size: 160,
+          top: 1100,
+          left: 295,
+        },
         children: [],
       },
     ],
@@ -170,7 +219,11 @@ const websiteTemplate: PageSchema = {
       {
         id: 'tpl-web-banner',
         type: 'LubanBanner',
-        props: { title: '专业解决方案提供商', subtitle: '助力企业数字化转型', ctaText: '了解详情' },
+        props: {
+          title: '专业解决方案提供商',
+          subtitle: '助力企业数字化转型',
+          ctaText: '了解详情',
+        },
         children: [],
       },
       {
@@ -181,19 +234,31 @@ const websiteTemplate: PageSchema = {
           {
             id: 'tpl-web-card-1',
             type: 'LubanCard',
-            props: { title: '产品 1', description: '高效稳定的核心产品', image: '' },
+            props: {
+              title: '产品 1',
+              description: '高效稳定的核心产品',
+              image: '',
+            },
             children: [],
           },
           {
             id: 'tpl-web-card-2',
             type: 'LubanCard',
-            props: { title: '产品 2', description: '灵活可扩展的解决方案', image: '' },
+            props: {
+              title: '产品 2',
+              description: '灵活可扩展的解决方案',
+              image: '',
+            },
             children: [],
           },
           {
             id: 'tpl-web-card-3',
             type: 'LubanCard',
-            props: { title: '产品 3', description: '安全可靠的企业服务', image: '' },
+            props: {
+              title: '产品 3',
+              description: '安全可靠的企业服务',
+              image: '',
+            },
             children: [],
           },
         ],
@@ -225,7 +290,11 @@ const landingTemplate: PageSchema = {
       {
         id: 'tpl-land-banner',
         type: 'LubanBanner',
-        props: { title: '🚀 新品发布', subtitle: '预约体验，享首发优惠', ctaText: '立即预约' },
+        props: {
+          title: '🚀 新品发布',
+          subtitle: '预约体验，享首发优惠',
+          ctaText: '立即预约',
+        },
         children: [],
       },
       {
@@ -246,18 +315,32 @@ const landingTemplate: PageSchema = {
       {
         id: 'tpl-land-form',
         type: 'LubanForm',
-        props: { formId: 'tpl-land-placeholder', submitText: '预约体验', layout: 'vertical' },
+        props: {
+          formId: 'tpl-land-placeholder',
+          submitText: '预约体验',
+          layout: 'vertical',
+        },
         children: [
           {
             id: 'tpl-land-name',
             type: 'LubanInput',
-            props: { name: 'name', label: '姓名', placeholder: '请输入姓名', required: true },
+            props: {
+              name: 'name',
+              label: '姓名',
+              placeholder: '请输入姓名',
+              required: true,
+            },
             children: [],
           },
           {
             id: 'tpl-land-phone',
             type: 'LubanPhoneInput',
-            props: { name: 'phone', label: '手机号', placeholder: '请输入手机号', required: true },
+            props: {
+              name: 'phone',
+              label: '手机号',
+              placeholder: '请输入手机号',
+              required: true,
+            },
             children: [],
           },
         ],
@@ -265,7 +348,11 @@ const landingTemplate: PageSchema = {
       {
         id: 'tpl-land-cta',
         type: 'LubanButton',
-        props: { content: '🎉 立即预约首发', variant: 'contained', color: 'primary' },
+        props: {
+          content: '🎉 立即预约首发',
+          variant: 'contained',
+          color: 'primary',
+        },
         children: [],
       },
     ],

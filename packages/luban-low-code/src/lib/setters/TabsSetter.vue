@@ -16,7 +16,7 @@ const props = withDefaults(
   defineProps<{
     modelValue?: TabItem[];
   }>(),
-  { modelValue: () => [] }
+  { modelValue: () => [] },
 );
 
 const emit = defineEmits<{
@@ -34,12 +34,18 @@ function genId(): string {
 }
 
 function emitList(list: TabItem[]): void {
-  emit('update:modelValue', list.map((t) => ({ ...t })));
+  emit(
+    'update:modelValue',
+    list.map((t) => ({ ...t })),
+  );
 }
 
 function add(): void {
   const n = tabs.value.length + 1;
-  emitList([...tabs.value, { id: genId(), label: `标签 ${n}`, key: `tab${n}` }]);
+  emitList([
+    ...tabs.value,
+    { id: genId(), label: `标签 ${n}`, key: `tab${n}` },
+  ]);
 }
 
 function remove(index: number): void {
@@ -72,7 +78,9 @@ function move(index: number, dir: -1 | 1): void {
           type="text"
           :value="tab.label"
           placeholder="标签名"
-          @input="update(i, { label: ($event.target as HTMLInputElement).value })"
+          @input="
+            update(i, { label: ($event.target as HTMLInputElement).value })
+          "
         />
         <input
           class="lb-tabs-setter__input lb-tabs-setter__input--key"
@@ -82,9 +90,19 @@ function move(index: number, dir: -1 | 1): void {
           @input="update(i, { key: ($event.target as HTMLInputElement).value })"
         />
         <div class="lb-tabs-setter__actions">
-          <button title="上移" :disabled="i === 0" @click="move(i, -1)">←</button>
-          <button title="下移" :disabled="i === tabs.length - 1" @click="move(i, 1)">→</button>
-          <button class="lb-tabs-setter__del" title="删除" @click="remove(i)">✕</button>
+          <button title="上移" :disabled="i === 0" @click="move(i, -1)">
+            ←
+          </button>
+          <button
+            title="下移"
+            :disabled="i === tabs.length - 1"
+            @click="move(i, 1)"
+          >
+            →
+          </button>
+          <button class="lb-tabs-setter__del" title="删除" @click="remove(i)">
+            ✕
+          </button>
         </div>
       </div>
     </div>

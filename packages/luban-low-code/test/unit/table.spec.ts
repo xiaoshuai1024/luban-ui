@@ -23,7 +23,13 @@ describe('tableMaterial (LubanTable) — props schema contract', () => {
 
   it('declares all required props with defaults', () => {
     const props = tableMaterial.propsSchema.properties;
-    for (const key of ['columns', 'datasourceId', 'pageSize', 'striped', 'border']) {
+    for (const key of [
+      'columns',
+      'datasourceId',
+      'pageSize',
+      'striped',
+      'border',
+    ]) {
       expect(props[key]).toBeDefined();
       expect(props[key]!.default).not.toBeUndefined();
     }
@@ -110,7 +116,9 @@ describe('LubanTable component — rendering', () => {
     const wrapper = mount(LubanTable, {
       props: { columns, rows, border: false },
     });
-    expect(wrapper.find('.lb-table').classes()).not.toContain('lb-table--border');
+    expect(wrapper.find('.lb-table').classes()).not.toContain(
+      'lb-table--border',
+    );
   });
 
   it('emits rowClick with the clicked row payload', async () => {
@@ -152,7 +160,9 @@ describe('LubanTable component — rendering', () => {
     expect(wrapper.find('.lb-table__page-info').text()).toBe('1 / 3');
 
     // 翻到下一页：第 3-4 条
-    await wrapper.find('.lb-table__page-btn[aria-label="下一页"]').trigger('click');
+    await wrapper
+      .find('.lb-table__page-btn[aria-label="下一页"]')
+      .trigger('click');
     trs = wrapper.findAll('.lb-table__row');
     expect(trs).toHaveLength(2);
     expect(trs[0].text()).toContain('c');
@@ -160,7 +170,10 @@ describe('LubanTable component — rendering', () => {
   });
 
   it('disables prev on first page and next on last page (H1)', () => {
-    const longRows = Array.from({ length: 5 }, (_, i) => ({ name: String(i), age: i }));
+    const longRows = Array.from({ length: 5 }, (_, i) => ({
+      name: String(i),
+      age: i,
+    }));
     const wrapper = mount(LubanTable, {
       props: { columns, rows: longRows, pageSize: 2 },
     });
@@ -170,7 +183,10 @@ describe('LubanTable component — rendering', () => {
   });
 
   it('renders all rows without pagination controls when pageSize<=0 (H1)', () => {
-    const longRows = Array.from({ length: 5 }, (_, i) => ({ name: String(i), age: i }));
+    const longRows = Array.from({ length: 5 }, (_, i) => ({
+      name: String(i),
+      age: i,
+    }));
     const wrapper = mount(LubanTable, {
       props: { columns, rows: longRows, pageSize: 0 },
     });

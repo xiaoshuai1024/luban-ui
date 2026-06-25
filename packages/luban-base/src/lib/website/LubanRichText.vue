@@ -7,8 +7,20 @@ defineProps<{ html: string }>();
 </template>
 
 <style scoped>
-.lb-richtext { line-height: 1.7; color: #333; word-break: break-word; }
-.lb-richtext :deep(p) { margin: 0 0 8px; }
-.lb-richtext :deep(ul), .lb-richtext :deep(ol) { padding-left: 20px; margin: 0 0 8px; }
-.lb-richtext :deep(img) { max-width: 100%; }
+.lb-richtext {
+  line-height: 1.7;
+  color: #333;
+  word-break: break-word;
+}
+.lb-richtext :deep(p) {
+  margin: 0 0 8px;
+}
+.lb-richtext :deep(ul),
+.lb-richtext :deep(ol) {
+  padding-left: 20px;
+  margin: 0 0 8px;
+}
+.lb-richtext :deep(img) {
+  max-width: 100%;
+}
 </style>

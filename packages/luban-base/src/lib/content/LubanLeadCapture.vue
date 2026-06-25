@@ -49,7 +49,7 @@ const props = withDefaults(
     showEmail: false,
     formId: '',
     successText: '提交成功，我们会尽快与您联系',
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -112,8 +112,12 @@ function onSubmit(): void {
 <template>
   <section class="lb-lead-capture" :style="{ backgroundColor }">
     <div class="lb-lead-capture__content">
-      <h2 class="lb-lead-capture__heading">{{ heading }}</h2>
-      <p v-if="description" class="lb-lead-capture__description">{{ description }}</p>
+      <h2 class="lb-lead-capture__heading">
+        {{ heading }}
+      </h2>
+      <p v-if="description" class="lb-lead-capture__description">
+        {{ description }}
+      </p>
 
       <!-- 成功态 -->
       <div v-if="submitted" class="lb-lead-capture__success">
@@ -217,8 +221,12 @@ function onSubmit(): void {
   transition: border-color 0.2s;
   width: 100%;
   box-sizing: border-box;
-  &:focus { border-color: var(--lb-accent); }
-  &--wide { flex: 1; }
+  &:focus {
+    border-color: var(--lb-accent);
+  }
+  &--wide {
+    flex: 1;
+  }
 }
 .lb-lead-capture__action {
   display: flex;
@@ -234,7 +242,12 @@ function onSubmit(): void {
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  &:hover:not(:disabled) { opacity: 0.9; }
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 </style>

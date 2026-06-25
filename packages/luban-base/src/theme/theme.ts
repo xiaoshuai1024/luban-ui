@@ -17,7 +17,11 @@
  *   - 浏览器与 jsdom 均可用（document.documentElement 必在）。
  *   - SSR 安全：若无 document，所有写操作降级为 noop；getCurrentTheme 返回 LIGHT_PRESET。
  */
-import type { LubanThemeName, LubanThemeTokens, PartialThemeTokens } from './types';
+import type {
+  LubanThemeName,
+  LubanThemeTokens,
+  PartialThemeTokens,
+} from './types';
 import { LIGHT_PRESET, DARK_PRESET } from './presets';
 
 const STYLE_TAG_ID = 'lb-theme-runtime-overrides';
@@ -61,7 +65,11 @@ function writeStyle(): void {
   if (!el) return;
   // 预设先写全套，再叠加 override（override 优先级更高，因其后出现）
   const presetTokens: PartialThemeTokens =
-    currentPreset === 'dark' ? DARK_PRESET : currentPreset === 'light' ? LIGHT_PRESET : {};
+    currentPreset === 'dark'
+      ? DARK_PRESET
+      : currentPreset === 'light'
+        ? LIGHT_PRESET
+        : {};
   const merged = { ...presetTokens, ...currentOverrides };
   el.textContent = serializeOverrides(merged);
 }
@@ -129,7 +137,8 @@ export function getCurrentTheme(): Readonly<LubanThemeTokens> {
     for (const k of keys) {
       const v = computed.getPropertyValue(`--lb-${k}`).trim();
       // 计算样式读不到（如 SSR 注水前）时回退到预设
-      (out as Record<string, unknown>)[k] = v || (LIGHT_PRESET as Record<string, string>)[k];
+      (out as Record<string, unknown>)[k] =
+        v || (LIGHT_PRESET as Record<string, string>)[k];
     }
     return out;
   }
@@ -138,7 +147,9 @@ export function getCurrentTheme(): Readonly<LubanThemeTokens> {
 }
 
 /** 订阅主题变更；返回取消订阅函数 */
-export function onThemeChange(cb: (tokens: LubanThemeTokens) => void): () => void {
+export function onThemeChange(
+  cb: (tokens: LubanThemeTokens) => void,
+): () => void {
   listeners.add(cb);
   return () => {
     listeners.delete(cb);

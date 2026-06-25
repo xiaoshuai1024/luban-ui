@@ -6,7 +6,10 @@ const meta: Meta<typeof LubanBanner> = {
   component: LubanBanner,
   tags: ['autodocs'],
   argTypes: {
-    objectFit: { control: 'select', options: ['cover', 'contain', 'fill', 'none'] },
+    objectFit: {
+      control: 'select',
+      options: ['cover', 'contain', 'fill', 'none'],
+    },
   },
 };
 

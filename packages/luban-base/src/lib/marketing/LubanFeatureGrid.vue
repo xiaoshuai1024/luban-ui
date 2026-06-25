@@ -7,21 +7,20 @@ withDefaults(
     backgroundColor?: string;
   }>(),
   {
-    heading: "核心特性",
+    heading: '核心特性',
     columns: 3,
     features: () => [],
-    backgroundColor: "var(--lb-bg)",
-  }
+    backgroundColor: 'var(--lb-bg)',
+  },
 );
 </script>
 
 <template>
-  <section
-    class="lb-feature-grid"
-    :style="{ backgroundColor }"
-  >
+  <section class="lb-feature-grid" :style="{ backgroundColor }">
     <div class="lb-feature-grid__inner">
-      <h2 v-if="heading" class="lb-feature-grid__heading">{{ heading }}</h2>
+      <h2 v-if="heading" class="lb-feature-grid__heading">
+        {{ heading }}
+      </h2>
       <div
         v-if="features.length"
         class="lb-feature-grid__list"
@@ -32,9 +31,15 @@ withDefaults(
           :key="i"
           class="lb-feature-grid__card"
         >
-          <div v-if="item.icon" class="lb-feature-grid__icon">{{ item.icon }}</div>
-          <h3 class="lb-feature-grid__title">{{ item.title }}</h3>
-          <p v-if="item.description" class="lb-feature-grid__desc">{{ item.description }}</p>
+          <div v-if="item.icon" class="lb-feature-grid__icon">
+            {{ item.icon }}
+          </div>
+          <h3 class="lb-feature-grid__title">
+            {{ item.title }}
+          </h3>
+          <p v-if="item.description" class="lb-feature-grid__desc">
+            {{ item.description }}
+          </p>
         </div>
       </div>
     </div>

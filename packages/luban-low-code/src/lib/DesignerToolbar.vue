@@ -35,7 +35,7 @@ const props = withDefaults(
     onlineUsers: () => [],
     zoom: 100,
     collabEnabled: false,
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -51,7 +51,12 @@ const emit = defineEmits<{
   'zoom-change': [zoom: number];
 }>();
 
-const deviceOptions: { value: DeviceType; icon: string; label: string; width: number }[] = [
+const deviceOptions: {
+  value: DeviceType;
+  icon: string;
+  label: string;
+  width: number;
+}[] = [
   { value: 'pc', icon: '🖥️', label: 'PC', width: 0 },
   { value: 'tablet', icon: '📋', label: 'iPad', width: 768 },
   { value: 'mobile', icon: '📱', label: 'H5', width: 375 },
@@ -136,27 +141,69 @@ function onZoomDelta(delta: number) {
 
       <!-- 缩放控制 -->
       <div v-if="mode === 'design'" class="lb-toolbar__group lb-toolbar__zoom">
-        <button class="lb-toolbar__btn lb-toolbar__btn--sm" title="缩小" @click="onZoomDelta(-10)">−</button>
+        <button
+          class="lb-toolbar__btn lb-toolbar__btn--sm"
+          title="缩小"
+          @click="onZoomDelta(-10)"
+        >
+          −
+        </button>
         <span class="lb-toolbar__zoom-value">{{ zoom }}%</span>
-        <button class="lb-toolbar__btn lb-toolbar__btn--sm" title="放大" @click="onZoomDelta(10)">+</button>
-        <button v-if="zoom !== 100" class="lb-toolbar__btn lb-toolbar__btn--sm" title="重置" @click="emit('zoom-change', 100)">⟲</button>
+        <button
+          class="lb-toolbar__btn lb-toolbar__btn--sm"
+          title="放大"
+          @click="onZoomDelta(10)"
+        >
+          +
+        </button>
+        <button
+          v-if="zoom !== 100"
+          class="lb-toolbar__btn lb-toolbar__btn--sm"
+          title="重置"
+          @click="emit('zoom-change', 100)"
+        >
+          ⟲
+        </button>
       </div>
 
       <div class="lb-toolbar__divider" />
 
       <!-- 导入/导出/模板 -->
       <div class="lb-toolbar__group">
-        <button class="lb-toolbar__btn lb-toolbar__btn--text" title="导入 JSON" @click="emit('import-json')">📥</button>
-        <button class="lb-toolbar__btn lb-toolbar__btn--text" title="导出 JSON" @click="emit('export-json')">📤</button>
-        <button class="lb-toolbar__btn lb-toolbar__btn--text" title="页面模板" @click="emit('open-templates')">📋 模板</button>
+        <button
+          class="lb-toolbar__btn lb-toolbar__btn--text"
+          title="导入 JSON"
+          @click="emit('import-json')"
+        >
+          📥
+        </button>
+        <button
+          class="lb-toolbar__btn lb-toolbar__btn--text"
+          title="导出 JSON"
+          @click="emit('export-json')"
+        >
+          📤
+        </button>
+        <button
+          class="lb-toolbar__btn lb-toolbar__btn--text"
+          title="页面模板"
+          @click="emit('open-templates')"
+        >
+          📋 模板
+        </button>
       </div>
 
       <div class="lb-toolbar__divider" />
 
       <!-- 协作状态 -->
       <div v-if="collabEnabled" class="lb-toolbar__collab">
-        <span class="lb-toolbar__collab-dot" :class="{ 'lb-toolbar__collab-dot--online': onlineUsers.length > 0 }" />
-        <span v-if="onlineUsers.length > 0" class="lb-toolbar__collab-text">{{ onlineUsers.length }} 人在线</span>
+        <span
+          class="lb-toolbar__collab-dot"
+          :class="{ 'lb-toolbar__collab-dot--online': onlineUsers.length > 0 }"
+        />
+        <span v-if="onlineUsers.length > 0" class="lb-toolbar__collab-text"
+          >{{ onlineUsers.length }} 人在线</span
+        >
         <span v-else class="lb-toolbar__collab-text">单人</span>
       </div>
 
@@ -184,9 +231,15 @@ function onZoomDelta(delta: number) {
     <!-- 底部状态栏 -->
     <div class="lb-toolbar__status">
       <div class="lb-toolbar__status-left">
-        <span v-if="hasUnsavedChanges" class="lb-toolbar__status-unsaved">● 未保存</span>
-        <span v-if="lastSavedAt" class="lb-toolbar__status-saved">上次保存 {{ lastSavedAt }}</span>
-        <span v-if="version != null" class="lb-toolbar__status-version">v{{ version }}</span>
+        <span v-if="hasUnsavedChanges" class="lb-toolbar__status-unsaved"
+          >● 未保存</span
+        >
+        <span v-if="lastSavedAt" class="lb-toolbar__status-saved"
+          >上次保存 {{ lastSavedAt }}</span
+        >
+        <span v-if="version != null" class="lb-toolbar__status-version"
+          >v{{ version }}</span
+        >
       </div>
       <div class="lb-toolbar__status-right">
         <span v-if="onlineUsers.length > 0" class="lb-toolbar__status-users">

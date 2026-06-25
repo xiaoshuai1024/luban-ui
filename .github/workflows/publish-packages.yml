@@ -6,11 +6,11 @@ on:
       - master
       - dev
     paths:
-      - "packages/**"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - "nx.json"
-      - ".github/workflows/publish-packages.yml"
+      - 'packages/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'nx.json'
+      - '.github/workflows/publish-packages.yml'
 
 concurrency:
   group: publish-${{ github.ref_name }}

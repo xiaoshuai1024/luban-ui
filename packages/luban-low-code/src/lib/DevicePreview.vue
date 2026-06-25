@@ -18,8 +18,18 @@ interface DeviceConfig {
 
 const DEVICE_CONFIG: Record<DeviceType, DeviceConfig> = {
   pc: { label: 'PC', width: 0, icon: '🖥️', frameClass: 'lb-device--pc' },
-  tablet: { label: 'iPad', width: 768, icon: '📋', frameClass: 'lb-device--tablet' },
-  mobile: { label: 'H5', width: 375, icon: '📱', frameClass: 'lb-device--mobile' },
+  tablet: {
+    label: 'iPad',
+    width: 768,
+    icon: '📋',
+    frameClass: 'lb-device--tablet',
+  },
+  mobile: {
+    label: 'H5',
+    width: 375,
+    icon: '📱',
+    frameClass: 'lb-device--mobile',
+  },
 };
 
 const props = withDefaults(
@@ -28,7 +38,7 @@ const props = withDefaults(
     /** 是否显示设备顶部状态条（时间/电量装饰） */
     showStatusBar?: boolean;
   }>(),
-  { device: 'pc', showStatusBar: true }
+  { device: 'pc', showStatusBar: true },
 );
 
 const config = computed(() => DEVICE_CONFIG[props.device]);
@@ -71,7 +81,9 @@ const frameStyle = computed(() => {
     <div class="lb-device__label">
       <span class="lb-device__label-icon">{{ config.icon }}</span>
       <span class="lb-device__label-text">{{ config.label }}</span>
-      <span v-if="config.width > 0" class="lb-device__label-width">{{ config.width }}px</span>
+      <span v-if="config.width > 0" class="lb-device__label-width"
+        >{{ config.width }}px</span
+      >
     </div>
   </div>
 </template>
@@ -95,9 +107,13 @@ const frameStyle = computed(() => {
 .lb-device__shell {
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.06);
   overflow: hidden;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.3s ease;
+  transition:
+    width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    max-width 0.3s ease;
 }
 
 .lb-device--tablet .lb-device__shell {

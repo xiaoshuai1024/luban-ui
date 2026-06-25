@@ -12,7 +12,7 @@ withDefaults(
     modelValue: false,
     disabled: false,
     error: false,
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -41,8 +41,15 @@ const emit = defineEmits<{
       </button>
       <span v-if="label" class="lb-form-field__label">{{ label }}</span>
     </div>
-    <input v-if="name" type="hidden" :name="name" :value="modelValue ? 'on' : ''" />
-    <p v-if="error && errorMessage" class="lb-form-field__error">{{ errorMessage }}</p>
+    <input
+      v-if="name"
+      type="hidden"
+      :name="name"
+      :value="modelValue ? 'on' : ''"
+    />
+    <p v-if="error && errorMessage" class="lb-form-field__error">
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
 

@@ -63,6 +63,12 @@ export interface PropSchemaItem {
   placeholder?: string;
   /** 对于 spacing 类型：指定方向 ('all' | 'horizontal' | 'vertical' | 'top' | 'right' | 'bottom' | 'left') */
   direction?: string;
+  /** 字段可见性条件（联动）：当指定 prop 等于/不等于某值时显示 */
+  visibleWhen?: {
+    prop: string;
+    equals?: unknown;
+    notEquals?: unknown;
+  };
 }
 
 export type PropSchema = Record<string, PropSchemaItem>;

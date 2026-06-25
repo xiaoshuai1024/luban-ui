@@ -51,7 +51,10 @@ describe('V2-T5 buildAnimationCss', () => {
   });
 
   it('in-view 触发：输出 pending/playing class 规则', () => {
-    const css = buildAnimationCss('n3', { type: 'slide-up', trigger: 'in-view' });
+    const css = buildAnimationCss('n3', {
+      type: 'slide-up',
+      trigger: 'in-view',
+    });
     expect(css).toContain('.lb-anim-pending');
     expect(css).toContain('.lb-anim-playing');
     expect(css).toContain('opacity: 0'); // pending 初始隐藏
@@ -94,8 +97,16 @@ describe('V2-T5 treeAnimationCss', () => {
       id: 'root',
       type: 'LubanContainer',
       children: [
-        { id: 'c1', type: 'LubanText', animation: { type: 'fade', trigger: 'load' } },
-        { id: 'c2', type: 'LubanText', animation: { type: 'zoom', trigger: 'hover' } },
+        {
+          id: 'c1',
+          type: 'LubanText',
+          animation: { type: 'fade', trigger: 'load' },
+        },
+        {
+          id: 'c2',
+          type: 'LubanText',
+          animation: { type: 'zoom', trigger: 'hover' },
+        },
       ],
     };
     const css = treeAnimationCss(root);
@@ -110,9 +121,21 @@ describe('V2-T5 treeAnimationCss', () => {
       id: 'root',
       type: 'LubanContainer',
       children: [
-        { id: 'c1', type: 'LubanText', animation: { type: 'fade', trigger: 'load' } },
-        { id: 'c2', type: 'LubanText', animation: { type: 'fade', trigger: 'load' } },
-        { id: 'c3', type: 'LubanText', animation: { type: 'fade', trigger: 'load' } },
+        {
+          id: 'c1',
+          type: 'LubanText',
+          animation: { type: 'fade', trigger: 'load' },
+        },
+        {
+          id: 'c2',
+          type: 'LubanText',
+          animation: { type: 'fade', trigger: 'load' },
+        },
+        {
+          id: 'c3',
+          type: 'LubanText',
+          animation: { type: 'fade', trigger: 'load' },
+        },
       ],
     };
     const css = treeAnimationCss(root);

@@ -18,7 +18,7 @@ const props = withDefaults(
     /** 是否正在加载 */
     loading?: boolean;
   }>(),
-  { undoCount: 0, redoCount: 0, labels: () => [], loading: false }
+  { undoCount: 0, redoCount: 0, labels: () => [], loading: false },
 );
 
 const emit = defineEmits<{
@@ -87,21 +87,22 @@ function onJump(entry: TimelineEntry): void {
           :disabled="undoCount === 0"
           title="撤销 (Ctrl+Z)"
           @click="emit('undo')"
-        >↶ 撤销</button>
+        >
+          ↶ 撤销
+        </button>
         <button
           class="lb-history-panel__btn"
           :disabled="redoCount === 0"
           title="重做 (Ctrl+Shift+Z)"
           @click="emit('redo')"
-        >↷ 重做</button>
+        >
+          ↷ 重做
+        </button>
       </div>
     </div>
 
     <div v-if="loading" class="lb-history-panel__empty">加载中...</div>
-    <div
-      v-else-if="timeline.length === 1"
-      class="lb-history-panel__empty"
-    >
+    <div v-else-if="timeline.length === 1" class="lb-history-panel__empty">
       暂无历史操作
     </div>
     <ul v-else class="lb-history-panel__timeline">
@@ -110,12 +111,22 @@ function onJump(entry: TimelineEntry): void {
         :key="entry.delta"
         class="lb-history-panel__entry"
         :class="`lb-history-panel__entry--${entry.type}`"
-        :title="entry.delta === 0 ? '当前状态' : (entry.delta < 0 ? '点击撤销到此步' : '点击重做到此步')"
+        :title="
+          entry.delta === 0
+            ? '当前状态'
+            : entry.delta < 0
+              ? '点击撤销到此步'
+              : '点击重做到此步'
+        "
         @click="onJump(entry)"
       >
         <span class="lb-history-panel__dot" />
         <span class="lb-history-panel__entry-label">{{ entry.label }}</span>
-        <span v-if="entry.type === 'current'" class="lb-history-panel__current-tag">当前</span>
+        <span
+          v-if="entry.type === 'current'"
+          class="lb-history-panel__current-tag"
+          >当前</span
+        >
       </li>
     </ul>
 

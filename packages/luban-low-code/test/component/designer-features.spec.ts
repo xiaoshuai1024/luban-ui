@@ -38,7 +38,9 @@ describe('LubanDesigner V3 新功能', () => {
     });
 
     it('设计态渲染内置工具栏', () => {
-      expect(wrapper.find('.luban-designer__builtin-toolbar').exists()).toBe(true);
+      expect(wrapper.find('.luban-designer__builtin-toolbar').exists()).toBe(
+        true,
+      );
     });
 
     it('非设计态不渲染内置工具栏', () => {
@@ -103,7 +105,9 @@ describe('LubanDesigner V3 新功能', () => {
     });
 
     it('适应画布按钮存在', () => {
-      expect(wrapper.find('.luban-designer__zoom-btn--fit').exists()).toBe(true);
+      expect(wrapper.find('.luban-designer__zoom-btn--fit').exists()).toBe(
+        true,
+      );
     });
 
     it('网格切换按钮存在并默认为激活态', () => {
@@ -116,7 +120,9 @@ describe('LubanDesigner V3 新功能', () => {
       const toggles = wrapper.findAll('.luban-designer__toggle-btn');
       expect(toggles.length).toBe(2);
       const snapBtn = toggles[1];
-      expect(snapBtn.classes()).not.toContain('luban-designer__toggle-btn--active');
+      expect(snapBtn.classes()).not.toContain(
+        'luban-designer__toggle-btn--active',
+      );
     });
   });
 
@@ -125,14 +131,18 @@ describe('LubanDesigner V3 新功能', () => {
       wrapper = mount(LubanDesigner, {
         props: { schema: makeSchema(), designMode: true, showToolbar: false },
       });
-      expect(wrapper.find('.luban-designer__canvas').classes()).toContain('luban-designer__canvas--grid');
+      expect(wrapper.find('.luban-designer__canvas').classes()).toContain(
+        'luban-designer__canvas--grid',
+      );
     });
 
     it('非设计态不显示网格 class', () => {
       const w = mount(LubanDesigner, {
         props: { schema: makeSchema(), designMode: false, showToolbar: false },
       });
-      expect(w.find('.luban-designer__canvas').classes()).not.toContain('luban-designer__canvas--grid');
+      expect(w.find('.luban-designer__canvas').classes()).not.toContain(
+        'luban-designer__canvas--grid',
+      );
     });
 
     it('点击网格切换按钮移除网格 class', async () => {
@@ -141,8 +151,12 @@ describe('LubanDesigner V3 新功能', () => {
       });
       const gridBtn = wrapper.find('.luban-designer__toggle-btn');
       await gridBtn.trigger('click');
-      expect(gridBtn.classes()).not.toContain('luban-designer__toggle-btn--active');
-      expect(wrapper.find('.luban-designer__canvas').classes()).not.toContain('luban-designer__canvas--grid');
+      expect(gridBtn.classes()).not.toContain(
+        'luban-designer__toggle-btn--active',
+      );
+      expect(wrapper.find('.luban-designer__canvas').classes()).not.toContain(
+        'luban-designer__canvas--grid',
+      );
     });
 
     it('点击网格按钮再次切换恢复网格', async () => {
@@ -151,9 +165,13 @@ describe('LubanDesigner V3 新功能', () => {
       });
       const gridBtn = wrapper.find('.luban-designer__toggle-btn');
       await gridBtn.trigger('click'); // 关
-      expect(wrapper.find('.luban-designer__canvas').classes()).not.toContain('luban-designer__canvas--grid');
+      expect(wrapper.find('.luban-designer__canvas').classes()).not.toContain(
+        'luban-designer__canvas--grid',
+      );
       await gridBtn.trigger('click'); // 开
-      expect(wrapper.find('.luban-designer__canvas').classes()).toContain('luban-designer__canvas--grid');
+      expect(wrapper.find('.luban-designer__canvas').classes()).toContain(
+        'luban-designer__canvas--grid',
+      );
     });
   });
 
@@ -162,7 +180,9 @@ describe('LubanDesigner V3 新功能', () => {
       wrapper = mount(LubanDesigner, {
         props: { schema: makeSchema(), designMode: true, showToolbar: false },
       });
-      expect(wrapper.find('.luban-designer__root-container').exists()).toBe(true);
+      expect(wrapper.find('.luban-designer__root-container').exists()).toBe(
+        true,
+      );
     });
 
     it('空 schema 显示 placeholder 引导', () => {
@@ -173,9 +193,15 @@ describe('LubanDesigner V3 新功能', () => {
     });
 
     it('有子节点时不显示 placeholder', () => {
-      const children = [makeChild('LubanButton', 'btn-1', { content: '按钮1' })];
+      const children = [
+        makeChild('LubanButton', 'btn-1', { content: '按钮1' }),
+      ];
       wrapper = mount(LubanDesigner, {
-        props: { schema: makeSchema(children), designMode: true, showToolbar: false },
+        props: {
+          schema: makeSchema(children),
+          designMode: true,
+          showToolbar: false,
+        },
       });
       expect(wrapper.find('.luban-designer__placeholder').exists()).toBe(false);
     });
@@ -184,7 +210,9 @@ describe('LubanDesigner V3 新功能', () => {
       wrapper = mount(LubanDesigner, {
         props: { schema: makeSchema(), designMode: true, showToolbar: false },
       });
-      expect(wrapper.find('.luban-designer__canvas-spacer').exists()).toBe(true);
+      expect(wrapper.find('.luban-designer__canvas-spacer').exists()).toBe(
+        true,
+      );
     });
 
     it('视口渲染', () => {

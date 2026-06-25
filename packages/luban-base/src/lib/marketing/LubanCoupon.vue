@@ -6,7 +6,7 @@ withDefaults(
     title?: string;
     description?: string;
   }>(),
-  { title: '优惠券', description: '' }
+  { title: '优惠券', description: '' },
 );
 const emit = defineEmits<{ copy: [code: string] }>();
 </script>
@@ -14,9 +14,15 @@ const emit = defineEmits<{ copy: [code: string] }>();
 <template>
   <div class="lb-coupon">
     <div class="lb-coupon__left">
-      <div class="lb-coupon__discount">{{ discount }}</div>
-      <div class="lb-coupon__title">{{ title }}</div>
-      <div v-if="description" class="lb-coupon__desc">{{ description }}</div>
+      <div class="lb-coupon__discount">
+        {{ discount }}
+      </div>
+      <div class="lb-coupon__title">
+        {{ title }}
+      </div>
+      <div v-if="description" class="lb-coupon__desc">
+        {{ description }}
+      </div>
     </div>
     <button class="lb-coupon__right" type="button" @click="emit('copy', code)">
       <span class="lb-coupon__code">{{ code }}</span>

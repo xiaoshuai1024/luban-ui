@@ -38,12 +38,18 @@ export function nodeResponsiveCss(node: NodeSchema): string {
   const tablet = node.responsive.tablet;
   if (tablet && Object.keys(tablet).length > 0) {
     const decls = styleToDecls(tablet);
-    if (decls) rules.push(`@media (max-width: ${BREAKPOINTS.tablet}px) { ${selector} { ${decls} } }`);
+    if (decls)
+      rules.push(
+        `@media (max-width: ${BREAKPOINTS.tablet}px) { ${selector} { ${decls} } }`,
+      );
   }
   const mobile = node.responsive.mobile;
   if (mobile && Object.keys(mobile).length > 0) {
     const decls = styleToDecls(mobile);
-    if (decls) rules.push(`@media (max-width: ${BREAKPOINTS.mobile}px) { ${selector} { ${decls} } }`);
+    if (decls)
+      rules.push(
+        `@media (max-width: ${BREAKPOINTS.mobile}px) { ${selector} { ${decls} } }`,
+      );
   }
   return rules.join('\n');
 }

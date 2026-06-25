@@ -14,7 +14,7 @@ describe('LubanSelect', () => {
           { label: 'B', value: 'b' },
         ],
       },
-      null as string | null
+      null as string | null,
     );
     await wrapper.get('select').setValue('b');
     expect(v.value).toBe('b');

@@ -30,7 +30,7 @@ export const CONTAINER_TYPES = new Set<string>(
   materialRegistry
     .getAll()
     .filter((def) => def.isContainer === true)
-    .map((def) => def.name)
+    .map((def) => def.name),
 );
 
 export function isContainerType(type: string): boolean {
@@ -49,7 +49,7 @@ export const FORM_CONTROL_TYPES = new Set<string>(
   materialRegistry
     .getAll()
     .filter((def) => def.category === 'form' && def.isContainer !== true)
-    .map((def) => def.name)
+    .map((def) => def.name),
 );
 
 /**
@@ -99,7 +99,7 @@ export const BOOLEAN_FORM_VALUE_TYPES = new Set<string>([
 export function canAcceptChild(
   containerType: string,
   childType: string,
-  getAcceptTypes: (type: string) => string[] | undefined
+  getAcceptTypes: (type: string) => string[] | undefined,
 ): boolean {
   if (!CONTAINER_TYPES.has(containerType)) return false;
   const accept = getAcceptTypes(containerType);

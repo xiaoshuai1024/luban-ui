@@ -14,7 +14,7 @@ withDefaults(
     required: false,
     disabled: false,
     error: false,
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -32,13 +32,21 @@ const emit = defineEmits<{
         :required="required"
         :disabled="disabled"
         :aria-invalid="error"
-        @change="emit('update:modelValue', ($event.target as HTMLInputElement).checked)"
+        @change="
+          emit('update:modelValue', ($event.target as HTMLInputElement).checked)
+        "
       />
-      <span v-if="label" class="lb-form-field__label" :class="{ 'lb-form-field__label--required': required }">
+      <span
+        v-if="label"
+        class="lb-form-field__label"
+        :class="{ 'lb-form-field__label--required': required }"
+      >
         {{ label }}
       </span>
     </label>
-    <p v-if="error && errorMessage" class="lb-form-field__error">{{ errorMessage }}</p>
+    <p v-if="error && errorMessage" class="lb-form-field__error">
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
 

@@ -44,7 +44,7 @@ withDefaults(
     align: 'center',
     layout: 'centered',
     sideImage: '',
-  }
+  },
 );
 </script>
 
@@ -59,26 +59,43 @@ withDefaults(
       color: textColor,
     }"
   >
-    <div class="lb-hero__overlay" v-if="backgroundImage && layout === 'centered'" />
+    <div
+      v-if="backgroundImage && layout === 'centered'"
+      class="lb-hero__overlay"
+    />
     <div class="lb-hero__content" :style="{ textAlign: align }">
       <span v-if="eyebrow" class="lb-hero__eyebrow">{{ eyebrow }}</span>
-      <h1 class="lb-hero__title">{{ title }}</h1>
-      <p v-if="subtitle" class="lb-hero__subtitle">{{ subtitle }}</p>
-      <div class="lb-hero__actions" :style="{ justifyContent: align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center' }">
-        <a
-          v-if="ctaText && ctaUrl"
-          :href="ctaUrl"
-          class="lb-hero__cta"
-        >{{ ctaText }}</a>
+      <h1 class="lb-hero__title">
+        {{ title }}
+      </h1>
+      <p v-if="subtitle" class="lb-hero__subtitle">
+        {{ subtitle }}
+      </p>
+      <div
+        class="lb-hero__actions"
+        :style="{
+          justifyContent:
+            align === 'left'
+              ? 'flex-start'
+              : align === 'right'
+                ? 'flex-end'
+                : 'center',
+        }"
+      >
+        <a v-if="ctaText && ctaUrl" :href="ctaUrl" class="lb-hero__cta">{{
+          ctaText
+        }}</a>
         <span
           v-else-if="ctaText && !ctaUrl"
           class="lb-hero__cta lb-hero__cta--disabled"
-        >{{ ctaText }}</span>
+          >{{ ctaText }}</span
+        >
         <a
           v-if="secondaryCtaText && secondaryCtaUrl"
           :href="secondaryCtaUrl"
           class="lb-hero__cta lb-hero__cta--secondary"
-        >{{ secondaryCtaText }}</a>
+          >{{ secondaryCtaText }}</a
+        >
       </div>
     </div>
     <div v-if="layout === 'split' && sideImage" class="lb-hero__side">
@@ -101,7 +118,10 @@ withDefaults(
     justify-content: space-between;
     gap: 32px;
     padding: 0 48px;
-    .lb-hero__content { flex: 1; max-width: 560px; }
+    .lb-hero__content {
+      flex: 1;
+      max-width: 560px;
+    }
   }
 }
 .lb-hero__overlay {
@@ -153,14 +173,22 @@ withDefaults(
   text-decoration: none;
   transition: opacity 0.2s;
   cursor: pointer;
-  &:hover { opacity: 0.9; }
+  &:hover {
+    opacity: 0.9;
+  }
   &--secondary {
     background: transparent;
     color: var(--lb-text-on-dark);
-    border: 2px solid rgba(255,255,255,0.7);
-    &:hover { background: rgba(255,255,255,0.1); opacity: 1; }
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      opacity: 1;
+    }
   }
-  &--disabled { opacity: 0.6; cursor: default; }
+  &--disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
 }
 .lb-hero__side {
   flex: 0 0 40%;

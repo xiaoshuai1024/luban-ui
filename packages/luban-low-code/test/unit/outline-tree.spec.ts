@@ -12,9 +12,10 @@ const schema: PageSchema = {
     children: [
       { id: 't1', type: 'LubanText', props: { content: 'a' } },
       {
-        id: 'f1', type: 'LubanForm', props: {}, children: [
-          { id: 'i1', type: 'LubanInput', props: {} },
-        ],
+        id: 'f1',
+        type: 'LubanForm',
+        props: {},
+        children: [{ id: 'i1', type: 'LubanInput', props: {} }],
       },
     ],
   },
@@ -28,15 +29,24 @@ function mountWithListeners(extraProps: Record<string, unknown> = {}) {
   const reordered = ref<[string, string] | null>(null);
   const Parent = defineComponent({
     setup() {
-      return () => h(OutlineTree, {
-        schema,
-        selectedId: selected.value,
-        ...extraProps,
-        onSelect: (id: string) => { selected.value = id; },
-        onDelete: (id: string) => { deleted.value = id; },
-        onDuplicate: (id: string) => { duplicated.value = id; },
-        onReorder: (id: string, dir: string) => { reordered.value = [id, dir]; },
-      });
+      return () =>
+        h(OutlineTree, {
+          schema,
+          selectedId: selected.value,
+          ...extraProps,
+          onSelect: (id: string) => {
+            selected.value = id;
+          },
+          onDelete: (id: string) => {
+            deleted.value = id;
+          },
+          onDuplicate: (id: string) => {
+            duplicated.value = id;
+          },
+          onReorder: (id: string, dir: string) => {
+            reordered.value = [id, dir];
+          },
+        });
     },
   });
   return { wrapper: mount(Parent), selected, deleted, duplicated, reordered };
@@ -60,7 +70,7 @@ describe('OutlineTree', () => {
   it('highlights the selectedId row', () => {
     const w = mount(OutlineTree, { props: { schema, selectedId: 'f1' } });
     const rows = w.findAll('.lb-outline-node__row');
-    const formRow = rows.find(r => r.text().includes('表单'));
+    const formRow = rows.find((r) => r.text().includes('表单'));
     expect(formRow?.classes()).toContain('lb-outline-node__row--selected');
   });
 
@@ -89,7 +99,9 @@ describe('OutlineTree', () => {
   });
 
   it('renders empty state when schema has no children', () => {
-    const empty: PageSchema = { root: { id: 'root', type: 'LubanContainer', props: {}, children: [] } };
+    const empty: PageSchema = {
+      root: { id: 'root', type: 'LubanContainer', props: {}, children: [] },
+    };
     const w = mount(OutlineTree, { props: { schema: empty } });
     expect(w.find('.lb-outline-tree__empty').exists()).toBe(true);
   });

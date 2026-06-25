@@ -11,4 +11,3 @@ describe('luban-low-code registry', () => {
     expect(getComponent('Unknown')).toBeUndefined();
   });
 });
-

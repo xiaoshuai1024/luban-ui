@@ -13,4 +13,3 @@ describe('LubanButton', () => {
     expect(btn.classes()).toContain('lb-button--primary');
   });
 });
-

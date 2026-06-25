@@ -24,7 +24,7 @@ const props = withDefaults(
     visible: false,
     placement: 'right',
     size: '30%',
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -38,7 +38,7 @@ watch(
   (next, prev) => {
     if (next && !prev) emit('open');
     if (!next && prev) emit('close');
-  }
+  },
 );
 
 function close(): void {

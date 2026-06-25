@@ -7,21 +7,20 @@ withDefaults(
     backgroundColor?: string;
   }>(),
   {
-    heading: "常见问题",
+    heading: '常见问题',
     items: () => [],
     defaultOpenIndex: -1,
-    backgroundColor: "var(--lb-bg)",
-  }
+    backgroundColor: 'var(--lb-bg)',
+  },
 );
 </script>
 
 <template>
-  <section
-    class="lb-faq"
-    :style="{ backgroundColor }"
-  >
+  <section class="lb-faq" :style="{ backgroundColor }">
     <div class="lb-faq__inner">
-      <h2 v-if="heading" class="lb-faq__heading">{{ heading }}</h2>
+      <h2 v-if="heading" class="lb-faq__heading">
+        {{ heading }}
+      </h2>
       <div v-if="items.length" class="lb-faq__list">
         <details
           v-for="(item, i) in items"
@@ -29,8 +28,12 @@ withDefaults(
           class="lb-faq__item"
           :open="i === defaultOpenIndex"
         >
-          <summary class="lb-faq__question">{{ item.question }}</summary>
-          <div class="lb-faq__answer">{{ item.answer }}</div>
+          <summary class="lb-faq__question">
+            {{ item.question }}
+          </summary>
+          <div class="lb-faq__answer">
+            {{ item.answer }}
+          </div>
         </details>
       </div>
     </div>

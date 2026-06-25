@@ -18,6 +18,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@luban-low-code/luban-base': resolve(__dirname, '../luban-base/src'),
+      'luban-base': resolve(__dirname, '../luban-base/src'),
     },
   },
   build: {

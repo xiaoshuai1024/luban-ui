@@ -36,7 +36,7 @@ const props = withDefaults(
     pageSize: 10,
     striped: false,
     border: true,
-  }
+  },
 );
 
 defineEmits<{
@@ -44,7 +44,9 @@ defineEmits<{
   rowClick: [row: Record<string, unknown>];
 }>();
 
-function normaliseWidth(width: number | string | undefined): string | undefined {
+function normaliseWidth(
+  width: number | string | undefined,
+): string | undefined {
   if (width == null || width === '') return undefined;
   return typeof width === 'number' ? `${width}px` : String(width);
 }
@@ -54,12 +56,12 @@ const currentPage = ref(1);
 
 // 分页仅在 pageSize>0 且数据量超过单页时启用；否则整表渲染（向后兼容现有用例）。
 const pagingEnabled = computed(
-  () => props.pageSize > 0 && props.rows.length > props.pageSize
+  () => props.pageSize > 0 && props.rows.length > props.pageSize,
 );
 const totalPages = computed(() =>
   pagingEnabled.value
     ? Math.max(1, Math.ceil(props.rows.length / props.pageSize))
-    : 1
+    : 1,
 );
 const pagedRows = computed(() => {
   if (!pagingEnabled.value) return props.rows;
@@ -71,10 +73,11 @@ const pagedRows = computed(() => {
 watch(
   () => [props.rows, props.pageSize] as const,
   () => {
-    if (currentPage.value > totalPages.value) currentPage.value = totalPages.value;
+    if (currentPage.value > totalPages.value)
+      currentPage.value = totalPages.value;
     if (currentPage.value < 1) currentPage.value = 1;
   },
-  { flush: 'post' }
+  { flush: 'post' },
 );
 
 function goPrev(): void {
@@ -124,7 +127,7 @@ function rowKey(row: Record<string, unknown>, idx: number): string | number {
         </tr>
         <tr v-if="rows.length === 0" class="lb-table__empty-row">
           <td :colspan="Math.max(columns.length, 1)" class="lb-table__empty">
-            <slot name="empty">暂无数据</slot>
+            <slot name="empty"> 暂无数据 </slot>
           </td>
         </tr>
       </tbody>

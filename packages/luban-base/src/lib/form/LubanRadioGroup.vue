@@ -18,7 +18,7 @@ withDefaults(
     required: false,
     disabled: false,
     error: false,
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -28,7 +28,11 @@ const emit = defineEmits<{
 
 <template>
   <div class="lb-form-field">
-    <div v-if="label" class="lb-form-field__label" :class="{ 'lb-form-field__label--required': required }">
+    <div
+      v-if="label"
+      class="lb-form-field__label"
+      :class="{ 'lb-form-field__label--required': required }"
+    >
       {{ label }}
     </div>
     <div class="lb-radio-group">
@@ -52,7 +56,9 @@ const emit = defineEmits<{
         </label>
       </div>
     </div>
-    <p v-if="error && errorMessage" class="lb-form-field__error">{{ errorMessage }}</p>
+    <p v-if="error && errorMessage" class="lb-form-field__error">
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
 

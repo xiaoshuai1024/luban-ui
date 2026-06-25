@@ -20,7 +20,10 @@ const props = withDefaults(
     /** 单位提示 */
     unit?: string;
   }>(),
-  { modelValue: () => ({ top: '', right: '', bottom: '', left: '' }), unit: 'px' }
+  {
+    modelValue: () => ({ top: '', right: '', bottom: '', left: '' }),
+    unit: 'px',
+  },
 );
 
 const emit = defineEmits<{
@@ -113,7 +116,9 @@ function setAll(val: string): void {
         :title="linked ? '点击解除链锁（四向独立编辑）' : '点击链锁统一编辑'"
         @click="toggleLinked"
       >
-        <span class="lb-spacing-setter__center-icon">{{ linked ? '🔗' : '⊡' }}</span>
+        <span class="lb-spacing-setter__center-icon">{{
+          linked ? '🔗' : '⊡'
+        }}</span>
       </div>
     </div>
     <div v-if="linked" class="lb-spacing-setter__all">
@@ -165,11 +170,28 @@ function setAll(val: string): void {
   border-color: #409eff;
   outline: none;
 }
-.lb-spacing-setter__field--top { grid-column: 2; grid-row: 1; }
-.lb-spacing-setter__field--left { grid-column: 1; grid-row: 2; }
-.lb-spacing-setter__center { grid-column: 2; grid-row: 2; text-align: center; cursor: pointer; }
-.lb-spacing-setter__field--right { grid-column: 3; grid-row: 2; }
-.lb-spacing-setter__field--bottom { grid-column: 2; grid-row: 3; }
+.lb-spacing-setter__field--top {
+  grid-column: 2;
+  grid-row: 1;
+}
+.lb-spacing-setter__field--left {
+  grid-column: 1;
+  grid-row: 2;
+}
+.lb-spacing-setter__center {
+  grid-column: 2;
+  grid-row: 2;
+  text-align: center;
+  cursor: pointer;
+}
+.lb-spacing-setter__field--right {
+  grid-column: 3;
+  grid-row: 2;
+}
+.lb-spacing-setter__field--bottom {
+  grid-column: 2;
+  grid-row: 3;
+}
 .lb-spacing-setter__center-icon {
   font-size: 16px;
   color: #c0c4cc;

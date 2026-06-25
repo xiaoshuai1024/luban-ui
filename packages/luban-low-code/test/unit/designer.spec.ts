@@ -26,4 +26,3 @@ describe('LubanDesigner', () => {
     expect(wrapper.find('.luban-designer__root-container').exists()).toBe(true);
   });
 });
-

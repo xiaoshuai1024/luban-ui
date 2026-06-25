@@ -22,7 +22,7 @@ const props = withDefaults(
     tabs: () => [],
     activeKey: '',
     type: '',
-  }
+  },
 );
 
 const emit = defineEmits<{

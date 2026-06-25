@@ -23,7 +23,9 @@ const recent = ref<string[]>([]);
 try {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) recent.value = JSON.parse(saved);
-} catch { /* ignore */ }
+} catch {
+  /* ignore */
+}
 
 // 搜索过滤
 const filteredGroups = computed<PaletteGroup[]>(() => {
@@ -35,7 +37,7 @@ const filteredGroups = computed<PaletteGroup[]>(() => {
       items: g.items.filter(
         (item) =>
           item.label.toLowerCase().includes(q) ||
-          item.type.toLowerCase().includes(q)
+          item.type.toLowerCase().includes(q),
       ),
     }))
     .filter((g) => g.items.length > 0);
@@ -61,7 +63,10 @@ const recentItems = computed<PaletteItem[]>(() => {
       // 搜索时也过滤最近使用
       if (!searchQuery.value.trim()) return true;
       const q = searchQuery.value.toLowerCase();
-      return item.label.toLowerCase().includes(q) || item.type.toLowerCase().includes(q);
+      return (
+        item.label.toLowerCase().includes(q) ||
+        item.type.toLowerCase().includes(q)
+      );
     });
 });
 
@@ -95,7 +100,9 @@ function addToRecent(type: string): void {
   recent.value = recent.value.slice(0, 6);
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(recent.value));
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   emit('recent-change', recent.value);
 }
 
@@ -150,12 +157,19 @@ function getIcon(type: string): string {
           class="lb-component-panel__category-header"
           @click="toggleCategory(group.category)"
         >
-          <span class="lb-component-panel__arrow">{{ isCollapsed(group.category) ? '▸' : '▾' }}</span>
+          <span class="lb-component-panel__arrow">{{
+            isCollapsed(group.category) ? '▸' : '▾'
+          }}</span>
           <span>{{ group.category }}</span>
-          <span class="lb-component-panel__count">{{ group.items.length }}</span>
+          <span class="lb-component-panel__count">{{
+            group.items.length
+          }}</span>
         </div>
         <transition name="lb-collapse">
-          <div v-show="!isCollapsed(group.category)" class="lb-component-panel__items">
+          <div
+            v-show="!isCollapsed(group.category)"
+            class="lb-component-panel__items"
+          >
             <div
               v-for="item in group.items"
               :key="item.type"
@@ -165,7 +179,9 @@ function getIcon(type: string): string {
               @dragstart="onDragStart($event, item.type)"
               @dblclick="onDoubleClick(item.type)"
             >
-              <span class="lb-component-panel__icon">{{ getIcon(item.type) }}</span>
+              <span class="lb-component-panel__icon">{{
+                getIcon(item.type)
+              }}</span>
               <span class="lb-component-panel__label">{{ item.label }}</span>
             </div>
           </div>
@@ -174,7 +190,14 @@ function getIcon(type: string): string {
     </div>
 
     <!-- 搜索空结果 -->
-    <div v-if="searchQuery.trim && filteredGroups.length === 0 && recentItems.length === 0" class="lb-component-panel__empty">
+    <div
+      v-if="
+        searchQuery.trim &&
+        filteredGroups.length === 0 &&
+        recentItems.length === 0
+      "
+      class="lb-component-panel__empty"
+    >
       未找到匹配组件
     </div>
   </div>

@@ -21,7 +21,7 @@ const props = withDefaults(
     title: '',
     visible: false,
     width: '50%',
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -38,7 +38,7 @@ watch(
   (next, prev) => {
     if (next && !prev) emit('open');
     if (!next && prev) emit('close');
-  }
+  },
 );
 
 function close(): void {
@@ -80,11 +80,7 @@ const titleId = computed(() => 'lb-modal-title');
         :aria-label="title ? undefined : '对话框'"
         @click="onMaskClick"
       >
-        <div
-          class="lb-modal"
-          :style="{ width }"
-          @click="stop"
-        >
+        <div class="lb-modal" :style="{ width }" @click="stop">
           <div class="lb-modal__header">
             <span :id="titleId" class="lb-modal__title">{{ title }}</span>
             <button

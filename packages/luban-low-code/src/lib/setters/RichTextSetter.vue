@@ -11,7 +11,7 @@ const props = withDefaults(
     modelValue?: string;
     placeholder?: string;
   }>(),
-  { modelValue: '', placeholder: '输入富文本内容...' }
+  { modelValue: '', placeholder: '输入富文本内容...' },
 );
 
 const emit = defineEmits<{
@@ -31,7 +31,7 @@ watch(
     if (editorRef.value && document.activeElement !== editorRef.value) {
       if (editorRef.value.innerHTML !== val) editorRef.value.innerHTML = val;
     }
-  }
+  },
 );
 
 function exec(command: string, value?: string): void {
@@ -86,7 +86,9 @@ const TOOLS: { cmd: string; icon: string; title: string; arg?: string }[] = [
         class="lb-richtext-setter__btn"
         title="插入链接"
         @mousedown.prevent="setLink"
-      >🔗</button>
+      >
+        🔗
+      </button>
     </div>
     <div
       ref="editorRef"

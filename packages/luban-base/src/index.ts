@@ -1,5 +1,9 @@
 export { default as LubanButton } from './lib/button/LubanButton.vue';
-export type { ButtonVariant, ButtonColor, LubanButtonProps } from './lib/button/button-types';
+export type {
+  ButtonVariant,
+  ButtonColor,
+  LubanButtonProps,
+} from './lib/button/button-types';
 
 export { default as LubanContainer } from './lib/layout/LubanContainer.vue';
 export { default as LubanRow } from './lib/layout/LubanRow.vue';

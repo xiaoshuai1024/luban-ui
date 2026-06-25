@@ -14,4 +14,3 @@ describe('LubanContainer', () => {
     expect(wrapper.find('.inner').exists()).toBe(true);
   });
 });
-

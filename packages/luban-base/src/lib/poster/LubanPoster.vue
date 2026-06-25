@@ -4,11 +4,22 @@ defineProps<{ width?: number; height?: number; background?: string }>();
 </script>
 
 <template>
-  <div class="lb-poster" :style="{ width: width ? `${width}px` : '1080px', minHeight: height ? `${height}px` : '1920px', background: background || '#fff' }">
+  <div
+    class="lb-poster"
+    :style="{
+      width: width ? `${width}px` : '1080px',
+      minHeight: height ? `${height}px` : '1920px',
+      background: background || '#fff',
+    }"
+  >
     <slot />
   </div>
 </template>
 
 <style scoped>
-.lb-poster { position: relative; box-sizing: border-box; overflow: hidden; }
+.lb-poster {
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
 </style>

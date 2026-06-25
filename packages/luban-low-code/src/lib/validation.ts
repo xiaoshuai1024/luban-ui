@@ -43,7 +43,10 @@ function isRequiredButUnchecked(rule: ValidationRule, value: unknown): boolean {
 /**
  * Run validation rules against a value. Returns the first error message or null if valid.
  */
-export function validate(value: unknown, rules: ValidationRule[] | undefined): string | null {
+export function validate(
+  value: unknown,
+  rules: ValidationRule[] | undefined,
+): string | null {
   if (!rules?.length) return null;
 
   const str = value != null ? String(value).trim() : '';
@@ -92,13 +95,19 @@ export function validate(value: unknown, rules: ValidationRule[] | undefined): s
     if (rule.max != null && typeof value === 'number' && value > rule.max) {
       return rule.message ?? `不能大于 ${rule.max}`;
     }
-    if (rule.min != null && (typeof value === 'string' || typeof value === 'number')) {
+    if (
+      rule.min != null &&
+      (typeof value === 'string' || typeof value === 'number')
+    ) {
       const n = typeof value === 'number' ? value : Number(value);
       if (!Number.isNaN(n) && n < rule.min!) {
         return rule.message ?? `不能小于 ${rule.min}`;
       }
     }
-    if (rule.max != null && (typeof value === 'string' || typeof value === 'number')) {
+    if (
+      rule.max != null &&
+      (typeof value === 'string' || typeof value === 'number')
+    ) {
       const n = typeof value === 'number' ? value : Number(value);
       if (!Number.isNaN(n) && n > rule.max!) {
         return rule.message ?? `不能大于 ${rule.max}`;
@@ -124,7 +133,10 @@ export function validate(value: unknown, rules: ValidationRule[] | undefined): s
 // ---- 全表单校验 + formState 初始化（T-ui-3）----
 
 /** 深度优先遍历 schema 节点（含 children 递归）。 */
-function walkNodes(node: NodeSchema | undefined, cb: (n: NodeSchema) => void): void {
+function walkNodes(
+  node: NodeSchema | undefined,
+  cb: (n: NodeSchema) => void,
+): void {
   if (!node) return;
   cb(node);
   if (node.children?.length) {
@@ -175,7 +187,7 @@ export function initFormState(schema: PageSchema): Record<string, unknown> {
  */
 export function validateAll(
   schema: PageSchema,
-  formState: Record<string, unknown>
+  formState: Record<string, unknown>,
 ): Record<string, string> {
   const errors: Record<string, string> = {};
   walkNodes(schema.root, (n) => {

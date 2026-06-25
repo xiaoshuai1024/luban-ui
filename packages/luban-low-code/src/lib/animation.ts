@@ -50,7 +50,9 @@ function animName(type: AnimationType): string {
 }
 
 /** 是否为有效动画配置（type 必填才算） */
-export function isValidAnimation(anim: NodeAnimation | undefined): anim is NodeAnimation {
+export function isValidAnimation(
+  anim: NodeAnimation | undefined,
+): anim is NodeAnimation {
   if (!anim) return false;
   if (!anim.type) return false;
   return !!KEYFRAMES[anim.type];
@@ -61,7 +63,10 @@ export function isValidAnimation(anim: NodeAnimation | undefined): anim is NodeA
  * 返回 @keyframes 定义 + 选择器规则（按 trigger 分支）。
  * 无效动画返回空串。
  */
-export function buildAnimationCss(nodeId: string, anim: NodeAnimation | undefined): string {
+export function buildAnimationCss(
+  nodeId: string,
+  anim: NodeAnimation | undefined,
+): string {
   if (!isValidAnimation(anim)) return '';
   const type = anim.type!;
   const duration = anim.duration ?? 600;
@@ -89,10 +94,18 @@ ${selector}.lb-anim-playing { animation: ${animProps}; }`;
  * 遍历整树收集所有节点的动画 CSS，合并为一段 <style>。
  * 仅含有效动画节点；@keyframes 按类型去重（同类型只输出一次）。
  */
-export function treeAnimationCss(root: { id?: string; animation?: NodeAnimation; children?: unknown[] }): string {
+export function treeAnimationCss(root: {
+  id?: string;
+  animation?: NodeAnimation;
+  children?: unknown[];
+}): string {
   const parts: string[] = [];
   const seenKeyframes = new Set<AnimationType>();
-  function walk(node: { id?: string; animation?: NodeAnimation; children?: unknown[] }): void {
+  function walk(node: {
+    id?: string;
+    animation?: NodeAnimation;
+    children?: unknown[];
+  }): void {
     if (node.id && node.animation) {
       const css = buildAnimationCss(node.id, node.animation);
       if (css) {
@@ -102,7 +115,9 @@ export function treeAnimationCss(root: { id?: string; animation?: NodeAnimation;
         if (type) {
           if (seenKeyframes.has(type)) {
             // 移除已存在的 @keyframes 块（保留选择器规则）
-            filtered = css.replace(KEYFRAMES[type].trim(), '').replace(/^\s+/, '');
+            filtered = css
+              .replace(KEYFRAMES[type].trim(), '')
+              .replace(/^\s+/, '');
           } else {
             seenKeyframes.add(type);
           }
@@ -111,7 +126,10 @@ export function treeAnimationCss(root: { id?: string; animation?: NodeAnimation;
       }
     }
     if (node.children) {
-      for (const c of node.children) walk(c as { id?: string; animation?: NodeAnimation; children?: unknown[] });
+      for (const c of node.children)
+        walk(
+          c as { id?: string; animation?: NodeAnimation; children?: unknown[] },
+        );
     }
   }
   walk(root);

@@ -24,7 +24,9 @@ interface ObserveOptions {
 /**
  * 收集 schema 树中所有 trigger=in-view 的节点 {id, scrollRepeat}。
  */
-export function collectInViewNodes(root: NodeSchema): { id: string; scrollRepeat?: boolean }[] {
+export function collectInViewNodes(
+  root: NodeSchema,
+): { id: string; scrollRepeat?: boolean }[] {
   const out: { id: string; scrollRepeat?: boolean }[] = [];
   function walk(node: NodeSchema): void {
     const anim: NodeAnimation | undefined = node.animation;
@@ -46,7 +48,7 @@ export function collectInViewNodes(root: NodeSchema): { id: string; scrollRepeat
 export function useAnimationObserver(
   containerRef: () => HTMLElement | null,
   schemaRef: () => NodeSchema | null | undefined,
-  options: ObserveOptions = {}
+  options: ObserveOptions = {},
 ): { observe: () => void; disconnect: () => void } {
   let io: IntersectionObserver | null = null;
   const threshold = options.threshold ?? 0.15;
@@ -92,12 +94,14 @@ export function useAnimationObserver(
           }
         }
       },
-      { threshold, rootMargin }
+      { threshold, rootMargin },
     );
 
     // 初始标记 pending（隐藏）+ 注册观察
     for (const n of nodes) {
-      const el = container.querySelector(`[data-lb-node="${n.id}"]`) as HTMLElement | null;
+      const el = container.querySelector(
+        `[data-lb-node="${n.id}"]`,
+      ) as HTMLElement | null;
       if (el) {
         el.classList.add('lb-anim-pending');
         io.observe(el);

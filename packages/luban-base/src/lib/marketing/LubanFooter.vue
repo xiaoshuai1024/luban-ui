@@ -11,27 +11,22 @@ withDefaults(
   }>(),
   {
     columns: () => [],
-    copyright: "© 2026",
-    backgroundColor: "var(--lb-bg-dark)",
-    textColor: "var(--lb-text-on-dark)",
-  }
+    copyright: '© 2026',
+    backgroundColor: 'var(--lb-bg-dark)',
+    textColor: 'var(--lb-text-on-dark)',
+  },
 );
 </script>
 
 <template>
-  <footer
-    class="lb-footer"
-    :style="{ backgroundColor, color: textColor }"
-  >
+  <footer class="lb-footer" :style="{ backgroundColor, color: textColor }">
     <div class="lb-footer__inner">
-      <div class="lb-footer__columns" v-if="columns.length">
-        <div
-          v-for="(col, i) in columns"
-          :key="i"
-          class="lb-footer__column"
-        >
-          <h4 class="lb-footer__title">{{ col.title }}</h4>
-          <ul class="lb-footer__list" v-if="col.links?.length">
+      <div v-if="columns.length" class="lb-footer__columns">
+        <div v-for="(col, i) in columns" :key="i" class="lb-footer__column">
+          <h4 class="lb-footer__title">
+            {{ col.title }}
+          </h4>
+          <ul v-if="col.links?.length" class="lb-footer__list">
             <li v-for="(link, j) in col.links" :key="j">
               <a class="lb-footer__link" :href="link.url">{{ link.label }}</a>
             </li>

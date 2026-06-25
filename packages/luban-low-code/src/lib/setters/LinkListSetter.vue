@@ -16,7 +16,7 @@ const props = withDefaults(
   defineProps<{
     modelValue?: LinkItem[];
   }>(),
-  { modelValue: () => [] }
+  { modelValue: () => [] },
 );
 
 const emit = defineEmits<{
@@ -34,11 +34,17 @@ function genId(): string {
 }
 
 function emitList(list: LinkItem[]): void {
-  emit('update:modelValue', list.map((l) => ({ ...l })));
+  emit(
+    'update:modelValue',
+    list.map((l) => ({ ...l })),
+  );
 }
 
 function add(): void {
-  emitList([...links.value, { id: genId(), label: '新链接', href: '#', target: '_self' }]);
+  emitList([
+    ...links.value,
+    { id: genId(), label: '新链接', href: '#', target: '_self' },
+  ]);
 }
 
 function remove(index: number): void {
@@ -71,27 +77,51 @@ function move(index: number, dir: -1 | 1): void {
           type="text"
           :value="link.label"
           placeholder="显示文字"
-          @input="update(i, { label: ($event.target as HTMLInputElement).value })"
+          @input="
+            update(i, { label: ($event.target as HTMLInputElement).value })
+          "
         />
         <input
           class="lb-linklist-setter__input"
           type="text"
           :value="link.href"
           placeholder="链接地址"
-          @input="update(i, { href: ($event.target as HTMLInputElement).value })"
+          @input="
+            update(i, { href: ($event.target as HTMLInputElement).value })
+          "
         />
         <select
           class="lb-linklist-setter__select"
           :value="link.target ?? '_self'"
-          @change="update(i, { target: ($event.target as HTMLSelectElement).value as '_self' | '_blank' })"
+          @change="
+            update(i, {
+              target: ($event.target as HTMLSelectElement).value as
+                | '_self'
+                | '_blank',
+            })
+          "
         >
           <option value="_self">当前页</option>
           <option value="_blank">新窗口</option>
         </select>
         <div class="lb-linklist-setter__actions">
-          <button title="上移" :disabled="i === 0" @click="move(i, -1)">↑</button>
-          <button title="下移" :disabled="i === links.length - 1" @click="move(i, 1)">↓</button>
-          <button class="lb-linklist-setter__del" title="删除" @click="remove(i)">✕</button>
+          <button title="上移" :disabled="i === 0" @click="move(i, -1)">
+            ↑
+          </button>
+          <button
+            title="下移"
+            :disabled="i === links.length - 1"
+            @click="move(i, 1)"
+          >
+            ↓
+          </button>
+          <button
+            class="lb-linklist-setter__del"
+            title="删除"
+            @click="remove(i)"
+          >
+            ✕
+          </button>
         </div>
       </div>
     </div>
