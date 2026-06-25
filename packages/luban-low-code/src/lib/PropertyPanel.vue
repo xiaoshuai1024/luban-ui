@@ -164,7 +164,7 @@ function removeOption(key: string, index: number, isStyle = false): void {
           <label class="lb-property-field__label" :class="{ 'lb-property-field__label--required': schema.required }">
             {{ schema.label ?? key }}
           </label>
-          <input v-if="setterFor(schema) === 'string'" class="lb-property-input" type="text" :placeholder="schema.placeholder" :value="String(getValue(key, schema.default ?? ''))" @input="patch(key, ($event.target as HTMLInputElement).value)" />
+          <input v-if="setterFor(schema) === 'string'" class="lb-property-input" type="text" :placeholder="schema.placeholder" :value="String(getValue(key, schema.default ?? ''))" @change="patch(key, ($event.target as HTMLInputElement).value)" />
           <input v-else-if="setterFor(schema) === 'number'" class="lb-property-input" type="number" :value="Number(getValue(key, schema.default ?? 0))" @input="patch(key, Number(($event.target as HTMLInputElement).value))" />
           <label v-else-if="setterFor(schema) === 'boolean'" class="lb-property-switch"><input type="checkbox" :checked="Boolean(getValue(key, schema.default ?? false))" @change="patch(key, ($event.target as HTMLInputElement).checked)" /><span>{{ Boolean(getValue(key, schema.default ?? false)) ? '是' : '否' }}</span></label>
           <select v-else-if="setterFor(schema) === 'select'" class="lb-property-input" :value="getValue(key, schema.default ?? '')" @change="patch(key, ($event.target as HTMLSelectElement).value)"><option v-for="opt in schema.options" :key="String(opt.value)" :value="opt.value">{{ opt.label }}</option></select>
