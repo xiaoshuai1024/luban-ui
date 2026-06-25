@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { ComponentMeta, PropSchemaItem } from './componentMeta';
 
 /**
@@ -36,6 +36,44 @@ const styleEntries = computed(() => {
 });
 
 const eventsList = computed(() => props.nodeMeta?.events ?? []);
+
+// T-ui-4：搜索 + 分组折叠
+const searchQuery = ref('');
+const COLLAPSE_KEY = 'luban_property_panel_collapsed';
+const collapsed = ref<Record<string, boolean>>({});
+try {
+  const saved = localStorage.getItem(COLLAPSE_KEY);
+  if (saved) collapsed.value = JSON.parse(saved);
+} catch { /* noop */ }
+
+function toggleGroup(group: string): void {
+  collapsed.value = { ...collapsed.value, [group]: !collapsed.value[group] };
+  try { localStorage.setItem(COLLAPSE_KEY, JSON.stringify(collapsed.value)); } catch { /* noop */ }
+}
+function isCollapsed(group: string): boolean {
+  return !!collapsed.value[group];
+}
+
+// 搜索时自动展开
+watch(searchQuery, (q) => {
+  if (q.trim()) collapsed.value = {};
+});
+
+// 过滤 propEntries
+const filteredPropEntries = computed(() => {
+  if (!searchQuery.value.trim()) return propEntries.value;
+  const q = searchQuery.value.toLowerCase();
+  return propEntries.value.filter(([key, schema]) =>
+    (schema.label ?? key).toLowerCase().includes(q) || key.toLowerCase().includes(q)
+  );
+});
+const filteredStyleEntries = computed(() => {
+  if (!searchQuery.value.trim()) return styleEntries.value;
+  const q = searchQuery.value.toLowerCase();
+  return styleEntries.value.filter(([key, schema]) =>
+    (schema.label ?? key).toLowerCase().includes(q) || key.toLowerCase().includes(q)
+  );
+});
 
 /** 是否有任何可编辑字段（无则显示空态） */
 const hasAnyField = computed(
@@ -98,10 +136,24 @@ function removeOption(key: string, index: number, isStyle = false): void {
     <template v-if="nodeMeta && hasAnyField">
       <div class="lb-property-panel__header">{{ nodeMeta.label }} 属性配置</div>
 
-      <!-- 基础属性 -->
-      <div v-if="propEntries.length" class="lb-property-panel__section">
-        <div class="lb-property-panel__section-title">基础属性</div>
-        <div v-for="([key, schema]) in propEntries" :key="'p-' + key" class="lb-property-field">
+      <!-- T-ui-4：搜索框 -->
+      <div class="lb-property-panel__search">
+        <input
+          v-model="searchQuery"
+          class="lb-property-panel__search-input"
+          type="text"
+          placeholder="搜索属性..."
+        />
+      </div>
+
+      <!-- 基础属性（可折叠） -->
+      <div v-if="filteredPropEntries.length" class="lb-property-panel__section">
+        <div class="lb-property-panel__section-title" @click="toggleGroup('基础')">
+          <span class="lb-property-panel__arrow">{{ isCollapsed('基础') ? '▸' : '▾' }}</span>
+          基础属性
+        </div>
+        <div v-show="!isCollapsed('基础')">
+        <div v-for="([key, schema]) in filteredPropEntries" :key="'p-' + key" class="lb-property-field">
           <label class="lb-property-field__label" :class="{ 'lb-property-field__label--required': schema.required }">
             {{ schema.label ?? key }}
           </label>
@@ -115,26 +167,37 @@ function removeOption(key: string, index: number, isStyle = false): void {
           <div v-else-if="setterFor(schema) === 'options'" class="lb-property-options"><div v-for="(opt, i) in optionsList(key)" :key="i" class="lb-property-options__row"><input class="lb-property-input lb-property-options__input" type="text" placeholder="标签" :value="opt.label" @input="updateOption(key, i, 'label', ($event.target as HTMLInputElement).value)" /><input class="lb-property-input lb-property-options__input" type="text" placeholder="值" :value="String(opt.value)" @input="updateOption(key, i, 'value', ($event.target as HTMLInputElement).value)" /><button class="lb-property-options__btn" type="button" @click="removeOption(key, i)">✕</button></div><button class="lb-property-options__add" type="button" @click="addOption(key)">+ 添加</button></div>
           <textarea v-else class="lb-property-textarea" :value="jsonText(key)" rows="3" @blur="commitJson(key, ($event.target as HTMLTextAreaElement).value)" />
         </div>
+        </div>
       </div>
 
-      <!-- 样式属性 -->
-      <div v-if="styleEntries.length" class="lb-property-panel__section">
-        <div class="lb-property-panel__section-title">样式</div>
-        <div v-for="([key, schema]) in styleEntries" :key="'s-' + key" class="lb-property-field">
+      <!-- 样式属性（可折叠） -->
+      <div v-if="filteredStyleEntries.length" class="lb-property-panel__section">
+        <div class="lb-property-panel__section-title" @click="toggleGroup('样式')">
+          <span class="lb-property-panel__arrow">{{ isCollapsed('样式') ? '▸' : '▾' }}</span>
+          样式
+        </div>
+        <div v-show="!isCollapsed('样式')">
+        <div v-for="([key, schema]) in filteredStyleEntries" :key="'s-' + key" class="lb-property-field">
           <label class="lb-property-field__label">{{ schema.label ?? key }}</label>
           <input v-if="setterFor(schema) === 'string' || setterFor(schema) === 'spacing'" class="lb-property-input" type="text" :placeholder="schema.placeholder ?? '如 16px'" :value="String(getValue(key, schema.default ?? '', true))" @input="patch(key, ($event.target as HTMLInputElement).value, true)" />
           <div v-else-if="setterFor(schema) === 'color'" class="lb-property-color"><input type="color" class="lb-property-color__picker" :value="String(getValue(key, '#000000', true))" @input="patch(key, ($event.target as HTMLInputElement).value, true)" /><input type="text" class="lb-property-input lb-property-color__text" :value="String(getValue(key, '#000000', true))" @input="patch(key, ($event.target as HTMLInputElement).value, true)" /></div>
           <select v-else-if="setterFor(schema) === 'select'" class="lb-property-input" :value="getValue(key, '', true)" @change="patch(key, ($event.target as HTMLSelectElement).value, true)"><option v-for="opt in schema.options" :key="String(opt.value)" :value="opt.value">{{ opt.label }}</option></select>
           <input v-else class="lb-property-input" type="text" :value="String(getValue(key, '', true))" @input="patch(key, ($event.target as HTMLInputElement).value, true)" />
         </div>
+        </div>
       </div>
 
-      <!-- 事件 -->
+      <!-- 事件（可折叠） -->
       <div v-if="eventsList.length" class="lb-property-panel__section">
-        <div class="lb-property-panel__section-title">事件</div>
+        <div class="lb-property-panel__section-title" @click="toggleGroup('事件')">
+          <span class="lb-property-panel__arrow">{{ isCollapsed('事件') ? '▸' : '▾' }}</span>
+          事件
+        </div>
+        <div v-show="!isCollapsed('事件')">
         <div v-for="evt in eventsList" :key="evt" class="lb-property-field">
           <label class="lb-property-field__label">{{ evt }}</label>
           <span class="lb-property-field__hint">可在代码模式绑定</span>
+        </div>
         </div>
       </div>
     </template>
@@ -151,7 +214,11 @@ function removeOption(key: string, index: number, isStyle = false): void {
 .lb-property-panel{display:flex;flex-direction:column;height:100%;overflow-y:auto;background:#fff}
 .lb-property-panel__header{font-weight:600;font-size:14px;padding:12px 16px 10px;border-bottom:1px solid #f0f0f0;color:#303133;position:sticky;top:0;background:#fff;z-index:1}
 .lb-property-panel__section{padding:8px 16px;border-bottom:1px solid #f5f5f5}
-.lb-property-panel__section-title{font-size:11px;color:#909399;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;margin-top:4px}
+.lb-property-panel__section-title{font-size:11px;color:#909399;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;margin-top:4px;cursor:pointer;user-select:none;display:flex;align-items:center;gap:4px}
+.lb-property-panel__arrow{font-size:10px;color:#c0c4cc}
+.lb-property-panel__search{padding:8px 12px}
+.lb-property-panel__search-input{width:100%;padding:6px 10px;border:1px solid #dcdfe6;border-radius:6px;font-size:12px;outline:none}
+.lb-property-panel__search-input:focus{border-color:#409eff}
 .lb-property-field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
 .lb-property-field__label{font-size:12px;color:#606266}
 .lb-property-field__label--required::after{content:' *';color:#f56c6c}
