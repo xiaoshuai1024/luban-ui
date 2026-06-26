@@ -124,12 +124,17 @@ function getIcon(type: string): string {
         type="text"
         placeholder="搜索组件..."
         class="lb-component-panel__search-input"
-      />
+      >
     </div>
 
     <!-- 最近使用 -->
-    <div v-if="recentItems.length" class="lb-component-panel__recent">
-      <div class="lb-component-panel__section-title">最近使用</div>
+    <div
+      v-if="recentItems.length"
+      class="lb-component-panel__recent"
+    >
+      <div class="lb-component-panel__section-title">
+        最近使用
+      </div>
       <div class="lb-component-panel__items lb-component-panel__items--grid">
         <div
           v-for="item in recentItems"
@@ -193,8 +198,8 @@ function getIcon(type: string): string {
     <div
       v-if="
         searchQuery.trim &&
-        filteredGroups.length === 0 &&
-        recentItems.length === 0
+          filteredGroups.length === 0 &&
+          recentItems.length === 0
       "
       class="lb-component-panel__empty"
     >

@@ -54,7 +54,10 @@ const cards = computed<Card[]>(() =>
 
 <template>
   <div class="lb-content-list">
-    <div v-if="cards.length === 0" class="lb-content-list__empty">
+    <div
+      v-if="cards.length === 0"
+      class="lb-content-list__empty"
+    >
       {{ emptyText }}
     </div>
     <div
@@ -75,12 +78,18 @@ const cards = computed<Card[]>(() =>
           :alt="card.title"
           class="lb-content-list__img"
           loading="lazy"
-        />
+        >
         <div class="lb-content-list__body">
-          <h3 v-if="card.title" class="lb-content-list__title">
+          <h3
+            v-if="card.title"
+            class="lb-content-list__title"
+          >
             {{ card.title }}
           </h3>
-          <p v-if="card.body" class="lb-content-list__text">
+          <p
+            v-if="card.body"
+            class="lb-content-list__text"
+          >
             {{ card.body }}
           </p>
         </div>

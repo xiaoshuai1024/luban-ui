@@ -3,7 +3,10 @@ defineProps<{ html: string }>();
 </script>
 
 <template>
-  <div class="lb-richtext" v-html="html" />
+  <div
+    class="lb-richtext"
+    v-html="html"
+  />
 </template>
 
 <style scoped>

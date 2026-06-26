@@ -30,9 +30,11 @@ const hover = ref(0);
       v-if="label"
       class="lb-form-field__label"
       :class="{ 'lb-form-field__label--required': required }"
-      >{{ label }}</label
+    >{{ label }}</label>
+    <div
+      class="lb-rating"
+      :aria-invalid="error"
     >
-    <div class="lb-rating" :aria-invalid="error">
       <button
         v-for="i in max"
         :key="i"
@@ -47,7 +49,10 @@ const hover = ref(0);
         ★
       </button>
     </div>
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

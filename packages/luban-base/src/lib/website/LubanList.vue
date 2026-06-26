@@ -3,8 +3,15 @@ defineProps<{ items: string[]; ordered?: boolean }>();
 </script>
 
 <template>
-  <component :is="ordered ? 'ol' : 'ul'" class="lb-list">
-    <li v-for="(item, i) in items" :key="i" class="lb-list__item">
+  <component
+    :is="ordered ? 'ol' : 'ul'"
+    class="lb-list"
+  >
+    <li
+      v-for="(item, i) in items"
+      :key="i"
+      class="lb-list__item"
+    >
       {{ item }}
     </li>
   </component>

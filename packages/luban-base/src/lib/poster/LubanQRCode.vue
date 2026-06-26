@@ -12,7 +12,12 @@ const src = computed(
 
 <template>
   <div class="lb-qrcode">
-    <img :src="src" :width="size" :height="size" alt="二维码" />
+    <img
+      :src="src"
+      :width="size"
+      :height="size"
+      alt="二维码"
+    >
   </div>
 </template>
 

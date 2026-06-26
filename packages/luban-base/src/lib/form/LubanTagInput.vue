@@ -44,10 +44,16 @@ const removeTag = (i: number) =>
       v-if="label"
       class="lb-form-field__label"
       :class="{ 'lb-form-field__label--required': required }"
-      >{{ label }}</label
+    >{{ label }}</label>
+    <div
+      class="lb-tag-input"
+      :class="{ 'lb-tag-input--error': error }"
     >
-    <div class="lb-tag-input" :class="{ 'lb-tag-input--error': error }">
-      <span v-for="(tag, i) in tags()" :key="i" class="lb-tag-input__tag">
+      <span
+        v-for="(tag, i) in tags()"
+        :key="i"
+        class="lb-tag-input__tag"
+      >
         {{ tag }}
         <button
           v-if="!disabled"
@@ -66,9 +72,12 @@ const removeTag = (i: number) =>
         :disabled="disabled"
         :aria-invalid="error"
         @keydown.enter.prevent="addTag"
-      />
+      >
     </div>
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

@@ -16,12 +16,21 @@ withDefaults(
 </script>
 
 <template>
-  <section class="lb-faq" :style="{ backgroundColor }">
+  <section
+    class="lb-faq"
+    :style="{ backgroundColor }"
+  >
     <div class="lb-faq__inner">
-      <h2 v-if="heading" class="lb-faq__heading">
+      <h2
+        v-if="heading"
+        class="lb-faq__heading"
+      >
         {{ heading }}
       </h2>
-      <div v-if="items.length" class="lb-faq__list">
+      <div
+        v-if="items.length"
+        class="lb-faq__list"
+      >
         <details
           v-for="(item, i) in items"
           :key="i"

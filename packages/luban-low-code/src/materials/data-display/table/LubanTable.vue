@@ -99,7 +99,10 @@ function rowKey(row: Record<string, unknown>, idx: number): string | number {
 </script>
 
 <template>
-  <div class="lb-table" :class="{ 'lb-table--border': border }">
+  <div
+    class="lb-table"
+    :class="{ 'lb-table--border': border }"
+  >
     <table class="lb-table__table">
       <thead>
         <tr>
@@ -121,19 +124,34 @@ function rowKey(row: Record<string, unknown>, idx: number): string | number {
           :class="{ 'lb-table__row--striped': striped && idx % 2 === 1 }"
           @click="$emit('rowClick', row)"
         >
-          <td v-for="col in columns" :key="col.key" class="lb-table__td">
+          <td
+            v-for="col in columns"
+            :key="col.key"
+            class="lb-table__td"
+          >
             {{ row?.[col.key] ?? '' }}
           </td>
         </tr>
-        <tr v-if="rows.length === 0" class="lb-table__empty-row">
-          <td :colspan="Math.max(columns.length, 1)" class="lb-table__empty">
-            <slot name="empty"> 暂无数据 </slot>
+        <tr
+          v-if="rows.length === 0"
+          class="lb-table__empty-row"
+        >
+          <td
+            :colspan="Math.max(columns.length, 1)"
+            class="lb-table__empty"
+          >
+            <slot name="empty">
+              暂无数据
+            </slot>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div v-if="pagingEnabled" class="lb-table__pagination">
+    <div
+      v-if="pagingEnabled"
+      class="lb-table__pagination"
+    >
       <button
         type="button"
         class="lb-table__page-btn"

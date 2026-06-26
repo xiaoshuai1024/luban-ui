@@ -80,9 +80,16 @@ const titleId = computed(() => 'lb-modal-title');
         :aria-label="title ? undefined : '对话框'"
         @click="onMaskClick"
       >
-        <div class="lb-modal" :style="{ width }" @click="stop">
+        <div
+          class="lb-modal"
+          :style="{ width }"
+          @click="stop"
+        >
           <div class="lb-modal__header">
-            <span :id="titleId" class="lb-modal__title">{{ title }}</span>
+            <span
+              :id="titleId"
+              class="lb-modal__title"
+            >{{ title }}</span>
             <button
               type="button"
               class="lb-modal__close"
@@ -95,7 +102,10 @@ const titleId = computed(() => 'lb-modal-title');
           <div class="lb-modal__body">
             <slot />
           </div>
-          <div v-if="$slots.footer" class="lb-modal__footer">
+          <div
+            v-if="$slots.footer"
+            class="lb-modal__footer"
+          >
             <slot name="footer" />
           </div>
         </div>

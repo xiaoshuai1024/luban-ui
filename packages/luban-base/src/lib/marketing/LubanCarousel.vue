@@ -50,7 +50,10 @@ watch(() => props.interval, startAutoplay);
     @mouseenter="stopAutoplay"
     @mouseleave="startAutoplay"
   >
-    <div v-if="slideCount > 0" class="lb-carousel__viewport">
+    <div
+      v-if="slideCount > 0"
+      class="lb-carousel__viewport"
+    >
       <component
         :is="props.slides[safeIndex]?.href ? 'a' : 'div'"
         :href="props.slides[safeIndex]?.href"
@@ -59,10 +62,15 @@ watch(() => props.interval, startAutoplay);
         <img
           :src="props.slides[safeIndex].src"
           :alt="props.slides[safeIndex].alt"
-        />
+        >
       </component>
     </div>
-    <div v-else class="lb-carousel__placeholder">轮播图（请添加图片）</div>
+    <div
+      v-else
+      class="lb-carousel__placeholder"
+    >
+      轮播图（请添加图片）
+    </div>
     <button
       v-if="slideCount > 1"
       class="lb-carousel__nav lb-carousel__nav--prev"
@@ -79,7 +87,10 @@ watch(() => props.interval, startAutoplay);
     >
       ›
     </button>
-    <div v-if="slideCount > 1" class="lb-carousel__dots">
+    <div
+      v-if="slideCount > 1"
+      class="lb-carousel__dots"
+    >
       <button
         v-for="(_, i) in props.slides"
         :key="i"

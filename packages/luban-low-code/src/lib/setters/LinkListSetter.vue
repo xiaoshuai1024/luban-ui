@@ -80,7 +80,7 @@ function move(index: number, dir: -1 | 1): void {
           @input="
             update(i, { label: ($event.target as HTMLInputElement).value })
           "
-        />
+        >
         <input
           class="lb-linklist-setter__input"
           type="text"
@@ -89,7 +89,7 @@ function move(index: number, dir: -1 | 1): void {
           @input="
             update(i, { href: ($event.target as HTMLInputElement).value })
           "
-        />
+        >
         <select
           class="lb-linklist-setter__select"
           :value="link.target ?? '_self'"
@@ -101,11 +101,19 @@ function move(index: number, dir: -1 | 1): void {
             })
           "
         >
-          <option value="_self">当前页</option>
-          <option value="_blank">新窗口</option>
+          <option value="_self">
+            当前页
+          </option>
+          <option value="_blank">
+            新窗口
+          </option>
         </select>
         <div class="lb-linklist-setter__actions">
-          <button title="上移" :disabled="i === 0" @click="move(i, -1)">
+          <button
+            title="上移"
+            :disabled="i === 0"
+            @click="move(i, -1)"
+          >
             ↑
           </button>
           <button
@@ -125,8 +133,18 @@ function move(index: number, dir: -1 | 1): void {
         </div>
       </div>
     </div>
-    <button class="lb-linklist-setter__add" @click="add">+ 添加链接</button>
-    <p v-if="links.length === 0" class="lb-linklist-setter__empty">暂无链接</p>
+    <button
+      class="lb-linklist-setter__add"
+      @click="add"
+    >
+      + 添加链接
+    </button>
+    <p
+      v-if="links.length === 0"
+      class="lb-linklist-setter__empty"
+    >
+      暂无链接
+    </p>
   </div>
 </template>
 

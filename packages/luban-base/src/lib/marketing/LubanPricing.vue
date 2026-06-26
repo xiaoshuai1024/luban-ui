@@ -23,12 +23,21 @@ withDefaults(
 </script>
 
 <template>
-  <section class="lb-pricing" :style="{ backgroundColor }">
+  <section
+    class="lb-pricing"
+    :style="{ backgroundColor }"
+  >
     <div class="lb-pricing__inner">
-      <h2 v-if="heading" class="lb-pricing__heading">
+      <h2
+        v-if="heading"
+        class="lb-pricing__heading"
+      >
         {{ heading }}
       </h2>
-      <div v-if="plans.length" class="lb-pricing__list">
+      <div
+        v-if="plans.length"
+        class="lb-pricing__list"
+      >
         <div
           v-for="(plan, i) in plans"
           :key="i"
@@ -40,11 +49,15 @@ withDefaults(
           </h3>
           <div class="lb-pricing__price">
             {{ plan.price
-            }}<span v-if="plan.period" class="lb-pricing__period"
-              >/{{ plan.period }}</span
-            >
+            }}<span
+              v-if="plan.period"
+              class="lb-pricing__period"
+            >/{{ plan.period }}</span>
           </div>
-          <ul v-if="plan.features?.length" class="lb-pricing__features">
+          <ul
+            v-if="plan.features?.length"
+            class="lb-pricing__features"
+          >
             <li
               v-for="(f, j) in plan.features"
               :key="j"
@@ -58,8 +71,7 @@ withDefaults(
             v-if="plan.ctaText"
             class="lb-pricing__cta"
             :href="plan.ctaUrl ? plan.ctaUrl : '#'"
-            >{{ plan.ctaText }}</a
-          >
+          >{{ plan.ctaText }}</a>
         </div>
       </div>
     </div>

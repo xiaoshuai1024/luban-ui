@@ -89,7 +89,7 @@ function onTextBlur(): void {
         type="color"
         :value="hexPart"
         @input="onSelect"
-      />
+      >
       <input
         class="lb-color-setter__text"
         :class="{ 'lb-color-setter__text--invalid': invalid }"
@@ -98,7 +98,7 @@ function onTextBlur(): void {
         placeholder="#000000"
         @input="onTextInput"
         @blur="onTextBlur"
-      />
+      >
     </div>
     <div class="lb-color-setter__presets">
       <button

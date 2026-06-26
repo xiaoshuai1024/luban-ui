@@ -33,7 +33,11 @@ withDefaults(
             : height,
     }"
   >
-    <img :src="src" :alt="alt" :style="{ objectFit }" />
+    <img
+      :src="src"
+      :alt="alt"
+      :style="{ objectFit }"
+    >
   </component>
 </template>
 

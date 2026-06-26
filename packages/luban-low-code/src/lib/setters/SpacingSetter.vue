@@ -81,7 +81,7 @@ function setAll(val: string): void {
           :value="spacing.top"
           :placeholder="`0${unit}`"
           @input="setSide('top', ($event.target as HTMLInputElement).value)"
-        />
+        >
       </div>
       <div class="lb-spacing-setter__field lb-spacing-setter__field--right">
         <label>右</label>
@@ -90,7 +90,7 @@ function setAll(val: string): void {
           :value="spacing.right"
           :placeholder="`0${unit}`"
           @input="setSide('right', ($event.target as HTMLInputElement).value)"
-        />
+        >
       </div>
       <div class="lb-spacing-setter__field lb-spacing-setter__field--bottom">
         <label>下</label>
@@ -99,7 +99,7 @@ function setAll(val: string): void {
           :value="spacing.bottom"
           :placeholder="`0${unit}`"
           @input="setSide('bottom', ($event.target as HTMLInputElement).value)"
-        />
+        >
       </div>
       <div class="lb-spacing-setter__field lb-spacing-setter__field--left">
         <label>左</label>
@@ -108,7 +108,7 @@ function setAll(val: string): void {
           :value="spacing.left"
           :placeholder="`0${unit}`"
           @input="setSide('left', ($event.target as HTMLInputElement).value)"
-        />
+        >
       </div>
       <div
         class="lb-spacing-setter__center"
@@ -121,14 +121,17 @@ function setAll(val: string): void {
         }}</span>
       </div>
     </div>
-    <div v-if="linked" class="lb-spacing-setter__all">
+    <div
+      v-if="linked"
+      class="lb-spacing-setter__all"
+    >
       <label>统一</label>
       <input
         type="text"
         :value="spacing.top"
         :placeholder="`0${unit}`"
         @input="setAll(($event.target as HTMLInputElement).value)"
-      />
+      >
     </div>
   </div>
 </template>

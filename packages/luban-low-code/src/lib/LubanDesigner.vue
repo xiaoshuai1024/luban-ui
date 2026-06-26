@@ -566,7 +566,10 @@ const isEmpty = computed(
 <template>
   <div class="luban-designer">
     <!-- 设计态内置工具栏：缩放控件 + 网格/吸附开关 -->
-    <div v-if="designMode" class="luban-designer__builtin-toolbar">
+    <div
+      v-if="designMode"
+      class="luban-designer__builtin-toolbar"
+    >
       <div class="luban-designer__zoom-controls">
         <button
           class="luban-designer__zoom-btn"
@@ -727,7 +730,10 @@ const isEmpty = computed(
             class="luban-designer__guides"
             aria-hidden="true"
           >
-            <template v-for="(g, i) in activeGuides" :key="i">
+            <template
+              v-for="(g, i) in activeGuides"
+              :key="i"
+            >
               <div
                 v-if="g.orientation === 'vertical'"
                 class="luban-designer__guide luban-designer__guide--vertical"
@@ -785,12 +791,18 @@ const isEmpty = computed(
           + {{ dropPreviewType }}
         </div>
         <!-- 画布拖入提示浮层 -->
-        <div v-if="dropZoneActive" class="luban-designer__drop-hint">
+        <div
+          v-if="dropZoneActive"
+          class="luban-designer__drop-hint"
+        >
           <span class="luban-designer__drop-hint-icon">⬇</span>
           <span>释放以添加组件</span>
         </div>
         <!-- 拖放失败错误提示 -->
-        <div v-if="dropError" class="luban-designer__drop-error">
+        <div
+          v-if="dropError"
+          class="luban-designer__drop-error"
+        >
           ⚠️ {{ dropError }}
         </div>
       </template>

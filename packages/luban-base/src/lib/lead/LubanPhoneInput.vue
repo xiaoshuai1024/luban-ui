@@ -40,8 +40,7 @@ const onInput = (e: Event) => {
       v-if="label"
       class="lb-form-field__label"
       :class="{ 'lb-form-field__label--required': required }"
-      >{{ label }}</label
-    >
+    >{{ label }}</label>
     <input
       class="lb-input"
       :class="{ 'lb-input--error': error }"
@@ -53,8 +52,11 @@ const onInput = (e: Event) => {
       :disabled="disabled"
       :aria-invalid="error"
       @input="onInput"
-    />
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    >
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

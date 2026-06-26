@@ -6,8 +6,7 @@ defineProps<{ name: string; size?: number; color?: string }>();
   <span
     class="lb-icon"
     :style="{ fontSize: size ? `${size}px` : undefined, color }"
-    >{{ name }}</span
-  >
+  >{{ name }}</span>
 </template>
 
 <style scoped>

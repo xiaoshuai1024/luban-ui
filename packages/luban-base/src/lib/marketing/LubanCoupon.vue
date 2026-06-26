@@ -20,11 +20,18 @@ const emit = defineEmits<{ copy: [code: string] }>();
       <div class="lb-coupon__title">
         {{ title }}
       </div>
-      <div v-if="description" class="lb-coupon__desc">
+      <div
+        v-if="description"
+        class="lb-coupon__desc"
+      >
         {{ description }}
       </div>
     </div>
-    <button class="lb-coupon__right" type="button" @click="emit('copy', code)">
+    <button
+      class="lb-coupon__right"
+      type="button"
+      @click="emit('copy', code)"
+    >
       <span class="lb-coupon__code">{{ code }}</span>
       <span class="lb-coupon__action">复制</span>
     </button>

@@ -43,9 +43,15 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="lb-testimonial-carousel" :style="{ backgroundColor }">
+  <section
+    class="lb-testimonial-carousel"
+    :style="{ backgroundColor }"
+  >
     <div class="lb-testimonial-carousel__inner">
-      <div v-if="testimonials.length" class="lb-testimonial-carousel__slide">
+      <div
+        v-if="testimonials.length"
+        class="lb-testimonial-carousel__slide"
+      >
         <div
           v-if="testimonials[current].rating"
           class="lb-testimonial-carousel__rating"
@@ -58,8 +64,7 @@ onBeforeUnmount(() => {
               'lb-testimonial-carousel__star--on':
                 (testimonials[current]?.rating ?? 0) >= n,
             }"
-            >★</span
-          >
+          >★</span>
         </div>
         <blockquote class="lb-testimonial-carousel__quote">
           {{ testimonials[current].quote }}
@@ -70,7 +75,7 @@ onBeforeUnmount(() => {
             class="lb-testimonial-carousel__avatar"
             :src="testimonials[current].avatarUrl"
             :alt="testimonials[current].author"
-          />
+          >
           <div>
             <div class="lb-testimonial-carousel__name">
               {{ testimonials[current].author }}

@@ -11,7 +11,11 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="lb-node-toolbar" @click.stop @mousedown.stop>
+  <div
+    class="lb-node-toolbar"
+    @click.stop
+    @mousedown.stop
+  >
     <button
       class="lb-node-toolbar__btn"
       title="复制 (Ctrl+D)"

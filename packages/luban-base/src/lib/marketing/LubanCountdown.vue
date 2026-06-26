@@ -34,25 +34,28 @@ onUnmounted(() => {
 
 <template>
   <div class="lb-countdown">
-    <span v-if="label" class="lb-countdown__label">{{ label }}</span>
-    <div v-if="!remaining.ended" class="lb-countdown__digits">
-      <span class="lb-countdown__unit"
-        >{{ remaining.days }}<small>天</small></span
-      >
+    <span
+      v-if="label"
+      class="lb-countdown__label"
+    >{{ label }}</span>
+    <div
+      v-if="!remaining.ended"
+      class="lb-countdown__digits"
+    >
+      <span class="lb-countdown__unit">{{ remaining.days }}<small>天</small></span>
       <span class="lb-countdown__sep">:</span>
-      <span class="lb-countdown__unit"
-        >{{ String(remaining.hours).padStart(2, '0') }}<small>时</small></span
-      >
+      <span class="lb-countdown__unit">{{ String(remaining.hours).padStart(2, '0') }}<small>时</small></span>
       <span class="lb-countdown__sep">:</span>
-      <span class="lb-countdown__unit"
-        >{{ String(remaining.minutes).padStart(2, '0') }}<small>分</small></span
-      >
+      <span class="lb-countdown__unit">{{ String(remaining.minutes).padStart(2, '0') }}<small>分</small></span>
       <span class="lb-countdown__sep">:</span>
-      <span class="lb-countdown__unit"
-        >{{ String(remaining.seconds).padStart(2, '0') }}<small>秒</small></span
-      >
+      <span class="lb-countdown__unit">{{ String(remaining.seconds).padStart(2, '0') }}<small>秒</small></span>
     </div>
-    <div v-else class="lb-countdown__ended">活动已结束</div>
+    <div
+      v-else
+      class="lb-countdown__ended"
+    >
+      活动已结束
+    </div>
   </div>
 </template>
 

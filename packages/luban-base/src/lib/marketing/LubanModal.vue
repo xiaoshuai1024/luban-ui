@@ -30,11 +30,22 @@ const close = () => {
       {{ trigger }}
     </button>
     <teleport to="body">
-      <div v-if="props.visible" class="lb-modal__mask" @click.self="close">
+      <div
+        v-if="props.visible"
+        class="lb-modal__mask"
+        @click.self="close"
+      >
         <div class="lb-modal__dialog">
-          <div v-if="title" class="lb-modal__header">
+          <div
+            v-if="title"
+            class="lb-modal__header"
+          >
             <span>{{ title }}</span>
-            <button class="lb-modal__close" type="button" @click="close">
+            <button
+              class="lb-modal__close"
+              type="button"
+              @click="close"
+            >
               ✕
             </button>
           </div>

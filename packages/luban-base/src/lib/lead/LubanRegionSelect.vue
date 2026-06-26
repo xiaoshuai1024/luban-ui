@@ -77,12 +77,24 @@ watch(province, () => {
       v-if="label"
       class="lb-form-field__label"
       :class="{ 'lb-form-field__label--required': required }"
-      >{{ label }}</label
-    >
+    >{{ label }}</label>
     <div class="lb-region__selects">
-      <select v-model="province" class="lb-input" :disabled="disabled">
-        <option value="" disabled>省份</option>
-        <option v-for="p in PROVINCES" :key="p" :value="p">
+      <select
+        v-model="province"
+        class="lb-input"
+        :disabled="disabled"
+      >
+        <option
+          value=""
+          disabled
+        >
+          省份
+        </option>
+        <option
+          v-for="p in PROVINCES"
+          :key="p"
+          :value="p"
+        >
           {{ p }}
         </option>
       </select>
@@ -92,13 +104,25 @@ watch(province, () => {
         :disabled="disabled"
         @change="emitUpdate"
       >
-        <option value="" disabled>城市</option>
-        <option v-for="c in CITIES[province] || []" :key="c" :value="c">
+        <option
+          value=""
+          disabled
+        >
+          城市
+        </option>
+        <option
+          v-for="c in CITIES[province] || []"
+          :key="c"
+          :value="c"
+        >
           {{ c }}
         </option>
       </select>
     </div>
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

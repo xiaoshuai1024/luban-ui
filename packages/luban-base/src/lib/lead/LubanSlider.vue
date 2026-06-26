@@ -51,8 +51,11 @@ const emit = defineEmits<{ 'update:modelValue': [v: number] }>();
           Number(($event.target as HTMLInputElement).value),
         )
       "
-    />
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    >
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

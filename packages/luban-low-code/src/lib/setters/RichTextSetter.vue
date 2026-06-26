@@ -109,6 +109,7 @@ const TOOLS: { cmd: string; icon: string; title: string; arg?: string }[] = [
   border-radius: 4px;
   overflow: hidden;
 }
+
 .lb-richtext-setter__toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -117,6 +118,7 @@ const TOOLS: { cmd: string; icon: string; title: string; arg?: string }[] = [
   background: #f5f7fa;
   border-bottom: 1px solid #ebeef5;
 }
+
 .lb-richtext-setter__btn {
   min-width: 26px;
   height: 26px;
@@ -129,10 +131,12 @@ const TOOLS: { cmd: string; icon: string; title: string; arg?: string }[] = [
   font-family: monospace;
   transition: background 0.1s ease;
 }
+
 .lb-richtext-setter__btn:hover {
   background: #ecf5ff;
   color: #409eff;
 }
+
 .lb-richtext-setter__editor {
   min-height: 80px;
   max-height: 200px;
@@ -142,15 +146,18 @@ const TOOLS: { cmd: string; icon: string; title: string; arg?: string }[] = [
   outline: none;
   overflow-y: auto;
 }
+
 .lb-richtext-setter__editor:empty::before {
   content: attr(data-placeholder);
   color: #c0c4cc;
 }
+
 .lb-richtext-setter__editor :deep(ul),
 .lb-richtext-setter__editor :deep(ol) {
   padding-left: 20px;
   margin: 4px 0;
 }
+
 .lb-richtext-setter__editor :deep(a) {
   color: #409eff;
 }

@@ -63,12 +63,21 @@ withDefaults(
       v-if="backgroundImage && layout === 'centered'"
       class="lb-hero__overlay"
     />
-    <div class="lb-hero__content" :style="{ textAlign: align }">
-      <span v-if="eyebrow" class="lb-hero__eyebrow">{{ eyebrow }}</span>
+    <div
+      class="lb-hero__content"
+      :style="{ textAlign: align }"
+    >
+      <span
+        v-if="eyebrow"
+        class="lb-hero__eyebrow"
+      >{{ eyebrow }}</span>
       <h1 class="lb-hero__title">
         {{ title }}
       </h1>
-      <p v-if="subtitle" class="lb-hero__subtitle">
+      <p
+        v-if="subtitle"
+        class="lb-hero__subtitle"
+      >
         {{ subtitle }}
       </p>
       <div
@@ -82,24 +91,33 @@ withDefaults(
                 : 'center',
         }"
       >
-        <a v-if="ctaText && ctaUrl" :href="ctaUrl" class="lb-hero__cta">{{
+        <a
+          v-if="ctaText && ctaUrl"
+          :href="ctaUrl"
+          class="lb-hero__cta"
+        >{{
           ctaText
         }}</a>
         <span
           v-else-if="ctaText && !ctaUrl"
           class="lb-hero__cta lb-hero__cta--disabled"
-          >{{ ctaText }}</span
-        >
+        >{{ ctaText }}</span>
         <a
           v-if="secondaryCtaText && secondaryCtaUrl"
           :href="secondaryCtaUrl"
           class="lb-hero__cta lb-hero__cta--secondary"
-          >{{ secondaryCtaText }}</a
-        >
+        >{{ secondaryCtaText }}</a>
       </div>
     </div>
-    <div v-if="layout === 'split' && sideImage" class="lb-hero__side">
-      <img :src="sideImage" alt="" class="lb-hero__side-image" />
+    <div
+      v-if="layout === 'split' && sideImage"
+      class="lb-hero__side"
+    >
+      <img
+        :src="sideImage"
+        alt=""
+        class="lb-hero__side-image"
+      >
     </div>
   </section>
 </template>

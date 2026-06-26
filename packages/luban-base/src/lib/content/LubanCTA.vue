@@ -47,7 +47,10 @@ withDefaults(
       <h2 class="lb-cta__heading">
         {{ heading }}
       </h2>
-      <p v-if="description" class="lb-cta__description">
+      <p
+        v-if="description"
+        class="lb-cta__description"
+      >
         {{ description }}
       </p>
       <div class="lb-cta__actions">
@@ -56,24 +59,20 @@ withDefaults(
           :href="buttonUrl"
           class="lb-cta__button"
           :class="`lb-cta__button--${buttonVariant}`"
-          >{{ buttonText }}</a
-        >
+        >{{ buttonText }}</a>
         <span
           v-else-if="buttonText && !buttonUrl"
           class="lb-cta__button lb-cta__button--disabled"
-          >{{ buttonText }}</span
-        >
+        >{{ buttonText }}</span>
         <a
           v-if="secondaryButtonText && secondaryButtonUrl"
           :href="secondaryButtonUrl"
           class="lb-cta__button lb-cta__button--secondary"
-          >{{ secondaryButtonText }}</a
-        >
+        >{{ secondaryButtonText }}</a>
         <span
           v-else-if="secondaryButtonText && !secondaryButtonUrl"
           class="lb-cta__button lb-cta__button--secondary lb-cta__button--disabled"
-          >{{ secondaryButtonText }}</span
-        >
+        >{{ secondaryButtonText }}</span>
       </div>
     </div>
   </section>

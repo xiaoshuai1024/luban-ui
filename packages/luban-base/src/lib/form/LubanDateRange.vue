@@ -28,8 +28,7 @@ const emit = defineEmits<{
       v-if="label"
       class="lb-form-field__label"
       :class="{ 'lb-form-field__label--required': required }"
-      >{{ label }}</label
-    >
+    >{{ label }}</label>
     <div class="lb-daterange">
       <input
         class="lb-input"
@@ -44,7 +43,7 @@ const emit = defineEmits<{
             start: ($event.target as HTMLInputElement).value,
           })
         "
-      />
+      >
       <span class="lb-daterange__sep">至</span>
       <input
         class="lb-input"
@@ -59,9 +58,12 @@ const emit = defineEmits<{
             end: ($event.target as HTMLInputElement).value,
           })
         "
-      />
+      >
     </div>
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

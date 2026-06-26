@@ -126,7 +126,10 @@ function onAction(action: MenuAction): void {
         >
           <span class="lb-context-menu__icon">{{ item.icon }}</span>
           <span class="lb-context-menu__label">{{ item.label }}</span>
-          <span v-if="item.shortcut" class="lb-context-menu__shortcut">{{
+          <span
+            v-if="item.shortcut"
+            class="lb-context-menu__shortcut"
+          >{{
             item.shortcut
           }}</span>
         </li>

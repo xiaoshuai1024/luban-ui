@@ -22,7 +22,11 @@ const active = ref(0);
       </button>
     </div>
     <div class="lb-tabs__panel">
-      <slot name="tab" :index="active" :tab="props.tabs[active]">
+      <slot
+        name="tab"
+        :index="active"
+        :tab="props.tabs[active]"
+      >
         {{ props.tabs[active]?.content }}
       </slot>
     </div>

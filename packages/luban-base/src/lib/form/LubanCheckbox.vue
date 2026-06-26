@@ -35,7 +35,7 @@ const emit = defineEmits<{
         @change="
           emit('update:modelValue', ($event.target as HTMLInputElement).checked)
         "
-      />
+      >
       <span
         v-if="label"
         class="lb-form-field__label"
@@ -44,7 +44,10 @@ const emit = defineEmits<{
         {{ label }}
       </span>
     </label>
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

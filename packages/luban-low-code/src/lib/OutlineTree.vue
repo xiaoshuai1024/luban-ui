@@ -64,7 +64,11 @@ function bubbleReorder(id: string, dir: 'up' | 'down'): void {
 
 <template>
   <div class="lb-outline-tree">
-    <div v-for="node in renderNodes" :key="node.id" class="lb-outline-node">
+    <div
+      v-for="node in renderNodes"
+      :key="node.id"
+      class="lb-outline-node"
+    >
       <div
         class="lb-outline-node__row"
         :class="{ 'lb-outline-node__row--selected': selectedId === node.id }"

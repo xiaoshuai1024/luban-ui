@@ -105,7 +105,10 @@ function isDisabled(btn: AlignBtn): boolean {
 </script>
 
 <template>
-  <div v-if="selectedCount >= 2" class="lb-multiselect">
+  <div
+    v-if="selectedCount >= 2"
+    class="lb-multiselect"
+  >
     <span class="lb-multiselect__count">
       已选 <strong>{{ selectedCount }}</strong> 个
     </span>

@@ -82,13 +82,13 @@ function move(index: number, dir: -1 | 1): void {
               @input="
                 update(i, { image: ($event.target as HTMLInputElement).value })
               "
-            />
+            >
             <img
               v-if="slide.image"
               class="lb-carousel-setter__thumb"
               :src="slide.image"
               alt=""
-            />
+            >
           </div>
           <input
             class="lb-carousel-setter__input"
@@ -98,7 +98,7 @@ function move(index: number, dir: -1 | 1): void {
             @input="
               update(i, { title: ($event.target as HTMLInputElement).value })
             "
-          />
+          >
           <input
             class="lb-carousel-setter__input"
             type="text"
@@ -107,10 +107,14 @@ function move(index: number, dir: -1 | 1): void {
             @input="
               update(i, { link: ($event.target as HTMLInputElement).value })
             "
-          />
+          >
         </div>
         <div class="lb-carousel-setter__item-actions">
-          <button title="上移" :disabled="i === 0" @click="move(i, -1)">
+          <button
+            title="上移"
+            :disabled="i === 0"
+            @click="move(i, -1)"
+          >
             ↑
           </button>
           <button
@@ -130,8 +134,16 @@ function move(index: number, dir: -1 | 1): void {
         </div>
       </div>
     </div>
-    <button class="lb-carousel-setter__add" @click="add">+ 添加幻灯片</button>
-    <p v-if="slides.length === 0" class="lb-carousel-setter__empty">
+    <button
+      class="lb-carousel-setter__add"
+      @click="add"
+    >
+      + 添加幻灯片
+    </button>
+    <p
+      v-if="slides.length === 0"
+      class="lb-carousel-setter__empty"
+    >
       暂无幻灯片，点击上方添加
     </p>
   </div>

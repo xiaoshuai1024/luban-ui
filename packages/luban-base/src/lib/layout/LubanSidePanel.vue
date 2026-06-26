@@ -35,7 +35,10 @@ function closePanel() {
 </script>
 
 <template>
-  <div v-if="isVisible" class="lb-side-panel-overlay">
+  <div
+    v-if="isVisible"
+    class="lb-side-panel-overlay"
+  >
     <aside
       class="lb-side-panel"
       :class="[`lb-side-panel--size-${size}`]"
@@ -45,7 +48,10 @@ function closePanel() {
       <header class="lb-side-panel__header">
         <div class="lb-side-panel__header-main">
           <slot name="header">
-            <h2 v-if="title" class="lb-side-panel__title">
+            <h2
+              v-if="title"
+              class="lb-side-panel__title"
+            >
               {{ title }}
             </h2>
           </slot>

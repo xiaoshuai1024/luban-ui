@@ -8,13 +8,27 @@ defineProps<{
 </script>
 
 <template>
-  <component :is="href ? 'a' : 'div'" :href="href" class="lb-card">
-    <img v-if="src" class="lb-card__img" :src="src" />
+  <component
+    :is="href ? 'a' : 'div'"
+    :href="href"
+    class="lb-card"
+  >
+    <img
+      v-if="src"
+      class="lb-card__img"
+      :src="src"
+    >
     <div class="lb-card__body">
-      <div v-if="title" class="lb-card__title">
+      <div
+        v-if="title"
+        class="lb-card__title"
+      >
         {{ title }}
       </div>
-      <div v-if="description" class="lb-card__desc">
+      <div
+        v-if="description"
+        class="lb-card__desc"
+      >
         {{ description }}
       </div>
       <slot />

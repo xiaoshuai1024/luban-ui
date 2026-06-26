@@ -101,11 +101,22 @@ function onJump(entry: TimelineEntry): void {
       </div>
     </div>
 
-    <div v-if="loading" class="lb-history-panel__empty">加载中...</div>
-    <div v-else-if="timeline.length === 1" class="lb-history-panel__empty">
+    <div
+      v-if="loading"
+      class="lb-history-panel__empty"
+    >
+      加载中...
+    </div>
+    <div
+      v-else-if="timeline.length === 1"
+      class="lb-history-panel__empty"
+    >
       暂无历史操作
     </div>
-    <ul v-else class="lb-history-panel__timeline">
+    <ul
+      v-else
+      class="lb-history-panel__timeline"
+    >
       <li
         v-for="entry in timeline"
         :key="entry.delta"
@@ -125,8 +136,7 @@ function onJump(entry: TimelineEntry): void {
         <span
           v-if="entry.type === 'current'"
           class="lb-history-panel__current-tag"
-          >当前</span
-        >
+        >当前</span>
       </li>
     </ul>
 

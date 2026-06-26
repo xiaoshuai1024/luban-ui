@@ -44,8 +44,14 @@ function typeClass(): string {
 </script>
 
 <template>
-  <div class="lb-tabs" :class="typeClass()">
-    <div class="lb-tabs__nav" role="tablist">
+  <div
+    class="lb-tabs"
+    :class="typeClass()"
+  >
+    <div
+      class="lb-tabs__nav"
+      role="tablist"
+    >
       <button
         v-for="tab in tabs"
         :key="tab.key"

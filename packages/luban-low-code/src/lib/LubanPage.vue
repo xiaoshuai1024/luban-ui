@@ -186,9 +186,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="pageWrapRef" class="luban-page">
+  <div
+    ref="pageWrapRef"
+    class="luban-page"
+  >
     <!-- V2-T4/T5 响应式 @media + 动画 @keyframes CSS：整树收集注入 -->
-    <component :is="'style'" v-if="extraCss" v-html="extraCss" />
+    <component
+      :is="'style'"
+      v-if="extraCss"
+      v-html="extraCss"
+    />
     <RuntimeRenderer
       v-if="schema?.root"
       :root="schema.root"

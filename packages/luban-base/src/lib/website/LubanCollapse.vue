@@ -14,12 +14,23 @@ const toggle = (i: number) => {
 
 <template>
   <div class="lb-collapse">
-    <div v-for="(panel, i) in props.panels" :key="i" class="lb-collapse__panel">
-      <button class="lb-collapse__header" type="button" @click="toggle(i)">
+    <div
+      v-for="(panel, i) in props.panels"
+      :key="i"
+      class="lb-collapse__panel"
+    >
+      <button
+        class="lb-collapse__header"
+        type="button"
+        @click="toggle(i)"
+      >
         <span>{{ panel.title }}</span>
         <span class="lb-collapse__arrow">{{ openSet.has(i) ? '−' : '+' }}</span>
       </button>
-      <div v-show="openSet.has(i)" class="lb-collapse__body">
+      <div
+        v-show="openSet.has(i)"
+        class="lb-collapse__body"
+      >
         {{ panel.content }}
       </div>
     </div>

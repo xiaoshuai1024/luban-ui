@@ -39,15 +39,21 @@ const emit = defineEmits<{
       >
         <span class="lb-switch__thumb" />
       </button>
-      <span v-if="label" class="lb-form-field__label">{{ label }}</span>
+      <span
+        v-if="label"
+        class="lb-form-field__label"
+      >{{ label }}</span>
     </div>
     <input
       v-if="name"
       type="hidden"
       :name="name"
       :value="modelValue ? 'on' : ''"
-    />
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    >
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

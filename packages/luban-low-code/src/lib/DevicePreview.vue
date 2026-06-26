@@ -51,15 +51,28 @@ const frameStyle = computed(() => {
 </script>
 
 <template>
-  <div class="lb-device" :class="config.frameClass">
+  <div
+    class="lb-device"
+    :class="config.frameClass"
+  >
     <!-- 移动端设备外框（带圆角边框，模拟手机壳） -->
-    <div v-if="device !== 'pc'" class="lb-device__shell" :style="frameStyle">
+    <div
+      v-if="device !== 'pc'"
+      class="lb-device__shell"
+      :style="frameStyle"
+    >
       <!-- 听筒/摄像头装饰（仅 mobile） -->
-      <div v-if="device === 'mobile' && showStatusBar" class="lb-device__notch">
+      <div
+        v-if="device === 'mobile' && showStatusBar"
+        class="lb-device__notch"
+      >
         <span class="lb-device__notch-speaker" />
       </div>
       <!-- 状态栏 -->
-      <div v-if="showStatusBar" class="lb-device__status-bar">
+      <div
+        v-if="showStatusBar"
+        class="lb-device__status-bar"
+      >
         <span class="lb-device__status-time">{{ config.label }}</span>
         <span class="lb-device__status-icons">
           <span class="lb-device__status-signal">📶</span>
@@ -73,7 +86,10 @@ const frameStyle = computed(() => {
     </div>
 
     <!-- PC：直接渲染（满宽），仅居中容器 -->
-    <div v-else class="lb-device__pc-wrapper">
+    <div
+      v-else
+      class="lb-device__pc-wrapper"
+    >
       <slot />
     </div>
 
@@ -81,9 +97,10 @@ const frameStyle = computed(() => {
     <div class="lb-device__label">
       <span class="lb-device__label-icon">{{ config.icon }}</span>
       <span class="lb-device__label-text">{{ config.label }}</span>
-      <span v-if="config.width > 0" class="lb-device__label-width"
-        >{{ config.width }}px</span
-      >
+      <span
+        v-if="config.width > 0"
+        class="lb-device__label-width"
+      >{{ config.width }}px</span>
     </div>
   </div>
 </template>

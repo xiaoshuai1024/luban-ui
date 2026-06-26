@@ -287,15 +287,15 @@ function slotContent(): string {
       v-on="resolveEvents(root.events)"
       @submit="
         formSubmitHandler &&
-        (root.type === 'LubanForm' || root.type === 'LubanLeadCapture')
+          (root.type === 'LubanForm' || root.type === 'LubanLeadCapture')
           ? formSubmitHandler({
-              formId: (root.props?.formId as string) || '',
-              formState:
-                root.type === 'LubanLeadCapture'
-                  ? ($event as Record<string, unknown>)
-                  : props.formState,
-              event: $event as Event,
-            })
+            formId: (root.props?.formId as string) || '',
+            formState:
+              root.type === 'LubanLeadCapture'
+                ? ($event as Record<string, unknown>)
+                : props.formState,
+            event: $event as Event,
+          })
           : undefined
       "
     >

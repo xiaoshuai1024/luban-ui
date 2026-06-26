@@ -10,7 +10,7 @@ defineProps<{ src: string; width?: number; radius?: number }>();
       width: width ? `${width}px` : '100%',
       borderRadius: radius ? `${radius}px` : 0,
     }"
-  />
+  >
 </template>
 
 <style scoped>

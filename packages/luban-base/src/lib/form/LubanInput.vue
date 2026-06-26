@@ -53,11 +53,17 @@ const emit = defineEmits<{
       "
       @blur="emit('blur', $event)"
       @focus="emit('focus', $event)"
-    />
-    <p v-if="helperText && !error" class="lb-form-field__helper">
+    >
+    <p
+      v-if="helperText && !error"
+      class="lb-form-field__helper"
+    >
       {{ helperText }}
     </p>
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

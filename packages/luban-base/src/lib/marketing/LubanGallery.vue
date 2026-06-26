@@ -16,16 +16,30 @@ withDefaults(
 </script>
 
 <template>
-  <section class="lb-gallery" :style="{ backgroundColor }">
+  <section
+    class="lb-gallery"
+    :style="{ backgroundColor }"
+  >
     <div class="lb-gallery__inner">
       <div
         v-if="images.length"
         class="lb-gallery__grid"
         :style="{ gridTemplateColumns: 'repeat(' + columns + ', 1fr)', gap }"
       >
-        <figure v-for="(img, i) in images" :key="i" class="lb-gallery__item">
-          <img class="lb-gallery__img" :src="img.src" :alt="img.alt" />
-          <figcaption v-if="img.caption" class="lb-gallery__caption">
+        <figure
+          v-for="(img, i) in images"
+          :key="i"
+          class="lb-gallery__item"
+        >
+          <img
+            class="lb-gallery__img"
+            :src="img.src"
+            :alt="img.alt"
+          >
+          <figcaption
+            v-if="img.caption"
+            class="lb-gallery__caption"
+          >
             {{ img.caption }}
           </figcaption>
         </figure>

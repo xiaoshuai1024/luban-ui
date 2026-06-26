@@ -35,7 +35,10 @@ const clampedRating = computed(() => {
 </script>
 
 <template>
-  <div class="lb-testimonial" :style="{ backgroundColor }">
+  <div
+    class="lb-testimonial"
+    :style="{ backgroundColor }"
+  >
     <div
       v-if="clampedRating > 0"
       class="lb-testimonial__stars"
@@ -46,8 +49,7 @@ const clampedRating = computed(() => {
         :key="i"
         class="lb-testimonial__star"
         :class="{ 'lb-testimonial__star--active': i <= clampedRating }"
-        >★</span
-      >
+      >★</span>
     </div>
     <blockquote class="lb-testimonial__quote">
       <p>{{ quote }}</p>
@@ -58,12 +60,18 @@ const clampedRating = computed(() => {
         :src="avatarUrl"
         :alt="author"
         class="lb-testimonial__avatar"
-      />
+      >
       <div class="lb-testimonial__author-info">
-        <span v-if="author" class="lb-testimonial__author-name">{{
+        <span
+          v-if="author"
+          class="lb-testimonial__author-name"
+        >{{
           author
         }}</span>
-        <span v-if="role" class="lb-testimonial__author-role">{{ role }}</span>
+        <span
+          v-if="role"
+          class="lb-testimonial__author-role"
+        >{{ role }}</span>
       </div>
     </div>
   </div>

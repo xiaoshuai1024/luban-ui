@@ -137,7 +137,10 @@ const lineNumbers = computed(() =>
 </script>
 
 <template>
-  <div class="lb-code-editor" :class="{ 'lb-code-editor--error': error }">
+  <div
+    class="lb-code-editor"
+    :class="{ 'lb-code-editor--error': error }"
+  >
     <div class="lb-code-editor__toolbar">
       <span class="lb-code-editor__title">JSON Schema</span>
       <div class="lb-code-editor__actions">
@@ -173,7 +176,10 @@ const lineNumbers = computed(() =>
       />
     </div>
 
-    <div v-if="error" class="lb-code-editor__error">
+    <div
+      v-if="error"
+      class="lb-code-editor__error"
+    >
       <span class="lb-code-editor__error-icon">⚠</span>
       <span class="lb-code-editor__error-text">{{ error }}</span>
     </div>

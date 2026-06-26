@@ -92,7 +92,10 @@ const titleId = computed(() => 'lb-drawer-title');
           @click="stop"
         >
           <div class="lb-drawer__header">
-            <span :id="titleId" class="lb-drawer__title">{{ title }}</span>
+            <span
+              :id="titleId"
+              class="lb-drawer__title"
+            >{{ title }}</span>
             <button
               type="button"
               class="lb-drawer__close"

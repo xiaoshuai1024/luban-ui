@@ -82,8 +82,11 @@ function onImgError(): void {
         :value="modelValue"
         :placeholder="placeholder"
         @input="onInput"
-      />
-      <label class="lb-image-setter__upload" title="本地上传">
+      >
+      <label
+        class="lb-image-setter__upload"
+        title="本地上传"
+      >
         📁
         <input
           ref="fileInputRef"
@@ -91,7 +94,7 @@ function onImgError(): void {
           accept="image/*"
           hidden
           @change="onFile"
-        />
+        >
       </label>
       <button
         v-if="modelValue"
@@ -102,19 +105,28 @@ function onImgError(): void {
         ✕
       </button>
     </div>
-    <div v-if="errorMsg" class="lb-image-setter__error">
+    <div
+      v-if="errorMsg"
+      class="lb-image-setter__error"
+    >
       {{ errorMsg }}
     </div>
-    <div v-if="hasImage" class="lb-image-setter__preview">
+    <div
+      v-if="hasImage"
+      class="lb-image-setter__preview"
+    >
       <img
         :src="modelValue"
         alt="预览"
         :style="{ maxWidth: `${previewWidth}px` }"
         @error="onImgError"
-      />
+      >
       <span class="lb-image-setter__preview-label">预览</span>
     </div>
-    <div v-else-if="modelValue && imgError" class="lb-image-setter__error">
+    <div
+      v-else-if="modelValue && imgError"
+      class="lb-image-setter__error"
+    >
       图片加载失败，请检查 URL
     </div>
   </div>

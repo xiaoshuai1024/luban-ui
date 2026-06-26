@@ -16,12 +16,21 @@ withDefaults(
 </script>
 
 <template>
-  <section class="lb-logo-cloud" :style="{ backgroundColor }">
+  <section
+    class="lb-logo-cloud"
+    :style="{ backgroundColor }"
+  >
     <div class="lb-logo-cloud__inner">
-      <h2 v-if="heading" class="lb-logo-cloud__heading">
+      <h2
+        v-if="heading"
+        class="lb-logo-cloud__heading"
+      >
         {{ heading }}
       </h2>
-      <div v-if="logos.length" class="lb-logo-cloud__list">
+      <div
+        v-if="logos.length"
+        class="lb-logo-cloud__list"
+      >
         <a
           v-for="(logo, i) in logos"
           :key="i"
@@ -33,7 +42,7 @@ withDefaults(
             :class="{ 'lb-logo-cloud__img--gray': grayscale }"
             :src="logo.src"
             :alt="logo.alt"
-          />
+          >
         </a>
       </div>
     </div>

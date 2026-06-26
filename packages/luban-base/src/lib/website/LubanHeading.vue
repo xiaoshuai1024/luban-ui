@@ -6,7 +6,10 @@ withDefaults(
 </script>
 
 <template>
-  <component :is="`h${level}`" class="lb-heading">
+  <component
+    :is="`h${level}`"
+    class="lb-heading"
+  >
     {{ content }}
   </component>
 </template>

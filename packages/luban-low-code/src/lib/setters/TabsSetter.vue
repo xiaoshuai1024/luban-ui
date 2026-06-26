@@ -81,16 +81,20 @@ function move(index: number, dir: -1 | 1): void {
           @input="
             update(i, { label: ($event.target as HTMLInputElement).value })
           "
-        />
+        >
         <input
           class="lb-tabs-setter__input lb-tabs-setter__input--key"
           type="text"
           :value="tab.key"
           placeholder="key"
           @input="update(i, { key: ($event.target as HTMLInputElement).value })"
-        />
+        >
         <div class="lb-tabs-setter__actions">
-          <button title="上移" :disabled="i === 0" @click="move(i, -1)">
+          <button
+            title="上移"
+            :disabled="i === 0"
+            @click="move(i, -1)"
+          >
             ←
           </button>
           <button
@@ -100,14 +104,28 @@ function move(index: number, dir: -1 | 1): void {
           >
             →
           </button>
-          <button class="lb-tabs-setter__del" title="删除" @click="remove(i)">
+          <button
+            class="lb-tabs-setter__del"
+            title="删除"
+            @click="remove(i)"
+          >
             ✕
           </button>
         </div>
       </div>
     </div>
-    <button class="lb-tabs-setter__add" @click="add">+ 添加标签</button>
-    <p v-if="tabs.length === 0" class="lb-tabs-setter__empty">暂无标签页</p>
+    <button
+      class="lb-tabs-setter__add"
+      @click="add"
+    >
+      + 添加标签
+    </button>
+    <p
+      v-if="tabs.length === 0"
+      class="lb-tabs-setter__empty"
+    >
+      暂无标签页
+    </p>
   </div>
 </template>
 

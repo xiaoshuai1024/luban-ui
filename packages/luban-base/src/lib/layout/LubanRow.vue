@@ -33,5 +33,5 @@ withDefaults(
 </template>
 
 <style scoped lang="scss">
-@use '../../styles/layout.scss';
+@use '../../styles/layout';
 </style>

@@ -176,7 +176,11 @@ const distanceLabels = computed(() => {
 </script>
 
 <template>
-  <div v-if="active" class="lb-align-guides" aria-hidden="true">
+  <div
+    v-if="active"
+    class="lb-align-guides"
+    aria-hidden="true"
+  >
     <svg
       class="lb-align-guides__svg"
       :width="canvasWidth"

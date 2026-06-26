@@ -16,9 +16,15 @@ withDefaults(
 </script>
 
 <template>
-  <section class="lb-feature-grid" :style="{ backgroundColor }">
+  <section
+    class="lb-feature-grid"
+    :style="{ backgroundColor }"
+  >
     <div class="lb-feature-grid__inner">
-      <h2 v-if="heading" class="lb-feature-grid__heading">
+      <h2
+        v-if="heading"
+        class="lb-feature-grid__heading"
+      >
         {{ heading }}
       </h2>
       <div
@@ -31,13 +37,19 @@ withDefaults(
           :key="i"
           class="lb-feature-grid__card"
         >
-          <div v-if="item.icon" class="lb-feature-grid__icon">
+          <div
+            v-if="item.icon"
+            class="lb-feature-grid__icon"
+          >
             {{ item.icon }}
           </div>
           <h3 class="lb-feature-grid__title">
             {{ item.title }}
           </h3>
-          <p v-if="item.description" class="lb-feature-grid__desc">
+          <p
+            v-if="item.description"
+            class="lb-feature-grid__desc"
+          >
             {{ item.description }}
           </p>
         </div>

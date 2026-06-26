@@ -52,13 +52,17 @@ const emit = defineEmits<{
           ($event.target as HTMLSelectElement).value === ''
             ? null
             : Number(($event.target as HTMLSelectElement).value) ||
-                ($event.target as HTMLSelectElement).value,
+              ($event.target as HTMLSelectElement).value,
         )
       "
       @blur="emit('blur', $event)"
       @focus="emit('focus', $event)"
     >
-      <option v-if="placeholder" value="" disabled>
+      <option
+        v-if="placeholder"
+        value=""
+        disabled
+      >
         {{ placeholder }}
       </option>
       <option
@@ -69,10 +73,16 @@ const emit = defineEmits<{
         {{ opt.label }}
       </option>
     </select>
-    <p v-if="helperText && !error" class="lb-form-field__helper">
+    <p
+      v-if="helperText && !error"
+      class="lb-form-field__helper"
+    >
       {{ helperText }}
     </p>
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

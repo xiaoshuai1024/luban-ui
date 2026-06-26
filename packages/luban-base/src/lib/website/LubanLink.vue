@@ -3,7 +3,11 @@ defineProps<{ href: string; text: string; target?: string }>();
 </script>
 
 <template>
-  <a class="lb-link" :href="href" :target="target || '_self'">{{ text }}</a>
+  <a
+    class="lb-link"
+    :href="href"
+    :target="target || '_self'"
+  >{{ text }}</a>
 </template>
 
 <style scoped>

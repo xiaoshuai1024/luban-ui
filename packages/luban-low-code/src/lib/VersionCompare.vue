@@ -164,11 +164,22 @@ function formatTime(iso: string): string {
           ⟳
         </button>
       </div>
-      <div v-if="loading" class="lb-version-compare__empty">加载中...</div>
-      <div v-else-if="versions.length === 0" class="lb-version-compare__empty">
+      <div
+        v-if="loading"
+        class="lb-version-compare__empty"
+      >
+        加载中...
+      </div>
+      <div
+        v-else-if="versions.length === 0"
+        class="lb-version-compare__empty"
+      >
         暂无历史版本
       </div>
-      <ul v-else class="lb-version-compare__versions">
+      <ul
+        v-else
+        class="lb-version-compare__versions"
+      >
         <li
           v-for="v in versions"
           :key="v.id"
@@ -185,32 +196,46 @@ function formatTime(iso: string): string {
             <span
               v-if="v.id === currentVersionId"
               class="lb-version-compare__current-tag"
-              >当前</span
-            >
+            >当前</span>
           </div>
           <div class="lb-version-compare__version-meta">
             <span>{{ formatTime(v.createdAt) }}</span>
-            <span v-if="v.operator" class="lb-version-compare__operator">{{
+            <span
+              v-if="v.operator"
+              class="lb-version-compare__operator"
+            >{{
               v.operator
             }}</span>
           </div>
-          <div v-if="v.note" class="lb-version-compare__version-note">
+          <div
+            v-if="v.note"
+            class="lb-version-compare__version-note"
+          >
             {{ v.note }}
           </div>
         </li>
       </ul>
-      <p v-if="versions.length > 0" class="lb-version-compare__hint">
+      <p
+        v-if="versions.length > 0"
+        class="lb-version-compare__hint"
+      >
         点击选择 2 个版本对比，双击预览
       </p>
     </div>
 
     <!-- 对比视图 -->
-    <div v-if="diffResult" class="lb-version-compare__diff">
+    <div
+      v-if="diffResult"
+      class="lb-version-compare__diff"
+    >
       <div class="lb-version-compare__diff-header">
         <span class="lb-version-compare__diff-title">
           差异对比（{{ changedCount }} 处不同）
         </span>
-        <button class="lb-version-compare__btn" @click="clearSelection">
+        <button
+          class="lb-version-compare__btn"
+          @click="clearSelection"
+        >
           清除
         </button>
         <button
@@ -246,7 +271,10 @@ function formatTime(iso: string): string {
         </div>
       </div>
     </div>
-    <div v-else class="lb-version-compare__diff-placeholder">
+    <div
+      v-else
+      class="lb-version-compare__diff-placeholder"
+    >
       <span class="lb-version-compare__diff-placeholder-icon">⇄</span>
       <span>选择 2 个版本进行对比</span>
     </div>

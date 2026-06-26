@@ -38,7 +38,12 @@ defineEmits<{
     }"
     @click="!href && $emit('click', $event)"
   >
-    <img class="lb-banner__img" :src="src" :alt="alt" :style="{ objectFit }" />
+    <img
+      class="lb-banner__img"
+      :src="src"
+      :alt="alt"
+      :style="{ objectFit }"
+    >
   </component>
 </template>
 

@@ -3,7 +3,10 @@ defineProps<{ variant?: 'solid' | 'dashed' | 'dotted' }>();
 </script>
 
 <template>
-  <hr class="lb-divider" :style="{ borderStyle: variant || 'solid' }" />
+  <hr
+    class="lb-divider"
+    :style="{ borderStyle: variant || 'solid' }"
+  >
 </template>
 
 <style scoped>

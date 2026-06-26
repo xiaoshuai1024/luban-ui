@@ -28,5 +28,5 @@ withDefaults(
 </template>
 
 <style scoped lang="scss">
-@use '../../styles/content.scss';
+@use '../../styles/content';
 </style>

@@ -51,12 +51,15 @@ const emit = defineEmits<{
             :disabled="disabled"
             :aria-invalid="error"
             @change="emit('update:modelValue', opt.value)"
-          />
+          >
           {{ opt.label }}
         </label>
       </div>
     </div>
-    <p v-if="error && errorMessage" class="lb-form-field__error">
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
       {{ errorMessage }}
     </p>
   </div>

@@ -14,13 +14,26 @@ withDefaults(
 </script>
 
 <template>
-  <section class="lb-stats" :style="{ backgroundColor, color: textColor }">
+  <section
+    class="lb-stats"
+    :style="{ backgroundColor, color: textColor }"
+  >
     <div class="lb-stats__inner">
-      <div v-if="stats.length" class="lb-stats__list">
-        <div v-for="(item, i) in stats" :key="i" class="lb-stats__item">
+      <div
+        v-if="stats.length"
+        class="lb-stats__list"
+      >
+        <div
+          v-for="(item, i) in stats"
+          :key="i"
+          class="lb-stats__item"
+        >
           <div class="lb-stats__value">
             {{ item.value
-            }}<span v-if="item.suffix" class="lb-stats__suffix">{{
+            }}<span
+              v-if="item.suffix"
+              class="lb-stats__suffix"
+            >{{
               item.suffix
             }}</span>
           </div>

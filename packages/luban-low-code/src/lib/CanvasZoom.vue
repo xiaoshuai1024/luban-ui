@@ -96,7 +96,13 @@ onBeforeUnmount(() => {
       title="缩放比例"
       @change="setZoom(internal)"
     >
-      <option v-for="p in PRESETS" :key="p" :value="p">{{ p }}%</option>
+      <option
+        v-for="p in PRESETS"
+        :key="p"
+        :value="p"
+      >
+        {{ p }}%
+      </option>
     </select>
 
     <button

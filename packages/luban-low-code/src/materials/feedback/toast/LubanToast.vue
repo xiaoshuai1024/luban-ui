@@ -106,8 +106,8 @@ defineExpose({ show, hide });
   border-radius: 4px;
   font-size: 14px;
   color: #fff;
-  background: rgba(0, 0, 0, 0.7);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: rgb(0 0 0 / 0.7);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
 
   &--success {
     background: #2e7d32;
@@ -132,7 +132,7 @@ defineExpose({ show, hide });
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.25);
+    background: rgb(255 255 255 / 0.25);
     font-weight: 600;
     font-size: 12px;
   }
