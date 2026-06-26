@@ -3,6 +3,7 @@ import { getComponent } from './registry';
 import type { NodeSchema, ResponsiveBreakpoint } from './schema';
 import { validate, type ValidationRule } from './validation';
 import { isFormValueType } from './constants';
+import ErrorBoundary from './ErrorBoundary.vue';
 import { evaluate, evaluateBoolean, interpolate } from './expression';
 import { createActionRunner, type ActionContext } from './action';
 import { treeResponsiveCss } from './responsiveStyle';
@@ -228,7 +229,9 @@ function slotContent(): string {
 </script>
 
 <template>
-  <template v-if="root && isNodeVisible(root)">
+  <!-- Wave 2 致命修复：ErrorBoundary 防止单个物料崩溃导致整页空白 -->
+  <ErrorBoundary :fallback-text="root ? \`组件 \${root.type} 渲染失败\` : '渲染失败'">
+    <template v-if="root && isNodeVisible(root)">
     <!-- loop: 按 loop.data 数组重复渲染本节点（每 item 注入 ctx） -->
     <template v-if="root.loop && loopItems.length">
       <RuntimeRenderer
@@ -321,4 +324,5 @@ function slotContent(): string {
       />
     </template>
   </template>
+  </ErrorBoundary>
 </template>

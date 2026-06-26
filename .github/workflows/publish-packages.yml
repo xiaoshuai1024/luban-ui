@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
@@ -35,7 +36,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
@@ -56,7 +57,7 @@ jobs:
       - name: Build packages (Nx)
         run: pnpm exec nx run-many --target=build --projects=luban-base,luban-low-code --skip-nx-cache
 
-      - name: Test packages (Nx)
+      - name: Test packages (Nx) — 测试失败则阻止发布
         run: pnpm exec nx run-many --target=test --projects=luban-base,luban-low-code --skip-nx-cache
 
       - name: Publish packages (Nx)

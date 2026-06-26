@@ -23,7 +23,8 @@ describe('PropertyPanel', () => {
     const w = mount(PropertyPanel, {
       props: { nodeMeta: meta, modelValue: { content: 'hi' } },
     });
-    const input = w.find('input[type="text"]');
+    // W2 搜索框也是 input[type=text]，用 .lb-property-field 精确定位属性字段
+    const input = w.find('.lb-property-field input[type="text"]');
     expect(input.exists()).toBe(true);
     expect((input.element as HTMLInputElement).value).toBe('hi');
   });
@@ -72,7 +73,7 @@ describe('PropertyPanel', () => {
       },
     });
     const w = mount(Parent);
-    await w.find('input[type="text"]').setValue('changed');
+    await w.find('.lb-property-field input[type="text"]').setValue('changed');
     expect((received.value as Record<string, unknown>).content).toBe('changed');
   });
 
