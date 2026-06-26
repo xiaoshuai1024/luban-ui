@@ -9,9 +9,14 @@
  * 本工具主要服务海报等绝对定位场景；非绝对定位场景对齐按钮自动禁用。
  */
 type AlignType =
-  | 'left' | 'center-h' | 'right'
-  | 'top' | 'center-v' | 'bottom'
-  | 'distribute-h' | 'distribute-v';
+  | 'left'
+  | 'center-h'
+  | 'right'
+  | 'top'
+  | 'center-v'
+  | 'bottom'
+  | 'distribute-h'
+  | 'distribute-v';
 
 const props = withDefaults(
   defineProps<{
@@ -20,7 +25,7 @@ const props = withDefaults(
     /** 是否支持绝对定位对齐（海报模式） */
     absoluteMode?: boolean;
   }>(),
-  { selectedCount: 0, absoluteMode: false }
+  { selectedCount: 0, absoluteMode: false },
 );
 
 const emit = defineEmits<{
@@ -40,14 +45,56 @@ interface AlignBtn {
 }
 
 const ALIGN_BUTTONS: AlignBtn[] = [
-  { type: 'left', icon: '⫛←', label: '左对齐', minCount: 2, absoluteOnly: true },
-  { type: 'center-h', icon: '⫛⫴', label: '水平居中', minCount: 2, absoluteOnly: true },
-  { type: 'right', icon: '⫛→', label: '右对齐', minCount: 2, absoluteOnly: true },
+  {
+    type: 'left',
+    icon: '⫛←',
+    label: '左对齐',
+    minCount: 2,
+    absoluteOnly: true,
+  },
+  {
+    type: 'center-h',
+    icon: '⫛⫴',
+    label: '水平居中',
+    minCount: 2,
+    absoluteOnly: true,
+  },
+  {
+    type: 'right',
+    icon: '⫛→',
+    label: '右对齐',
+    minCount: 2,
+    absoluteOnly: true,
+  },
   { type: 'top', icon: '⊤⫛', label: '顶对齐', minCount: 2, absoluteOnly: true },
-  { type: 'center-v', icon: '⫴⫛', label: '垂直居中', minCount: 2, absoluteOnly: true },
-  { type: 'bottom', icon: '⊥⫛', label: '底对齐', minCount: 2, absoluteOnly: true },
-  { type: 'distribute-h', icon: '⫷⫛⫸', label: '水平等距分布', minCount: 3, absoluteOnly: true },
-  { type: 'distribute-v', icon: '⫷⫛⫸', label: '垂直等距分布', minCount: 3, absoluteOnly: true },
+  {
+    type: 'center-v',
+    icon: '⫴⫛',
+    label: '垂直居中',
+    minCount: 2,
+    absoluteOnly: true,
+  },
+  {
+    type: 'bottom',
+    icon: '⊥⫛',
+    label: '底对齐',
+    minCount: 2,
+    absoluteOnly: true,
+  },
+  {
+    type: 'distribute-h',
+    icon: '⫷⫛⫸',
+    label: '水平等距分布',
+    minCount: 3,
+    absoluteOnly: true,
+  },
+  {
+    type: 'distribute-v',
+    icon: '⫷⫛⫸',
+    label: '垂直等距分布',
+    minCount: 3,
+    absoluteOnly: true,
+  },
 ];
 
 function isDisabled(btn: AlignBtn): boolean {
@@ -58,7 +105,10 @@ function isDisabled(btn: AlignBtn): boolean {
 </script>
 
 <template>
-  <div v-if="selectedCount >= 2" class="lb-multiselect">
+  <div
+    v-if="selectedCount >= 2"
+    class="lb-multiselect"
+  >
     <span class="lb-multiselect__count">
       已选 <strong>{{ selectedCount }}</strong> 个
     </span>
@@ -77,7 +127,11 @@ function isDisabled(btn: AlignBtn): boolean {
       </button>
     </div>
     <div class="lb-multiselect__divider" />
-    <button class="lb-multiselect__clear" title="取消多选 (Esc)" @click="emit('clear')">
+    <button
+      class="lb-multiselect__clear"
+      title="取消多选 (Esc)"
+      @click="emit('clear')"
+    >
       ✕
     </button>
   </div>

@@ -14,7 +14,11 @@ const schema: PageSchema = {
     type: 'LubanContainer',
     props: {},
     children: [
-      { id: 'input1', type: 'LubanInput', props: { label: '姓名', name: 'name' } },
+      {
+        id: 'input1',
+        type: 'LubanInput',
+        props: { label: '姓名', name: 'name' },
+      },
       { id: 'phone1', type: 'LubanPhoneInput', props: { label: '手机' } },
       { id: 'rating1', type: 'LubanRating', props: { label: '评分', max: 5 } },
     ],
@@ -24,7 +28,7 @@ const schema: PageSchema = {
 const Host = defineComponent({
   setup() {
     const formState = ref<Record<string, unknown>>({});
-    provide('lubanFormSubmit', () => {});
+    provide('lubanFormSubmit', () => undefined);
     return () =>
       h(RuntimeRenderer, {
         root: schema.root,
@@ -38,7 +42,9 @@ describe('RuntimeRenderer smoke', () => {
   it('renders form-value nodes without crashing (no recursion)', () => {
     const w = mount(Host);
     // 至少渲染了输入框
-    expect(w.find('input[type="text"]').exists() || w.findAll('input').length > 0).toBe(true);
+    expect(
+      w.find('input[type="text"]').exists() || w.findAll('input').length > 0,
+    ).toBe(true);
   });
 
   it('renders new form types (PhoneInput/Rating)', () => {

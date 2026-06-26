@@ -22,7 +22,7 @@ const props = withDefaults(
     /** 绑定滚轮缩放的画布元素 ref（父组件传入） */
     target?: HTMLElement | null;
   }>(),
-  { zoom: 100, min: 50, max: 200, step: 10, target: null }
+  { zoom: 100, min: 50, max: 200, step: 10, target: null },
 );
 
 const emit = defineEmits<{
@@ -35,7 +35,7 @@ watch(
   () => props.zoom,
   (val) => {
     internal.value = val;
-  }
+  },
 );
 
 function clamp(val: number): number {
@@ -62,7 +62,8 @@ function onWheel(e: WheelEvent): void {
 }
 
 onMounted(() => {
-  if (props.target) props.target.addEventListener('wheel', onWheel, { passive: false });
+  if (props.target)
+    props.target.addEventListener('wheel', onWheel, { passive: false });
 });
 
 watch(
@@ -70,7 +71,7 @@ watch(
   (el, oldEl) => {
     if (oldEl) oldEl.removeEventListener('wheel', onWheel);
     if (el) el.addEventListener('wheel', onWheel, { passive: false });
-  }
+  },
 );
 
 onBeforeUnmount(() => {
@@ -85,7 +86,9 @@ onBeforeUnmount(() => {
       title="缩小 (Ctrl/⌘ + −)"
       :disabled="zoom <= min"
       @click="delta(-step)"
-    >−</button>
+    >
+      −
+    </button>
 
     <select
       v-model.number="internal"
@@ -93,7 +96,13 @@ onBeforeUnmount(() => {
       title="缩放比例"
       @change="setZoom(internal)"
     >
-      <option v-for="p in PRESETS" :key="p" :value="p">{{ p }}%</option>
+      <option
+        v-for="p in PRESETS"
+        :key="p"
+        :value="p"
+      >
+        {{ p }}%
+      </option>
     </select>
 
     <button
@@ -101,14 +110,18 @@ onBeforeUnmount(() => {
       title="放大 (Ctrl/⌘ + +)"
       :disabled="zoom >= max"
       @click="delta(step)"
-    >+</button>
+    >
+      +
+    </button>
 
     <button
       v-if="zoom !== 100"
       class="lb-canvas-zoom__reset"
       title="重置为 100%"
       @click="setZoom(100)"
-    >⟲</button>
+    >
+      ⟲
+    </button>
 
     <span class="lb-canvas-zoom__hint">Ctrl + 滚轮</span>
   </div>

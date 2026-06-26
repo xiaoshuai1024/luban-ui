@@ -46,7 +46,8 @@ export const formMaterial = defineMaterial({
       size: {
         type: 'string',
         label: '尺寸',
-        description: '表单最大宽度档位：small(600px) / medium(800px) / large(960px)',
+        description:
+          '表单最大宽度档位：small(600px) / medium(800px) / large(960px)',
         enum: ['small', 'medium', 'large'],
         default: 'medium',
       },

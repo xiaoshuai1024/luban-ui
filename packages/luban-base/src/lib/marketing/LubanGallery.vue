@@ -9,9 +9,9 @@ withDefaults(
   {
     images: () => [],
     columns: 3,
-    gap: "16px",
-    backgroundColor: "var(--lb-bg)",
-  }
+    gap: '16px',
+    backgroundColor: 'var(--lb-bg)',
+  },
 );
 </script>
 
@@ -35,8 +35,13 @@ withDefaults(
             class="lb-gallery__img"
             :src="img.src"
             :alt="img.alt"
-          />
-          <figcaption v-if="img.caption" class="lb-gallery__caption">{{ img.caption }}</figcaption>
+          >
+          <figcaption
+            v-if="img.caption"
+            class="lb-gallery__caption"
+          >
+            {{ img.caption }}
+          </figcaption>
         </figure>
       </div>
     </div>

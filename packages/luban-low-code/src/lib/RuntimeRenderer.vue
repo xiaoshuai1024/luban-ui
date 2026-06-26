@@ -14,7 +14,10 @@ interface FormSubmitPayload {
   formState: Record<string, unknown>;
   event: Event;
 }
-const formSubmitHandler = inject<((payload: FormSubmitPayload) => void) | null>('lubanFormSubmit', null);
+const formSubmitHandler = inject<((payload: FormSubmitPayload) => void) | null>(
+  'lubanFormSubmit',
+  null,
+);
 
 // FORM_VALUE_TYPES 从 constants 统一导入（T-ui-12 单一真相源）
 
@@ -26,7 +29,7 @@ const props = withDefaults(
     /** 表达式上下文（数据源数据等），与 formState 合并供 visible/loop/events 求值 */
     ctx?: Record<string, unknown>;
   }>(),
-  { formErrors: () => ({}), ctx: () => ({}) }
+  { formErrors: () => ({}), ctx: () => ({}) },
 );
 
 /** 表达式求值上下文：数据源 ctx + $form（表单字段值，供 visible 等引用） */
@@ -44,7 +47,8 @@ function isNodeVisible(node: NodeSchema): boolean {
 const loopItems = computed<unknown[]>(() => {
   if (!props.root.loop) return [];
   const data = props.root.loop.data;
-  const resolved = typeof data === 'string' ? evaluate(data, evalCtx.value) : data;
+  const resolved =
+    typeof data === 'string' ? evaluate(data, evalCtx.value) : data;
   return Array.isArray(resolved) ? resolved : [];
 });
 /** 去掉 loop 字段的 root 副本（递归渲染时不再触发 loop） */
@@ -87,7 +91,7 @@ function setFormValue(name: string | undefined, value: unknown): void {
   const state = props.formState as Record<string, unknown>;
   if (name in state) {
     state[name] = value;
-    const rules = (props.root.props?.rules as ValidationRule[] | undefined);
+    const rules = props.root.props?.rules as ValidationRule[] | undefined;
     const message = validate(value, rules);
     if (message) {
       (props.formErrors as Record<string, string>)[name] = message;
@@ -106,7 +110,7 @@ function getFieldError(name: string | undefined): string | undefined {
 function validateField(name: string | undefined): void {
   if (name == null) return;
   const value = getFormValue(name);
-  const rules = (props.root.props?.rules as ValidationRule[] | undefined);
+  const rules = props.root.props?.rules as ValidationRule[] | undefined;
   const message = validate(value, rules);
   const err = props.formErrors as Record<string, string>;
   if (message) err[name] = message;
@@ -117,7 +121,7 @@ function validateField(name: string | undefined): void {
 function formValueProps(
   nodeProps: Record<string, unknown> | undefined,
   name: string | undefined,
-  node: NodeSchema
+  node: NodeSchema,
 ): Record<string, unknown> {
   if (nodeProps == null) return nodeStyleProps(node);
   const { content: _c, text: _t, rules: _r, ...rest } = nodeProps;
@@ -133,10 +137,11 @@ function formValueProps(
 /** Props for component, excluding content/text (used for slot instead) */
 function componentProps(
   nodeProps: Record<string, unknown> | undefined,
-  node: NodeSchema
+  node: NodeSchema,
 ): Record<string, unknown> {
   // 节点级 style/className 即使 props 为空也要透传（inheritAttrs 落到组件根）
-  if (nodeProps == null) return { ...cmsPropsFor(node), ...nodeStyleProps(node) };
+  if (nodeProps == null)
+    return { ...cmsPropsFor(node), ...nodeStyleProps(node) };
   const { content: _c, text: _t, rules: _r, ...rest } = nodeProps;
   // 字符串 props 做 {{}} 插值（数据驱动：props 可引用 ctx/$form 变量）
   const out: Record<string, unknown> = {};
@@ -153,10 +158,9 @@ function componentProps(
  * 通过 provide 注入；RuntimeRenderer 读出合并。无绑定时返回 {}。
  */
 const CMS_RESOLVED_KEY = 'lb-cms-resolved';
-const cmsResolvedMap = inject<Readonly<Record<string, Record<string, unknown>>> | null>(
-  CMS_RESOLVED_KEY,
-  null
-);
+const cmsResolvedMap = inject<Readonly<
+  Record<string, Record<string, unknown>>
+> | null>(CMS_RESOLVED_KEY, null);
 function cmsPropsFor(node: NodeSchema): Record<string, unknown> {
   if (!cmsResolvedMap || !node.cmsBinding) return {};
   return cmsResolvedMap[node.id] ?? {};
@@ -190,20 +194,29 @@ function nodeStyleProps(node: NodeSchema): Record<string, unknown> {
  * - node.props.responsive: { pc?, tablet?, mobile? } 按当前设备叠加
  * 返回 Vue :style 对象语法。
  */
-function mergedStyle(nodeProps: Record<string, unknown> | undefined): Record<string, string> | undefined {
+function mergedStyle(
+  nodeProps: Record<string, unknown> | undefined,
+): Record<string, string> | undefined {
   if (!nodeProps) return undefined;
   const style = (nodeProps.style as Record<string, string> | undefined) ?? {};
-  const responsive = nodeProps.responsive as {
-    pc?: Record<string, string>;
-    tablet?: Record<string, string>;
-    mobile?: Record<string, string>;
-  } | undefined;
+  const responsive = nodeProps.responsive as
+    | {
+        pc?: Record<string, string>;
+        tablet?: Record<string, string>;
+        mobile?: Record<string, string>;
+      }
+    | undefined;
   if (!responsive) {
     return Object.keys(style).length > 0 ? style : undefined;
   }
   // 按断点叠加（PC 为基础，tablet/mobile 覆盖）。运行时无断点感知，全合并；
   // 真正的按设备渲染由 website 在 useRuntimeDevice 选择性裁剪 responsive。
-  return { ...style, ...(responsive.pc ?? {}), ...(responsive.tablet ?? {}), ...(responsive.mobile ?? {}) };
+  return {
+    ...style,
+    ...(responsive.pc ?? {}),
+    ...(responsive.tablet ?? {}),
+    ...(responsive.mobile ?? {}),
+  };
 }
 
 function slotContent(): string {
@@ -229,9 +242,17 @@ function slotContent(): string {
     </template>
     <!-- Form value components: bind v-model to formState + validation error -->
     <component
-      v-else-if="!root.loop && getComponent(root.type) && isFormValueType(root.type)"
       :is="getComponent(root.type)"
-      v-bind="formValueProps(root.props as Record<string, unknown>, root.props?.name as string, root)"
+      v-else-if="
+        !root.loop && getComponent(root.type) && isFormValueType(root.type)
+      "
+      v-bind="
+        formValueProps(
+          root.props as Record<string, unknown>,
+          root.props?.name as string,
+          root,
+        )
+      "
       :style="mergedStyle(root.props as Record<string, unknown>)"
       :model-value="
         root.props?.name != null
@@ -246,7 +267,7 @@ function slotContent(): string {
       @blur="validateField(root.props?.name as string)"
     >
       <RuntimeRenderer
-        v-for="child in (root.children ?? [])"
+        v-for="child in root.children ?? []"
         :key="child.id"
         :root="child"
         :form-state="formState"
@@ -256,26 +277,28 @@ function slotContent(): string {
     </component>
     <!-- Non-form components: props only, optional slot from content/text -->
     <component
-      v-else-if="getComponent(root.type)"
       :is="getComponent(root.type)"
+      v-else-if="getComponent(root.type)"
       v-bind="componentProps(root.props as Record<string, unknown>, root)"
       :style="mergedStyle(root.props as Record<string, unknown>)"
       v-on="resolveEvents(root.events)"
       @submit="
-        formSubmitHandler && (root.type === 'LubanForm' || root.type === 'LubanLeadCapture')
+        formSubmitHandler &&
+          (root.type === 'LubanForm' || root.type === 'LubanLeadCapture')
           ? formSubmitHandler({
-              formId: (root.props?.formId as string) || '',
-              formState: root.type === 'LubanLeadCapture'
+            formId: (root.props?.formId as string) || '',
+            formState:
+              root.type === 'LubanLeadCapture'
                 ? ($event as Record<string, unknown>)
                 : props.formState,
-              event: $event as Event,
-            })
+            event: $event as Event,
+          })
           : undefined
       "
     >
       <template v-if="(root.children ?? []).length">
         <RuntimeRenderer
-          v-for="child in (root.children ?? [])"
+          v-for="child in root.children ?? []"
           :key="child.id"
           :root="child"
           :form-state="formState"
@@ -283,11 +306,13 @@ function slotContent(): string {
           :ctx="evalCtx"
         />
       </template>
-      <template v-else-if="slotContent()">{{ slotContent() }}</template>
+      <template v-else-if="slotContent()">
+        {{ slotContent() }}
+      </template>
     </component>
     <template v-else>
       <RuntimeRenderer
-        v-for="child in (root.children ?? [])"
+        v-for="child in root.children ?? []"
         :key="child.id"
         :root="child"
         :form-state="formState"

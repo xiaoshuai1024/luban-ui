@@ -15,7 +15,7 @@ describe('LubanRadioGroup', () => {
           { label: '2', value: 2 },
         ],
       },
-      null as string | number | null
+      null as string | number | null,
     );
     const radios = wrapper.findAll('input[type="radio"]');
     await radios[1].setValue(true);

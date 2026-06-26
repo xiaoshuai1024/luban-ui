@@ -18,7 +18,7 @@ const props = withDefaults(
     modelValue: true,
     size: 'medium',
     closable: true,
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -35,7 +35,10 @@ function closePanel() {
 </script>
 
 <template>
-  <div v-if="isVisible" class="lb-side-panel-overlay">
+  <div
+    v-if="isVisible"
+    class="lb-side-panel-overlay"
+  >
     <aside
       class="lb-side-panel"
       :class="[`lb-side-panel--size-${size}`]"
@@ -45,7 +48,10 @@ function closePanel() {
       <header class="lb-side-panel__header">
         <div class="lb-side-panel__header-main">
           <slot name="header">
-            <h2 v-if="title" class="lb-side-panel__title">
+            <h2
+              v-if="title"
+              class="lb-side-panel__title"
+            >
               {{ title }}
             </h2>
           </slot>
@@ -88,7 +94,8 @@ function closePanel() {
   height: 100%;
   background-color: v.$lb-surface;
   color: v.$lb-text-primary;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06),
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
     0 10px 24px rgba(0, 0, 0, 0.16);
   display: flex;
   flex-direction: column;
@@ -168,4 +175,3 @@ function closePanel() {
   }
 }
 </style>
-

@@ -4,22 +4,54 @@ const props = defineProps<{
   title?: string;
   trigger?: string;
 }>();
-const emit = defineEmits<{ 'update:visible': [v: boolean]; open: []; close: [] }>();
-const open = () => { emit('update:visible', true); emit('open'); };
-const close = () => { emit('update:visible', false); emit('close'); };
+const emit = defineEmits<{
+  'update:visible': [v: boolean];
+  open: [];
+  close: [];
+}>();
+const open = () => {
+  emit('update:visible', true);
+  emit('open');
+};
+const close = () => {
+  emit('update:visible', false);
+  emit('close');
+};
 </script>
 
 <template>
   <div class="lb-modal">
-    <button v-if="trigger" class="lb-modal__trigger" type="button" @click="open">{{ trigger }}</button>
+    <button
+      v-if="trigger"
+      class="lb-modal__trigger"
+      type="button"
+      @click="open"
+    >
+      {{ trigger }}
+    </button>
     <teleport to="body">
-      <div v-if="props.visible" class="lb-modal__mask" @click.self="close">
+      <div
+        v-if="props.visible"
+        class="lb-modal__mask"
+        @click.self="close"
+      >
         <div class="lb-modal__dialog">
-          <div v-if="title" class="lb-modal__header">
+          <div
+            v-if="title"
+            class="lb-modal__header"
+          >
             <span>{{ title }}</span>
-            <button class="lb-modal__close" type="button" @click="close">✕</button>
+            <button
+              class="lb-modal__close"
+              type="button"
+              @click="close"
+            >
+              ✕
+            </button>
           </div>
-          <div class="lb-modal__body"><slot /></div>
+          <div class="lb-modal__body">
+            <slot />
+          </div>
         </div>
       </div>
     </teleport>

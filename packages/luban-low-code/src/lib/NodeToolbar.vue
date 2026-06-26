@@ -11,11 +11,23 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="lb-node-toolbar" @click.stop @mousedown.stop>
-    <button class="lb-node-toolbar__btn" title="复制 (Ctrl+D)" @click="$emit('copy')">
+  <div
+    class="lb-node-toolbar"
+    @click.stop
+    @mousedown.stop
+  >
+    <button
+      class="lb-node-toolbar__btn"
+      title="复制 (Ctrl+D)"
+      @click="$emit('copy')"
+    >
       ⧉
     </button>
-    <button class="lb-node-toolbar__btn lb-node-toolbar__btn--danger" title="删除 (Delete)" @click="$emit('delete')">
+    <button
+      class="lb-node-toolbar__btn lb-node-toolbar__btn--danger"
+      title="删除 (Delete)"
+      @click="$emit('delete')"
+    >
       ✕
     </button>
   </div>

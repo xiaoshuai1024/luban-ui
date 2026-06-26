@@ -49,7 +49,7 @@ const props = withDefaults(
     showEmail: false,
     formId: '',
     successText: '提交成功，我们会尽快与您联系',
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -110,18 +110,35 @@ function onSubmit(): void {
 </script>
 
 <template>
-  <section class="lb-lead-capture" :style="{ backgroundColor }">
+  <section
+    class="lb-lead-capture"
+    :style="{ backgroundColor }"
+  >
     <div class="lb-lead-capture__content">
-      <h2 class="lb-lead-capture__heading">{{ heading }}</h2>
-      <p v-if="description" class="lb-lead-capture__description">{{ description }}</p>
+      <h2 class="lb-lead-capture__heading">
+        {{ heading }}
+      </h2>
+      <p
+        v-if="description"
+        class="lb-lead-capture__description"
+      >
+        {{ description }}
+      </p>
 
       <!-- 成功态 -->
-      <div v-if="submitted" class="lb-lead-capture__success">
+      <div
+        v-if="submitted"
+        class="lb-lead-capture__success"
+      >
         {{ successText }}
       </div>
 
       <!-- 表单态 -->
-      <form v-else class="lb-lead-capture__form" @submit.prevent="onSubmit">
+      <form
+        v-else
+        class="lb-lead-capture__form"
+        @submit.prevent="onSubmit"
+      >
         <div class="lb-lead-capture__fields">
           <input
             v-if="showName"
@@ -130,7 +147,7 @@ function onSubmit(): void {
             name="name"
             class="lb-lead-capture__input"
             placeholder="姓名"
-          />
+          >
           <input
             v-if="showPhone"
             v-model="form.phone"
@@ -138,7 +155,7 @@ function onSubmit(): void {
             name="phone"
             class="lb-lead-capture__input"
             placeholder="手机号"
-          />
+          >
           <input
             v-if="showEmail"
             v-model="form.email"
@@ -146,7 +163,7 @@ function onSubmit(): void {
             name="email"
             class="lb-lead-capture__input"
             placeholder="邮箱"
-          />
+          >
         </div>
         <div class="lb-lead-capture__action">
           <input
@@ -155,7 +172,7 @@ function onSubmit(): void {
             name="message"
             class="lb-lead-capture__input lb-lead-capture__input--wide"
             :placeholder="placeholder"
-          />
+          >
           <button
             type="submit"
             class="lb-lead-capture__submit"
@@ -217,8 +234,12 @@ function onSubmit(): void {
   transition: border-color 0.2s;
   width: 100%;
   box-sizing: border-box;
-  &:focus { border-color: var(--lb-accent); }
-  &--wide { flex: 1; }
+  &:focus {
+    border-color: var(--lb-accent);
+  }
+  &--wide {
+    flex: 1;
+  }
 }
 .lb-lead-capture__action {
   display: flex;
@@ -234,7 +255,12 @@ function onSubmit(): void {
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  &:hover:not(:disabled) { opacity: 0.9; }
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 </style>

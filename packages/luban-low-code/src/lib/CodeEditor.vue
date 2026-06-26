@@ -20,7 +20,7 @@ const props = withDefaults(
     /** 是否显示行号 */
     showLineNumbers?: boolean;
   }>(),
-  { modelValue: null, readOnly: false, showLineNumbers: true }
+  { modelValue: null, readOnly: false, showLineNumbers: true },
 );
 
 const emit = defineEmits<{
@@ -46,7 +46,7 @@ watch(
       emit('validation-error', null);
     }
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 );
 
 function stringify(val: unknown): string {
@@ -72,7 +72,10 @@ function parseAndEmit(): void {
       error.value = '根节点必须是对象';
     } else if (!parsed.root || typeof parsed.root !== 'object') {
       error.value = '缺少 root 节点';
-    } else if (typeof parsed.root.id !== 'string' || typeof parsed.root.type !== 'string') {
+    } else if (
+      typeof parsed.root.id !== 'string' ||
+      typeof parsed.root.type !== 'string'
+    ) {
       error.value = 'root 节点缺少 id 或 type';
     } else {
       error.value = null;
@@ -129,12 +132,15 @@ function onScroll(): void {
 // 行号
 const lineCount = computed(() => text.value.split('\n').length);
 const lineNumbers = computed(() =>
-  Array.from({ length: lineCount.value }, (_, i) => i + 1).join('\n')
+  Array.from({ length: lineCount.value }, (_, i) => i + 1).join('\n'),
 );
 </script>
 
 <template>
-  <div class="lb-code-editor" :class="{ 'lb-code-editor--error': error }">
+  <div
+    class="lb-code-editor"
+    :class="{ 'lb-code-editor--error': error }"
+  >
     <div class="lb-code-editor__toolbar">
       <span class="lb-code-editor__title">JSON Schema</span>
       <div class="lb-code-editor__actions">
@@ -170,7 +176,10 @@ const lineNumbers = computed(() =>
       />
     </div>
 
-    <div v-if="error" class="lb-code-editor__error">
+    <div
+      v-if="error"
+      class="lb-code-editor__error"
+    >
       <span class="lb-code-editor__error-icon">⚠</span>
       <span class="lb-code-editor__error-text">{{ error }}</span>
     </div>

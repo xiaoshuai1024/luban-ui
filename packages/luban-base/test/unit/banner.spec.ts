@@ -14,4 +14,3 @@ describe('LubanBanner', () => {
     expect(img.attributes('src')).toContain('placeholder.com');
   });
 });
-

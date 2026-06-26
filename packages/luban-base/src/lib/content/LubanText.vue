@@ -13,7 +13,7 @@ withDefaults(
     /** Inline text when no slot content (designer/schema can set content or text) */
     content?: string;
   }>(),
-  { tag: 'p', variant: 'body1', secondary: false, content: '' }
+  { tag: 'p', variant: 'body1', secondary: false, content: '' },
 );
 </script>
 
@@ -21,15 +21,12 @@ withDefaults(
   <component
     :is="tag"
     class="lb-text"
-    :class="[
-      `lb-text--${variant}`,
-      { 'lb-text--secondary': secondary },
-    ]"
+    :class="[`lb-text--${variant}`, { 'lb-text--secondary': secondary }]"
   >
     <slot>{{ content }}</slot>
   </component>
 </template>
 
 <style scoped lang="scss">
-@use '../../styles/content.scss';
+@use '../../styles/content';
 </style>

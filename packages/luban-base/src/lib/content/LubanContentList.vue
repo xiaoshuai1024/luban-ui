@@ -9,48 +9,57 @@
  *   { type: 'LubanContentList', cmsBinding: { collectionId, mode: 'list' },
  *     props: { titleKey:'title', bodyKey:'body', imageKey:'cover', linkKey:'url', columns:2 } }
  */
-import { computed } from 'vue'
+import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
     /** CMS 绑定注入的 items（每条为 { [fieldKey]: unknown }） */
-    items?: Record<string, unknown>[]
+    items?: Record<string, unknown>[];
     /** 标题字段 key */
-    titleKey?: string
+    titleKey?: string;
     /** 正文字段 key */
-    bodyKey?: string
+    bodyKey?: string;
     /** 图片字段 key */
-    imageKey?: string
+    imageKey?: string;
     /** 链接字段 key（点击跳转） */
-    linkKey?: string
+    linkKey?: string;
     /** 列数（响应式 auto-fit，默认 3） */
-    columns?: number
+    columns?: number;
     /** 空状态文案 */
-    emptyText?: string
+    emptyText?: string;
   }>(),
-  { items: () => [], columns: 3, emptyText: '暂无内容' }
-)
+  { items: () => [], columns: 3, emptyText: '暂无内容' },
+);
 
 type Card = {
-  title: string
-  body: string
-  image?: string
-  link?: string
-}
+  title: string;
+  body: string;
+  image?: string;
+  link?: string;
+};
 
 const cards = computed<Card[]>(() =>
   (props.items ?? []).map((it) => ({
     title: String(it[props.titleKey ?? 'title'] ?? ''),
     body: String(it[props.bodyKey ?? 'body'] ?? ''),
-    image: it[props.imageKey ?? 'image'] ? String(it[props.imageKey ?? 'image']) : undefined,
-    link: it[props.linkKey ?? 'link'] ? String(it[props.linkKey ?? 'link']) : undefined,
-  }))
-)
+    image: it[props.imageKey ?? 'image']
+      ? String(it[props.imageKey ?? 'image'])
+      : undefined,
+    link: it[props.linkKey ?? 'link']
+      ? String(it[props.linkKey ?? 'link'])
+      : undefined,
+  })),
+);
 </script>
 
 <template>
   <div class="lb-content-list">
-    <div v-if="cards.length === 0" class="lb-content-list__empty">{{ emptyText }}</div>
+    <div
+      v-if="cards.length === 0"
+      class="lb-content-list__empty"
+    >
+      {{ emptyText }}
+    </div>
     <div
       v-else
       class="lb-content-list__grid"
@@ -69,10 +78,20 @@ const cards = computed<Card[]>(() =>
           :alt="card.title"
           class="lb-content-list__img"
           loading="lazy"
-        />
+        >
         <div class="lb-content-list__body">
-          <h3 v-if="card.title" class="lb-content-list__title">{{ card.title }}</h3>
-          <p v-if="card.body" class="lb-content-list__text">{{ card.body }}</p>
+          <h3
+            v-if="card.title"
+            class="lb-content-list__title"
+          >
+            {{ card.title }}
+          </h3>
+          <p
+            v-if="card.body"
+            class="lb-content-list__text"
+          >
+            {{ card.body }}
+          </p>
         </div>
       </component>
     </div>
@@ -105,7 +124,9 @@ const cards = computed<Card[]>(() =>
     background: var(--lb-bg, #fff);
     text-decoration: none;
     color: inherit;
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition:
+      box-shadow 0.2s,
+      transform 0.2s;
 
     &:hover {
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);

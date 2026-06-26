@@ -10,4 +10,3 @@ describe('LubanText', () => {
     expect(wrapper.text()).toContain('Hello');
   });
 });
-

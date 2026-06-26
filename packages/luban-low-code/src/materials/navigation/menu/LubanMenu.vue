@@ -31,7 +31,7 @@ const props = withDefaults(
     items: () => [],
     mode: 'horizontal',
     activeKey: '',
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -49,8 +49,15 @@ function onSelect(key: string): void {
 </script>
 
 <template>
-  <ul class="lb-menu" :class="`lb-menu--${mode}`" role="menubar">
-    <template v-for="item in items" :key="item.key">
+  <ul
+    class="lb-menu"
+    :class="`lb-menu--${mode}`"
+    role="menubar"
+  >
+    <template
+      v-for="item in items"
+      :key="item.key"
+    >
       <li
         class="lb-menu__item"
         :class="{ 'lb-menu__item--active': isActive(item.key) }"

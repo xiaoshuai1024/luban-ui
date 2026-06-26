@@ -12,7 +12,9 @@
   font-weight: 500;
   cursor: pointer;
   border: none;
-  transition: background-color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
 
   &:disabled {
     opacity: 0.6;
@@ -35,7 +37,10 @@
       background-color: var(--lb-secondary);
       color: var(--lb-accent-contrast);
       &:not(:disabled):hover {
-        background-color: color.adjust(variables.$lb-secondary, $lightness: -8%);
+        background-color: color.adjust(
+          variables.$lb-secondary,
+          $lightness: -8%
+        );
       }
     }
     &.lb-button--surface {

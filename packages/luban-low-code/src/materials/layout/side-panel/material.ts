@@ -17,7 +17,8 @@ export const sidePanelMaterial = defineMaterial({
   name: 'LubanSidePanel',
   version: '0.1.0',
   category: 'layout',
-  description: '侧滑面板：右侧滑出的模态面板，支持 header/body/footer 插槽与 v-model:visible。',
+  description:
+    '侧滑面板：右侧滑出的模态面板，支持 header/body/footer 插槽与 v-model:visible。',
   component: LubanSidePanel,
   isContainer: true,
   propsSchema: {
@@ -31,13 +32,15 @@ export const sidePanelMaterial = defineMaterial({
       },
       title: {
         type: 'string',
-        description: '面板标题，展示在 header 左侧（当未提供 header 插槽时生效）。',
+        description:
+          '面板标题，展示在 header 左侧（当未提供 header 插槽时生效）。',
         default: '',
         label: '标题',
       },
       size: {
         type: 'string',
-        description: '面板宽度档位：small≈480px、medium≈640px、large≈800px；窄屏自适应撑满。',
+        description:
+          '面板宽度档位：small≈480px、medium≈640px、large≈800px；窄屏自适应撑满。',
         enum: ['small', 'medium', 'large'],
         default: 'medium',
         label: '尺寸',

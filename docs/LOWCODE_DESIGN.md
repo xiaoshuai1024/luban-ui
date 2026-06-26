@@ -99,12 +99,12 @@ flowchart TB
 
 ## 4. 建议的文件与职责划分
 
-| 区域 | 内容 |
-|------|------|
+| 区域                        | 内容                                                                                                                                                                                                                              |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **packages/luban-low-code** | 保持 schema、registry、RuntimeRenderer、LubanDesigner；新增或扩展：ComponentMeta/componentMeta.ts、设计态用的 DesignRenderer（或集成到 LubanDesigner 内）、CONTAINER_TYPES/放置规则常量；可选导出 `<LubanPage :schema="..." />`。 |
-| **设计器拖拽** | Sortable.js + Vue 封装：若设计器作为 low-code 包的一部分对外提供，则在 packages 中增加 sortablejs 等依赖；若设计器仅作为 demo 放在 apps/luban-ui，则依赖加在 app，packages 只提供 schema 更新 API 与占位/选中契约。 |
-| **属性面板** | 可放在 packages（LubanDesigner 的 slot 或内置右侧栏）或 apps（demo 自实现）；若做在 packages，需依赖 ComponentMeta 生成表单。 |
-| **apps/luban-ui** | 测试设计器页：集成 LubanDesigner、属性面板（若未内置）、组件面板；使用上述 Sortable 方案实现拖入与排序，并调用 schema 更新方法。 |
+| **设计器拖拽**              | Sortable.js + Vue 封装：若设计器作为 low-code 包的一部分对外提供，则在 packages 中增加 sortablejs 等依赖；若设计器仅作为 demo 放在 apps/luban-ui，则依赖加在 app，packages 只提供 schema 更新 API 与占位/选中契约。               |
+| **属性面板**                | 可放在 packages（LubanDesigner 的 slot 或内置右侧栏）或 apps（demo 自实现）；若做在 packages，需依赖 ComponentMeta 生成表单。                                                                                                     |
+| **apps/luban-ui**           | 测试设计器页：集成 LubanDesigner、属性面板（若未内置）、组件面板；使用上述 Sortable 方案实现拖入与排序，并调用 schema 更新方法。                                                                                                  |
 
 ---
 

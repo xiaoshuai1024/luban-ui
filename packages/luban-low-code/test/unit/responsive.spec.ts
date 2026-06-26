@@ -15,7 +15,10 @@ import {
   hasResponsiveOverrides,
   BREAKPOINTS,
 } from '../../src/lib/responsive';
-import { nodeResponsiveCss, treeResponsiveCss } from '../../src/lib/responsiveStyle';
+import {
+  nodeResponsiveCss,
+  treeResponsiveCss,
+} from '../../src/lib/responsiveStyle';
 import type { NodeSchema } from '../../src/lib/schema';
 
 describe('V2-T4 resolveResponsiveProps', () => {
@@ -25,7 +28,10 @@ describe('V2-T4 resolveResponsiveProps', () => {
       type: 'LubanText',
       style: { color: 'red', fontSize: '16px' },
     };
-    expect(resolveResponsiveProps(node, 'desktop')).toEqual({ color: 'red', fontSize: '16px' });
+    expect(resolveResponsiveProps(node, 'desktop')).toEqual({
+      color: 'red',
+      fontSize: '16px',
+    });
   });
 
   it('tablet 浅合并覆盖 desktop', () => {
@@ -57,7 +63,11 @@ describe('V2-T4 resolveResponsiveProps', () => {
   });
 
   it('无 responsive 时所有断点都返回 desktop style', () => {
-    const node: NodeSchema = { id: 'n1', type: 'LubanText', style: { color: 'blue' } };
+    const node: NodeSchema = {
+      id: 'n1',
+      type: 'LubanText',
+      style: { color: 'blue' },
+    };
     expect(resolveResponsiveProps(node, 'tablet')).toEqual({ color: 'blue' });
     expect(resolveResponsiveProps(node, 'mobile')).toEqual({ color: 'blue' });
   });
@@ -69,25 +79,39 @@ describe('V2-T4 hasResponsiveOverrides', () => {
   });
 
   it('responsive 为空对象返回 false', () => {
-    expect(hasResponsiveOverrides({ id: 'n', type: 't', responsive: {} })).toBe(false);
+    expect(hasResponsiveOverrides({ id: 'n', type: 't', responsive: {} })).toBe(
+      false,
+    );
   });
 
   it('tablet 有键返回 true', () => {
     expect(
-      hasResponsiveOverrides({ id: 'n', type: 't', responsive: { tablet: { color: 'red' } } })
+      hasResponsiveOverrides({
+        id: 'n',
+        type: 't',
+        responsive: { tablet: { color: 'red' } },
+      }),
     ).toBe(true);
   });
 
   it('mobile 有键返回 true', () => {
     expect(
-      hasResponsiveOverrides({ id: 'n', type: 't', responsive: { mobile: { color: 'red' } } })
+      hasResponsiveOverrides({
+        id: 'n',
+        type: 't',
+        responsive: { mobile: { color: 'red' } },
+      }),
     ).toBe(true);
   });
 });
 
 describe('V2-T4 nodeResponsiveCss', () => {
   it('无 responsive 返回空串', () => {
-    const node: NodeSchema = { id: 'n1', type: 'LubanText', style: { color: 'red' } };
+    const node: NodeSchema = {
+      id: 'n1',
+      type: 'LubanText',
+      style: { color: 'red' },
+    };
     expect(nodeResponsiveCss(node)).toBe('');
   });
 
@@ -157,12 +181,20 @@ describe('V2-T4 treeResponsiveCss', () => {
       id: 'root',
       type: 'LubanContainer',
       children: [
-        { id: 'c1', type: 'LubanText', responsive: { tablet: { fontSize: '14px' } } },
+        {
+          id: 'c1',
+          type: 'LubanText',
+          responsive: { tablet: { fontSize: '14px' } },
+        },
         {
           id: 'c2',
           type: 'LubanContainer',
           children: [
-            { id: 'c2a', type: 'LubanText', responsive: { mobile: { display: 'none' } } },
+            {
+              id: 'c2a',
+              type: 'LubanText',
+              responsive: { mobile: { display: 'none' } },
+            },
           ],
         },
       ],

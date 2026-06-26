@@ -8,8 +8,13 @@ import { watch, nextTick, ref } from 'vue';
  */
 
 type MenuAction =
-  | 'copy' | 'paste' | 'delete'
-  | 'bring-front' | 'send-back' | 'move-up' | 'move-down';
+  | 'copy'
+  | 'paste'
+  | 'delete'
+  | 'bring-front'
+  | 'send-back'
+  | 'move-up'
+  | 'move-down';
 
 const props = withDefaults(
   defineProps<{
@@ -21,7 +26,7 @@ const props = withDefaults(
     /** 是否为容器（容器显示"转容器"禁用） */
     isContainer?: boolean;
   }>(),
-  { canPaste: false, isContainer: false }
+  { canPaste: false, isContainer: false },
 );
 
 const emit = defineEmits<{
@@ -51,7 +56,7 @@ watch(
     const y = props.y + rect.height > vh ? vh - rect.height - 8 : props.y;
     adjustedPos.value = { x: Math.max(8, x), y: Math.max(8, y) };
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 interface MenuItem {
@@ -66,12 +71,25 @@ interface MenuItem {
 
 const menuItems = (): MenuItem[] => [
   { action: 'copy', label: '复制', icon: '⧉', shortcut: 'Ctrl+C' },
-  { action: 'paste', label: '粘贴', icon: '📋', shortcut: 'Ctrl+V', disabled: !props.canPaste, dividerAfter: true },
+  {
+    action: 'paste',
+    label: '粘贴',
+    icon: '📋',
+    shortcut: 'Ctrl+V',
+    disabled: !props.canPaste,
+    dividerAfter: true,
+  },
   { action: 'move-up', label: '上移', icon: '↑', shortcut: 'Ctrl+↑' },
   { action: 'move-down', label: '下移', icon: '↓', shortcut: 'Ctrl+↓' },
   { action: 'bring-front', label: '置顶', icon: '⤒' },
   { action: 'send-back', label: '置底', icon: '⤓', dividerAfter: true },
-  { action: 'delete', label: '删除', icon: '🗑', shortcut: 'Delete', danger: true },
+  {
+    action: 'delete',
+    label: '删除',
+    icon: '🗑',
+    shortcut: 'Delete',
+    danger: true,
+  },
 ];
 
 function onAction(action: MenuAction): void {
@@ -108,7 +126,12 @@ function onAction(action: MenuAction): void {
         >
           <span class="lb-context-menu__icon">{{ item.icon }}</span>
           <span class="lb-context-menu__label">{{ item.label }}</span>
-          <span v-if="item.shortcut" class="lb-context-menu__shortcut">{{ item.shortcut }}</span>
+          <span
+            v-if="item.shortcut"
+            class="lb-context-menu__shortcut"
+          >{{
+            item.shortcut
+          }}</span>
         </li>
       </ul>
     </div>
@@ -129,14 +152,22 @@ function onAction(action: MenuAction): void {
   list-style: none;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
   z-index: 2001;
   font-size: 13px;
   animation: lb-ctx-in 0.12s ease;
 }
 @keyframes lb-ctx-in {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 .lb-context-menu__item {
   display: flex;

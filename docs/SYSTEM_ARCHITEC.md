@@ -19,6 +19,5 @@
 - **luban**（独立仓库）  
   系统管理后台，**单独 repo，不放入 luban-ui**。负责站点配置与接入、页面创建与管理。技术栈：Vue 3、Vite、Pinia、Vue Router、Element Plus。
 
-
 - luban-website
-vue3 SSR网站，通过请求bff获取数据并渲染render来展示页面
+  vue3 SSR网站，通过请求bff获取数据并渲染render来展示页面

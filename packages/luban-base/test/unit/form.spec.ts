@@ -12,8 +12,13 @@ describe('LubanForm', () => {
         return () =>
           h(
             LubanForm,
-            { size: 'medium', onSubmit: () => { submitted.value = true; } },
-            () => h('button', { type: 'submit' }, '提交')
+            {
+              size: 'medium',
+              onSubmit: () => {
+                submitted.value = true;
+              },
+            },
+            () => h('button', { type: 'submit' }, '提交'),
           );
       },
     });

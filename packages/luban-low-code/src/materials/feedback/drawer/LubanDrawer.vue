@@ -24,7 +24,7 @@ const props = withDefaults(
     visible: false,
     placement: 'right',
     size: '30%',
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -38,7 +38,7 @@ watch(
   (next, prev) => {
     if (next && !prev) emit('open');
     if (!next && prev) emit('close');
-  }
+  },
 );
 
 function close(): void {
@@ -92,7 +92,10 @@ const titleId = computed(() => 'lb-drawer-title');
           @click="stop"
         >
           <div class="lb-drawer__header">
-            <span :id="titleId" class="lb-drawer__title">{{ title }}</span>
+            <span
+              :id="titleId"
+              class="lb-drawer__title"
+            >{{ title }}</span>
             <button
               type="button"
               class="lb-drawer__close"

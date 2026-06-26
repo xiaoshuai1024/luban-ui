@@ -53,7 +53,7 @@ const props = withDefaults(
     canvasHeight: 800,
     threshold: 4,
     snapToCanvasCenter: true,
-  }
+  },
 );
 
 // 计算对齐线：active rect 的边缘/中线 与 siblings 边缘/中线 比较
@@ -71,7 +71,7 @@ const guides = computed<GuideLine[]>(() => {
   const checkAndPush = (
     type: 'horizontal' | 'vertical',
     aVal: number,
-    refVal: number
+    refVal: number,
   ): void => {
     if (Math.abs(aVal - refVal) <= props.threshold) {
       if (type === 'horizontal') {
@@ -117,8 +117,12 @@ const guides = computed<GuideLine[]>(() => {
 });
 
 function rectEdges(r: AlignRect): {
-  left: number; right: number; midX: number;
-  top: number; bottom: number; midY: number;
+  left: number;
+  right: number;
+  midX: number;
+  top: number;
+  bottom: number;
+  midY: number;
 } {
   return {
     left: r.x,
@@ -172,7 +176,11 @@ const distanceLabels = computed(() => {
 </script>
 
 <template>
-  <div v-if="active" class="lb-align-guides" aria-hidden="true">
+  <div
+    v-if="active"
+    class="lb-align-guides"
+    aria-hidden="true"
+  >
     <svg
       class="lb-align-guides__svg"
       :width="canvasWidth"

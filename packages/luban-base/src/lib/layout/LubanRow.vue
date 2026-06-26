@@ -13,7 +13,7 @@ withDefaults(
     direction: 'row',
     gap: 0,
     wrap: true,
-  }
+  },
 );
 </script>
 
@@ -33,5 +33,5 @@ withDefaults(
 </template>
 
 <style scoped lang="scss">
-@use '../../styles/layout.scss';
+@use '../../styles/layout';
 </style>

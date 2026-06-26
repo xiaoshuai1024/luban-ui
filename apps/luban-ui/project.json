@@ -1,0 +1,7 @@
+{
+  "name": "@luban-ui/luban-ui",
+  "projectType": "application",
+  "sourceRoot": "apps/luban-ui/src",
+  "tags": ["type:app"],
+  "targets": {}
+}

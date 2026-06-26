@@ -20,7 +20,9 @@ function metaOf(propSchema: ComponentMeta['propSchema']): ComponentMeta {
 describe('PropertyPanel', () => {
   it('renders a text input for string schema', () => {
     const meta = metaOf({ content: { type: 'string', label: '内容' } });
-    const w = mount(PropertyPanel, { props: { nodeMeta: meta, modelValue: { content: 'hi' } } });
+    const w = mount(PropertyPanel, {
+      props: { nodeMeta: meta, modelValue: { content: 'hi' } },
+    });
     const input = w.find('input[type="text"]');
     expect(input.exists()).toBe(true);
     expect((input.element as HTMLInputElement).value).toBe('hi');
@@ -28,17 +30,26 @@ describe('PropertyPanel', () => {
 
   it('renders a checkbox for boolean schema', () => {
     const meta = metaOf({ disabled: { type: 'boolean', label: '禁用' } });
-    const w = mount(PropertyPanel, { props: { nodeMeta: meta, modelValue: { disabled: true } } });
+    const w = mount(PropertyPanel, {
+      props: { nodeMeta: meta, modelValue: { disabled: true } },
+    });
     expect(w.find('input[type="checkbox"]').exists()).toBe(true);
   });
 
   it('renders a select for select schema with options', () => {
     const meta = metaOf({
-      size: { type: 'select', label: '尺寸', options: [
-        { label: '小', value: 'small' }, { label: '大', value: 'large' },
-      ] },
+      size: {
+        type: 'select',
+        label: '尺寸',
+        options: [
+          { label: '小', value: 'small' },
+          { label: '大', value: 'large' },
+        ],
+      },
     });
-    const w = mount(PropertyPanel, { props: { nodeMeta: meta, modelValue: { size: 'small' } } });
+    const w = mount(PropertyPanel, {
+      props: { nodeMeta: meta, modelValue: { size: 'small' } },
+    });
     const select = w.find('select');
     expect(select.exists()).toBe(true);
     expect(select.findAll('option')).toHaveLength(2);
@@ -50,11 +61,14 @@ describe('PropertyPanel', () => {
     const received = ref<Record<string, unknown>>({ content: 'hi' });
     const Parent = defineComponent({
       setup() {
-        return () => h(PropertyPanel, {
-          nodeMeta: meta,
-          modelValue: received.value,
-          'onUpdate:modelValue': (patch: Record<string, unknown>) => { received.value = { ...received.value, ...patch }; },
-        });
+        return () =>
+          h(PropertyPanel, {
+            nodeMeta: meta,
+            modelValue: received.value,
+            'onUpdate:modelValue': (patch: Record<string, unknown>) => {
+              received.value = { ...received.value, ...patch };
+            },
+          });
       },
     });
     const w = mount(Parent);
@@ -63,14 +77,20 @@ describe('PropertyPanel', () => {
   });
 
   it('shows required asterisk for required fields', () => {
-    const meta = metaOf({ formId: { type: 'string', label: '关联表单', required: true } });
-    const w = mount(PropertyPanel, { props: { nodeMeta: meta, modelValue: {} } });
+    const meta = metaOf({
+      formId: { type: 'string', label: '关联表单', required: true },
+    });
+    const w = mount(PropertyPanel, {
+      props: { nodeMeta: meta, modelValue: {} },
+    });
     expect(w.find('.lb-property-field__label--required').exists()).toBe(true);
   });
 
   it('renders empty state when propSchema is empty', () => {
     const meta = metaOf({});
-    const w = mount(PropertyPanel, { props: { nodeMeta: meta, modelValue: {} } });
+    const w = mount(PropertyPanel, {
+      props: { nodeMeta: meta, modelValue: {} },
+    });
     expect(w.find('.lb-property-panel__empty').exists()).toBe(true);
   });
 
@@ -79,11 +99,14 @@ describe('PropertyPanel', () => {
     const received = ref<Record<string, unknown>>({ options: [] });
     const Parent = defineComponent({
       setup() {
-        return () => h(PropertyPanel, {
-          nodeMeta: meta,
-          modelValue: received.value,
-          'onUpdate:modelValue': (patch: Record<string, unknown>) => { received.value = { ...received.value, ...patch }; },
-        });
+        return () =>
+          h(PropertyPanel, {
+            nodeMeta: meta,
+            modelValue: received.value,
+            'onUpdate:modelValue': (patch: Record<string, unknown>) => {
+              received.value = { ...received.value, ...patch };
+            },
+          });
       },
     });
     const w = mount(Parent);

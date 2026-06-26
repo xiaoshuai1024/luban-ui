@@ -18,14 +18,22 @@ import type { NodeSchema } from '../../src/lib/schema';
 
 describe('V2-T7 resolveCmsProps', () => {
   const items: ResolvedCollectionItem[] = [
-    { id: 'i1', data: { title: '第一篇', body: '内容1' }, updatedAt: '2026-01-01' },
-    { id: 'i2', data: { title: '第二篇', body: '内容2' }, updatedAt: '2026-01-02' },
+    {
+      id: 'i1',
+      data: { title: '第一篇', body: '内容1' },
+      updatedAt: '2026-01-01',
+    },
+    {
+      id: 'i2',
+      data: { title: '第二篇', body: '内容2' },
+      updatedAt: '2026-01-02',
+    },
   ];
 
   it('single 模式：取首条（desc 默认）指定字段注入 content', () => {
     const props = resolveCmsProps(
       { collectionId: 'c1', fieldKey: 'title', mode: 'single' },
-      items
+      items,
     );
     // desc 默认 → 首条是 updatedAt 较大的 i2
     expect(props.content).toBe('第二篇');
@@ -35,16 +43,13 @@ describe('V2-T7 resolveCmsProps', () => {
     const props = resolveCmsProps(
       { collectionId: 'c1', fieldKey: 'body', mode: 'single' },
       items,
-      'heading'
+      'heading',
     );
     expect(props.heading).toBe('内容2');
   });
 
   it('list 模式：注入 items 数组', () => {
-    const props = resolveCmsProps(
-      { collectionId: 'c1', mode: 'list' },
-      items
-    );
+    const props = resolveCmsProps({ collectionId: 'c1', mode: 'list' }, items);
     expect(Array.isArray(props.items)).toBe(true);
     expect((props.items as unknown[]).length).toBe(2);
   });
@@ -52,7 +57,7 @@ describe('V2-T7 resolveCmsProps', () => {
   it('list 模式：limit 裁剪', () => {
     const props = resolveCmsProps(
       { collectionId: 'c1', mode: 'list', limit: 1 },
-      items
+      items,
     );
     expect((props.items as unknown[]).length).toBe(1);
   });
@@ -65,7 +70,7 @@ describe('V2-T7 resolveCmsProps', () => {
   it('空 items single 返回空字符串', () => {
     const props = resolveCmsProps(
       { collectionId: 'c1', fieldKey: 'title', mode: 'single' },
-      []
+      [],
     );
     expect(props.content).toBe('');
   });
@@ -84,12 +89,19 @@ describe('V2-T7 sortAndLimitItems', () => {
   });
 
   it('updatedAt asc', () => {
-    const r = sortAndLimitItems(items, { collectionId: 'c1', sortOrder: 'asc' });
+    const r = sortAndLimitItems(items, {
+      collectionId: 'c1',
+      sortOrder: 'asc',
+    });
     expect(r.map((i) => i.id)).toEqual(['b', 'c', 'a']);
   });
 
   it('字段 score desc', () => {
-    const r = sortAndLimitItems(items, { collectionId: 'c1', sortBy: 'score', sortOrder: 'desc' });
+    const r = sortAndLimitItems(items, {
+      collectionId: 'c1',
+      sortBy: 'score',
+      sortOrder: 'desc',
+    });
     expect(r.map((i) => i.id)).toEqual(['a', 'c', 'b']);
   });
 

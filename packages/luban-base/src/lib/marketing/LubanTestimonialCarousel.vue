@@ -18,8 +18,8 @@ const props = withDefaults(
     testimonials: () => [],
     interval: 5000,
     autoplay: true,
-    backgroundColor: "var(--lb-bg)",
-  }
+    backgroundColor: 'var(--lb-bg)',
+  },
 );
 
 const current = ref(0);
@@ -48,26 +48,44 @@ onBeforeUnmount(() => {
     :style="{ backgroundColor }"
   >
     <div class="lb-testimonial-carousel__inner">
-      <div v-if="testimonials.length" class="lb-testimonial-carousel__slide">
-        <div class="lb-testimonial-carousel__rating" v-if="testimonials[current].rating">
+      <div
+        v-if="testimonials.length"
+        class="lb-testimonial-carousel__slide"
+      >
+        <div
+          v-if="testimonials[current].rating"
+          class="lb-testimonial-carousel__rating"
+        >
           <span
             v-for="n in 5"
             :key="n"
             class="lb-testimonial-carousel__star"
-            :class="{ 'lb-testimonial-carousel__star--on': (testimonials[current]?.rating ?? 0) >= n }"
+            :class="{
+              'lb-testimonial-carousel__star--on':
+                (testimonials[current]?.rating ?? 0) >= n,
+            }"
           >★</span>
         </div>
-        <blockquote class="lb-testimonial-carousel__quote">{{ testimonials[current].quote }}</blockquote>
+        <blockquote class="lb-testimonial-carousel__quote">
+          {{ testimonials[current].quote }}
+        </blockquote>
         <div class="lb-testimonial-carousel__author">
           <img
             v-if="testimonials[current].avatarUrl"
             class="lb-testimonial-carousel__avatar"
             :src="testimonials[current].avatarUrl"
             :alt="testimonials[current].author"
-          />
+          >
           <div>
-            <div class="lb-testimonial-carousel__name">{{ testimonials[current].author }}</div>
-            <div v-if="testimonials[current].role" class="lb-testimonial-carousel__role">{{ testimonials[current].role }}</div>
+            <div class="lb-testimonial-carousel__name">
+              {{ testimonials[current].author }}
+            </div>
+            <div
+              v-if="testimonials[current].role"
+              class="lb-testimonial-carousel__role"
+            >
+              {{ testimonials[current].role }}
+            </div>
           </div>
         </div>
         <div class="lb-testimonial-carousel__dots">
@@ -77,7 +95,7 @@ onBeforeUnmount(() => {
             class="lb-testimonial-carousel__dot"
             :class="{ 'lb-testimonial-carousel__dot--on': i === current }"
             @click="current = i"
-          ></button>
+          />
         </div>
       </div>
     </div>

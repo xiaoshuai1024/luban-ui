@@ -33,7 +33,7 @@ export class MaterialRegistry {
   register(def: MaterialDefinition): MaterialDefinition {
     if (this.defs.has(def.name)) {
       throw new Error(
-        `[luban-low-code] MaterialRegistry.register: duplicate material name "${def.name}"`
+        `[luban-low-code] MaterialRegistry.register: duplicate material name "${def.name}"`,
       );
     }
     this.defs.set(def.name, def);

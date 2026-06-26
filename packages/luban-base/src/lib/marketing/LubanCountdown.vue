@@ -6,7 +6,7 @@ const props = withDefaults(
     deadline: string;
     label?: string;
   }>(),
-  { label: '距离结束' }
+  { label: '距离结束' },
 );
 
 const now = ref(Date.now());
@@ -34,8 +34,14 @@ onUnmounted(() => {
 
 <template>
   <div class="lb-countdown">
-    <span v-if="label" class="lb-countdown__label">{{ label }}</span>
-    <div v-if="!remaining.ended" class="lb-countdown__digits">
+    <span
+      v-if="label"
+      class="lb-countdown__label"
+    >{{ label }}</span>
+    <div
+      v-if="!remaining.ended"
+      class="lb-countdown__digits"
+    >
       <span class="lb-countdown__unit">{{ remaining.days }}<small>天</small></span>
       <span class="lb-countdown__sep">:</span>
       <span class="lb-countdown__unit">{{ String(remaining.hours).padStart(2, '0') }}<small>时</small></span>
@@ -44,7 +50,12 @@ onUnmounted(() => {
       <span class="lb-countdown__sep">:</span>
       <span class="lb-countdown__unit">{{ String(remaining.seconds).padStart(2, '0') }}<small>秒</small></span>
     </div>
-    <div v-else class="lb-countdown__ended">活动已结束</div>
+    <div
+      v-else
+      class="lb-countdown__ended"
+    >
+      活动已结束
+    </div>
   </div>
 </template>
 

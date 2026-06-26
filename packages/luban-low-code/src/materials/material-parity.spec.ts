@@ -62,8 +62,7 @@ describe('material registry parity', () => {
   });
 
   it('every material has a valid semver version', () => {
-    const semverRe =
-      /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-.+)?$/;
+    const semverRe = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-.+)?$/;
     for (const def of all) {
       expect(def.version).toMatch(semverRe);
     }
@@ -101,7 +100,7 @@ describe('material registry parity', () => {
 
   it('form controls (6) are registered with category=form and non-container', () => {
     const formControls = all.filter(
-      (d) => d.category === 'form' && d.isContainer !== true
+      (d) => d.category === 'form' && d.isContainer !== true,
     );
     expect(formControls.length).toBe(6);
     const names = formControls.map((d) => d.name).sort();
@@ -113,7 +112,7 @@ describe('material registry parity', () => {
         'LubanSelect',
         'LubanSwitch',
         'LubanTextArea',
-      ].sort()
+      ].sort(),
     );
   });
 
@@ -169,23 +168,33 @@ describe('material registry parity', () => {
       '数据展示',
     ]);
     // 信息组含 SidePanel
-    const infoTypes = groups.find((g) => g.category === '信息')!.items.map((i) => i.type);
+    const infoTypes = groups
+      .find((g) => g.category === '信息')!
+      .items.map((i) => i.type);
     expect(infoTypes).toContain('LubanSidePanel');
     // 营销组含 marketing 物料（Hero/CTA/Testimonial/LeadCapture category=marketing）
-    const marketingTypes = groups.find((g) => g.category === '营销')!.items.map((i) => i.type);
+    const marketingTypes = groups
+      .find((g) => g.category === '营销')!
+      .items.map((i) => i.type);
     expect(marketingTypes).toContain('LubanHero');
     expect(marketingTypes).toContain('LubanCTA');
     expect(marketingTypes).toContain('LubanTestimonial');
     expect(marketingTypes).toContain('LubanLeadCapture');
     // 导航/反馈/数据展示组首次纳入 W1-T6 6 物料
-    const navTypes = groups.find((g) => g.category === '导航')!.items.map((i) => i.type);
+    const navTypes = groups
+      .find((g) => g.category === '导航')!
+      .items.map((i) => i.type);
     expect(navTypes).toContain('LubanMenu');
     expect(navTypes).toContain('LubanTabs');
-    const feedbackTypes = groups.find((g) => g.category === '反馈')!.items.map((i) => i.type);
+    const feedbackTypes = groups
+      .find((g) => g.category === '反馈')!
+      .items.map((i) => i.type);
     expect(feedbackTypes).toContain('LubanModal');
     expect(feedbackTypes).toContain('LubanDrawer');
     expect(feedbackTypes).toContain('LubanToast');
-    const dataTypes = groups.find((g) => g.category === '数据展示')!.items.map((i) => i.type);
+    const dataTypes = groups
+      .find((g) => g.category === '数据展示')!
+      .items.map((i) => i.type);
     expect(dataTypes).toContain('LubanTable');
     // 扁平列表去重（layout 同时在信息+布局，只算一次）
     const flat = getPaletteItems();
@@ -210,12 +219,9 @@ describe('material registry parity', () => {
       }
     }
     if (missing.length > 0) {
-      // eslint-disable-next-line no-console
       console.warn(
         `[material-parity] ${missing.length} props without default (allowed, tracked):\n` +
-          missing
-            .map((m) => `  - ${m.material}.${m.prop}`)
-            .join('\n')
+          missing.map((m) => `  - ${m.material}.${m.prop}`).join('\n'),
       );
     }
     // 软断言：始终通过（仅记录），未来可改为硬断言。

@@ -24,11 +24,21 @@ export const testimonialMaterial: MaterialDefinition = defineMaterial({
     type: 'object',
     required: ['quote'],
     properties: {
-      quote: { type: 'string', default: '非常好用！推荐给所有人。', label: '引用内容' },
+      quote: {
+        type: 'string',
+        default: '非常好用！推荐给所有人。',
+        label: '引用内容',
+      },
       author: { type: 'string', default: '', label: '作者姓名' },
       role: { type: 'string', default: '', label: '头衔/职务' },
       avatarUrl: { type: 'string', default: '', label: '头像地址' },
-      rating: { type: 'number', default: 0, label: '评分', minimum: 0, maximum: 5 },
+      rating: {
+        type: 'number',
+        default: 0,
+        label: '评分',
+        minimum: 0,
+        maximum: 5,
+      },
       backgroundColor: { type: 'string', default: '#ffffff', label: '背景色' },
     },
   },

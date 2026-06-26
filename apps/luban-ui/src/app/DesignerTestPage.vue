@@ -44,7 +44,11 @@ function onAddNode(type: string, parentId?: string) {
     const parent = findNodeById(schema.value.root, parentId);
     if (!parent) return;
     const acceptTypes = getComponentMeta(parent.type)?.acceptTypes;
-    if (acceptTypes != null && acceptTypes.length > 0 && !acceptTypes.includes(type))
+    if (
+      acceptTypes != null &&
+      acceptTypes.length > 0 &&
+      !acceptTypes.includes(type)
+    )
       return;
   }
   schema.value = appendNodeToSchema(schema.value, type, parentId);
@@ -65,8 +69,14 @@ function updateProp(key: string, value: unknown) {
 </script>
 
 <template>
-  <div class="designer-test" data-cy="designer-root">
-    <aside class="designer-test__palette" data-cy="designer-palette">
+  <div
+    class="designer-test"
+    data-cy="designer-root"
+  >
+    <aside
+      class="designer-test__palette"
+      data-cy="designer-palette"
+    >
       <section
         v-for="group in getPaletteGroups()"
         :key="group.category"
@@ -91,8 +101,14 @@ function updateProp(key: string, value: unknown) {
         </ul>
       </section>
     </aside>
-    <main class="designer-test__main" data-cy="designer-main">
-      <div class="designer-test__drop-zone" data-cy="designer-drop-zone">
+    <main
+      class="designer-test__main"
+      data-cy="designer-main"
+    >
+      <div
+        class="designer-test__drop-zone"
+        data-cy="designer-drop-zone"
+      >
         <luban-designer
           v-model:schema="schema"
           :show-toolbar="false"
@@ -136,7 +152,7 @@ function updateProp(key: string, value: unknown) {
                   @input="
                     updateProp(key, ($event.target as HTMLInputElement).value)
                   "
-                />
+                >
               </label>
               <label
                 v-else-if="item.type === 'number'"
@@ -152,10 +168,10 @@ function updateProp(key: string, value: unknown) {
                   @input="
                     updateProp(
                       key,
-                      Number(($event.target as HTMLInputElement).value)
+                      Number(($event.target as HTMLInputElement).value),
                     )
                   "
-                />
+                >
               </label>
               <label
                 v-else-if="item.type === 'boolean'"
@@ -168,12 +184,9 @@ function updateProp(key: string, value: unknown) {
                   type="checkbox"
                   :checked="(selectedNode!.props ?? {})[key]"
                   @change="
-                    updateProp(
-                      key,
-                      ($event.target as HTMLInputElement).checked
-                    )
+                    updateProp(key, ($event.target as HTMLInputElement).checked)
                   "
-                />
+                >
               </label>
               <label
                 v-else-if="item.type === 'select'"

@@ -15,7 +15,12 @@ const props = withDefaults(
     /** 本地上传大小上限（MB），默认 2MB */
     maxSizeMB?: number;
   }>(),
-  { modelValue: '', previewWidth: 80, placeholder: '输入图片 URL 或上传', maxSizeMB: 2 }
+  {
+    modelValue: '',
+    previewWidth: 80,
+    placeholder: '输入图片 URL 或上传',
+    maxSizeMB: 2,
+  },
 );
 
 const emit = defineEmits<{
@@ -77,29 +82,51 @@ function onImgError(): void {
         :value="modelValue"
         :placeholder="placeholder"
         @input="onInput"
-      />
-      <label class="lb-image-setter__upload" title="本地上传">
+      >
+      <label
+        class="lb-image-setter__upload"
+        title="本地上传"
+      >
         📁
-        <input ref="fileInputRef" type="file" accept="image/*" hidden @change="onFile" />
+        <input
+          ref="fileInputRef"
+          type="file"
+          accept="image/*"
+          hidden
+          @change="onFile"
+        >
       </label>
       <button
         v-if="modelValue"
         class="lb-image-setter__clear"
         title="清除"
         @click="clear"
-      >✕</button>
+      >
+        ✕
+      </button>
     </div>
-    <div v-if="errorMsg" class="lb-image-setter__error">{{ errorMsg }}</div>
-    <div v-if="hasImage" class="lb-image-setter__preview">
+    <div
+      v-if="errorMsg"
+      class="lb-image-setter__error"
+    >
+      {{ errorMsg }}
+    </div>
+    <div
+      v-if="hasImage"
+      class="lb-image-setter__preview"
+    >
       <img
         :src="modelValue"
         alt="预览"
         :style="{ maxWidth: `${previewWidth}px` }"
         @error="onImgError"
-      />
+      >
       <span class="lb-image-setter__preview-label">预览</span>
     </div>
-    <div v-else-if="modelValue && imgError" class="lb-image-setter__error">
+    <div
+      v-else-if="modelValue && imgError"
+      class="lb-image-setter__error"
+    >
       图片加载失败，请检查 URL
     </div>
   </div>

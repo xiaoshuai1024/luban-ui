@@ -8,12 +8,12 @@ withDefaults(
     sticky?: boolean;
   }>(),
   {
-    brand: "Luban",
+    brand: 'Luban',
     links: () => [],
-    backgroundColor: "var(--lb-bg)",
-    textColor: "var(--lb-bg-dark)",
+    backgroundColor: 'var(--lb-bg)',
+    textColor: 'var(--lb-bg-dark)',
     sticky: true,
-  }
+  },
 );
 </script>
 
@@ -24,15 +24,20 @@ withDefaults(
     :style="{ backgroundColor, color: textColor }"
   >
     <div class="lb-navbar__inner">
-      <a class="lb-navbar__brand" href="#">{{ brand }}</a>
-      <nav class="lb-navbar__nav" v-if="links.length">
+      <a
+        class="lb-navbar__brand"
+        href="#"
+      >{{ brand }}</a>
+      <nav
+        v-if="links.length"
+        class="lb-navbar__nav"
+      >
         <a
           v-for="(link, i) in links"
           :key="i"
           class="lb-navbar__link"
           :href="link.url"
-          >{{ link.label }}</a
-        >
+        >{{ link.label }}</a>
       </nav>
     </div>
   </header>

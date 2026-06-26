@@ -4,6 +4,8 @@ import type { Page, Locator } from '@playwright/test';
 export const po = (page: Page) => ({
   designerRoot: (): Locator => page.locator('[data-cy="designer-root"]'),
   designerPalette: (): Locator => page.locator('[data-cy="designer-palette"]'),
-  designerDropZone: (): Locator => page.locator('[data-cy="designer-drop-zone"]'),
-  paletteGroups: (): Locator => page.locator('[data-cy^="designer-palette-group-"]'),
+  designerDropZone: (): Locator =>
+    page.locator('[data-cy="designer-drop-zone"]'),
+  paletteGroups: (): Locator =>
+    page.locator('[data-cy^="designer-palette-group-"]'),
 });

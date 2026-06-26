@@ -16,7 +16,7 @@ const props = withDefaults(
   defineProps<{
     modelValue?: CarouselSlide[];
   }>(),
-  { modelValue: () => [] }
+  { modelValue: () => [] },
 );
 
 const emit = defineEmits<{
@@ -34,7 +34,10 @@ function genId(): string {
 }
 
 function emitList(list: CarouselSlide[]): void {
-  emit('update:modelValue', list.map((s) => ({ ...s })));
+  emit(
+    'update:modelValue',
+    list.map((s) => ({ ...s })),
+  );
 }
 
 function add(): void {
@@ -66,7 +69,9 @@ function move(index: number, dir: -1 | 1): void {
         :key="slide.id ?? i"
         class="lb-carousel-setter__item"
       >
-        <div class="lb-carousel-setter__item-index">{{ i + 1 }}</div>
+        <div class="lb-carousel-setter__item-index">
+          {{ i + 1 }}
+        </div>
         <div class="lb-carousel-setter__item-body">
           <div class="lb-carousel-setter__row">
             <input
@@ -74,39 +79,73 @@ function move(index: number, dir: -1 | 1): void {
               type="text"
               :value="slide.image"
               placeholder="图片 URL"
-              @input="update(i, { image: ($event.target as HTMLInputElement).value })"
-            />
+              @input="
+                update(i, { image: ($event.target as HTMLInputElement).value })
+              "
+            >
             <img
               v-if="slide.image"
               class="lb-carousel-setter__thumb"
               :src="slide.image"
               alt=""
-            />
+            >
           </div>
           <input
             class="lb-carousel-setter__input"
             type="text"
             :value="slide.title"
             placeholder="标题（可选）"
-            @input="update(i, { title: ($event.target as HTMLInputElement).value })"
-          />
+            @input="
+              update(i, { title: ($event.target as HTMLInputElement).value })
+            "
+          >
           <input
             class="lb-carousel-setter__input"
             type="text"
             :value="slide.link"
             placeholder="跳转链接（可选）"
-            @input="update(i, { link: ($event.target as HTMLInputElement).value })"
-          />
+            @input="
+              update(i, { link: ($event.target as HTMLInputElement).value })
+            "
+          >
         </div>
         <div class="lb-carousel-setter__item-actions">
-          <button title="上移" :disabled="i === 0" @click="move(i, -1)">↑</button>
-          <button title="下移" :disabled="i === slides.length - 1" @click="move(i, 1)">↓</button>
-          <button class="lb-carousel-setter__del" title="删除" @click="remove(i)">✕</button>
+          <button
+            title="上移"
+            :disabled="i === 0"
+            @click="move(i, -1)"
+          >
+            ↑
+          </button>
+          <button
+            title="下移"
+            :disabled="i === slides.length - 1"
+            @click="move(i, 1)"
+          >
+            ↓
+          </button>
+          <button
+            class="lb-carousel-setter__del"
+            title="删除"
+            @click="remove(i)"
+          >
+            ✕
+          </button>
         </div>
       </div>
     </div>
-    <button class="lb-carousel-setter__add" @click="add">+ 添加幻灯片</button>
-    <p v-if="slides.length === 0" class="lb-carousel-setter__empty">暂无幻灯片，点击上方添加</p>
+    <button
+      class="lb-carousel-setter__add"
+      @click="add"
+    >
+      + 添加幻灯片
+    </button>
+    <p
+      v-if="slides.length === 0"
+      class="lb-carousel-setter__empty"
+    >
+      暂无幻灯片，点击上方添加
+    </p>
   </div>
 </template>
 

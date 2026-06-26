@@ -13,7 +13,7 @@ import type { Component } from 'vue';
 export function withModel<T>(
   Comp: Component,
   extraProps: Record<string, unknown>,
-  initial: T
+  initial: T,
 ) {
   const v = ref(initial);
   const Parent = defineComponent({

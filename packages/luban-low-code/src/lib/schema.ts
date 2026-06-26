@@ -86,7 +86,12 @@ export interface NodeAnimation {
   scrollRepeat?: boolean;
 }
 
-export type AnimationType = 'fade' | 'slide-up' | 'slide-left' | 'zoom' | 'flip';
+export type AnimationType =
+  | 'fade'
+  | 'slide-up'
+  | 'slide-left'
+  | 'zoom'
+  | 'flip';
 export type AnimationTrigger = 'in-view' | 'hover' | 'load';
 
 /**

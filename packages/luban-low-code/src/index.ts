@@ -1,4 +1,16 @@
-export type { PageSchema, NodeSchema, NodeLoop, NodeDatasource, PageSeo, NodeResponsive, ResponsiveBreakpoint, NodeAnimation, AnimationType, AnimationTrigger, NodeCmsBinding } from './lib/schema';
+export type {
+  PageSchema,
+  NodeSchema,
+  NodeLoop,
+  NodeDatasource,
+  PageSeo,
+  NodeResponsive,
+  ResponsiveBreakpoint,
+  NodeAnimation,
+  AnimationType,
+  AnimationTrigger,
+  NodeCmsBinding,
+} from './lib/schema';
 export type { ValidationRule } from './lib/validation';
 export { validate, validateAll, initFormState } from './lib/validation';
 export { default as LubanDesigner } from './lib/LubanDesigner.vue';
@@ -47,7 +59,11 @@ export {
   getAllComponentMeta,
   registerComponentMeta,
 } from './lib/componentMeta';
-export type { ComponentMeta, PropSchema, PropSchemaItem } from './lib/componentMeta';
+export type {
+  ComponentMeta,
+  PropSchema,
+  PropSchemaItem,
+} from './lib/componentMeta';
 export {
   CONTAINER_TYPES,
   FORM_CONTROL_TYPES,
@@ -98,7 +114,12 @@ export {
   collectNodeRects,
   dedupeGuides,
 } from './lib/alignGuides';
-export type { Rect, GuideLine, AlignResult, SpacingHint } from './lib/alignGuides';
+export type {
+  Rect,
+  GuideLine,
+  AlignResult,
+  SpacingHint,
+} from './lib/alignGuides';
 
 // === V2-T7 CMS 绑定解析（纯逻辑）===
 export {
@@ -106,7 +127,10 @@ export {
   sortAndLimitItems,
   collectBoundCollectionIds,
 } from './lib/cmsBinding';
-export type { CollectionItemData, ResolvedCollectionItem } from './lib/cmsBinding';
+export type {
+  CollectionItemData,
+  ResolvedCollectionItem,
+} from './lib/cmsBinding';
 export {
   getPaletteGroups,
   getPaletteItems,
@@ -183,4 +207,3 @@ export {
 export function getMaterial(name: string): MaterialDefinition | undefined {
   return materialRegistry.get(name);
 }
-

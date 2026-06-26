@@ -6,7 +6,7 @@ withDefaults(
     maxWidth?: MaxWidth;
     padded?: boolean;
   }>(),
-  { maxWidth: 'full', padded: false }
+  { maxWidth: 'full', padded: false },
 );
 </script>
 
@@ -23,5 +23,5 @@ withDefaults(
 </template>
 
 <style scoped lang="scss">
-@use '../../styles/layout.scss';
+@use '../../styles/layout';
 </style>

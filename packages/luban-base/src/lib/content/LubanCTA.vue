@@ -33,7 +33,7 @@ withDefaults(
     textColor: 'var(--lb-accent-contrast)',
     buttonVariant: 'primary',
     fullWidth: false,
-  }
+  },
 );
 </script>
 
@@ -44,8 +44,15 @@ withDefaults(
     :style="{ backgroundColor, color: textColor }"
   >
     <div class="lb-cta__content">
-      <h2 class="lb-cta__heading">{{ heading }}</h2>
-      <p v-if="description" class="lb-cta__description">{{ description }}</p>
+      <h2 class="lb-cta__heading">
+        {{ heading }}
+      </h2>
+      <p
+        v-if="description"
+        class="lb-cta__description"
+      >
+        {{ description }}
+      </p>
       <div class="lb-cta__actions">
         <a
           v-if="buttonText && buttonUrl"
@@ -76,7 +83,9 @@ withDefaults(
   padding: 48px 24px;
   text-align: center;
   width: 100%;
-  &--full .lb-cta__content { max-width: none; }
+  &--full .lb-cta__content {
+    max-width: none;
+  }
 }
 .lb-cta__content {
   max-width: 600px;
@@ -111,25 +120,36 @@ withDefaults(
   &--primary {
     background: var(--lb-bg);
     color: var(--lb-accent);
-    &:hover { opacity: 0.9; }
+    &:hover {
+      opacity: 0.9;
+    }
   }
   &--outline {
     background: transparent;
     color: var(--lb-accent-contrast);
     border: 2px solid var(--lb-accent-contrast);
-    &:hover { background: rgba(255,255,255,0.1); }
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
   }
   &--ghost {
     background: transparent;
     color: var(--lb-accent-contrast);
-    &:hover { text-decoration: underline; }
+    &:hover {
+      text-decoration: underline;
+    }
   }
   &--secondary {
     background: transparent;
     color: var(--lb-accent-contrast);
-    border: 2px solid rgba(255,255,255,0.6);
-    &:hover { background: rgba(255,255,255,0.1); }
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
   }
-  &--disabled { opacity: 0.6; cursor: default; }
+  &--disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
 }
 </style>

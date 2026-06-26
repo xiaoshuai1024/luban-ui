@@ -17,7 +17,7 @@ withDefaults(
     block: false,
     type: 'button',
     content: '',
-  }
+  },
 );
 
 defineEmits<{
@@ -42,5 +42,5 @@ defineEmits<{
 </template>
 
 <style scoped lang="scss">
-@use '../../styles/button.scss';
+@use '../../styles/button';
 </style>

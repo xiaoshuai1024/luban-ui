@@ -10,9 +10,31 @@ permissions:
   contents: read
 
 jobs:
+  lint:
+    name: ESLint (Nx boundaries) + Prettier + stylelint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install deps
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Nx lint (boundaries) + Prettier + stylelint
+        run: pnpm run lint
+
   unit:
     name: Unit + component tests
     runs-on: ubuntu-latest
+    needs: lint
     steps:
       - uses: actions/checkout@v4
 
@@ -60,6 +82,6 @@ jobs:
 
       - name: Designer E2E
         env:
-          LUBAN_E2E_USE_PLAYWRIGHT_CHROMIUM: "1"
+          LUBAN_E2E_USE_PLAYWRIGHT_CHROMIUM: '1'
         working-directory: apps/luban-ui-e2e
         run: npx playwright test

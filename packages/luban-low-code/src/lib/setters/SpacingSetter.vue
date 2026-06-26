@@ -20,7 +20,10 @@ const props = withDefaults(
     /** 单位提示 */
     unit?: string;
   }>(),
-  { modelValue: () => ({ top: '', right: '', bottom: '', left: '' }), unit: 'px' }
+  {
+    modelValue: () => ({ top: '', right: '', bottom: '', left: '' }),
+    unit: 'px',
+  },
 );
 
 const emit = defineEmits<{
@@ -78,7 +81,7 @@ function setAll(val: string): void {
           :value="spacing.top"
           :placeholder="`0${unit}`"
           @input="setSide('top', ($event.target as HTMLInputElement).value)"
-        />
+        >
       </div>
       <div class="lb-spacing-setter__field lb-spacing-setter__field--right">
         <label>右</label>
@@ -87,7 +90,7 @@ function setAll(val: string): void {
           :value="spacing.right"
           :placeholder="`0${unit}`"
           @input="setSide('right', ($event.target as HTMLInputElement).value)"
-        />
+        >
       </div>
       <div class="lb-spacing-setter__field lb-spacing-setter__field--bottom">
         <label>下</label>
@@ -96,7 +99,7 @@ function setAll(val: string): void {
           :value="spacing.bottom"
           :placeholder="`0${unit}`"
           @input="setSide('bottom', ($event.target as HTMLInputElement).value)"
-        />
+        >
       </div>
       <div class="lb-spacing-setter__field lb-spacing-setter__field--left">
         <label>左</label>
@@ -105,7 +108,7 @@ function setAll(val: string): void {
           :value="spacing.left"
           :placeholder="`0${unit}`"
           @input="setSide('left', ($event.target as HTMLInputElement).value)"
-        />
+        >
       </div>
       <div
         class="lb-spacing-setter__center"
@@ -113,17 +116,22 @@ function setAll(val: string): void {
         :title="linked ? '点击解除链锁（四向独立编辑）' : '点击链锁统一编辑'"
         @click="toggleLinked"
       >
-        <span class="lb-spacing-setter__center-icon">{{ linked ? '🔗' : '⊡' }}</span>
+        <span class="lb-spacing-setter__center-icon">{{
+          linked ? '🔗' : '⊡'
+        }}</span>
       </div>
     </div>
-    <div v-if="linked" class="lb-spacing-setter__all">
+    <div
+      v-if="linked"
+      class="lb-spacing-setter__all"
+    >
       <label>统一</label>
       <input
         type="text"
         :value="spacing.top"
         :placeholder="`0${unit}`"
         @input="setAll(($event.target as HTMLInputElement).value)"
-      />
+      >
     </div>
   </div>
 </template>
@@ -165,11 +173,28 @@ function setAll(val: string): void {
   border-color: #409eff;
   outline: none;
 }
-.lb-spacing-setter__field--top { grid-column: 2; grid-row: 1; }
-.lb-spacing-setter__field--left { grid-column: 1; grid-row: 2; }
-.lb-spacing-setter__center { grid-column: 2; grid-row: 2; text-align: center; cursor: pointer; }
-.lb-spacing-setter__field--right { grid-column: 3; grid-row: 2; }
-.lb-spacing-setter__field--bottom { grid-column: 2; grid-row: 3; }
+.lb-spacing-setter__field--top {
+  grid-column: 2;
+  grid-row: 1;
+}
+.lb-spacing-setter__field--left {
+  grid-column: 1;
+  grid-row: 2;
+}
+.lb-spacing-setter__center {
+  grid-column: 2;
+  grid-row: 2;
+  text-align: center;
+  cursor: pointer;
+}
+.lb-spacing-setter__field--right {
+  grid-column: 3;
+  grid-row: 2;
+}
+.lb-spacing-setter__field--bottom {
+  grid-column: 2;
+  grid-row: 3;
+}
 .lb-spacing-setter__center-icon {
   font-size: 16px;
   color: #c0c4cc;

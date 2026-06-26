@@ -7,11 +7,11 @@ withDefaults(
     backgroundColor?: string;
   }>(),
   {
-    heading: "他们都在使用",
+    heading: '他们都在使用',
     logos: () => [],
     grayscale: true,
-    backgroundColor: "var(--lb-bg-muted)",
-  }
+    backgroundColor: 'var(--lb-bg-muted)',
+  },
 );
 </script>
 
@@ -21,8 +21,16 @@ withDefaults(
     :style="{ backgroundColor }"
   >
     <div class="lb-logo-cloud__inner">
-      <h2 v-if="heading" class="lb-logo-cloud__heading">{{ heading }}</h2>
-      <div v-if="logos.length" class="lb-logo-cloud__list">
+      <h2
+        v-if="heading"
+        class="lb-logo-cloud__heading"
+      >
+        {{ heading }}
+      </h2>
+      <div
+        v-if="logos.length"
+        class="lb-logo-cloud__list"
+      >
         <a
           v-for="(logo, i) in logos"
           :key="i"
@@ -34,7 +42,7 @@ withDefaults(
             :class="{ 'lb-logo-cloud__img--gray': grayscale }"
             :src="logo.src"
             :alt="logo.alt"
-          />
+          >
         </a>
       </div>
     </div>

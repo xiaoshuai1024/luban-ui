@@ -20,7 +20,7 @@ withDefaults(
     required: false,
     disabled: false,
     error: false,
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -32,7 +32,11 @@ const emit = defineEmits<{
 
 <template>
   <div class="lb-form-field">
-    <label v-if="label" class="lb-form-field__label" :class="{ 'lb-form-field__label--required': required }">
+    <label
+      v-if="label"
+      class="lb-form-field__label"
+      :class="{ 'lb-form-field__label--required': required }"
+    >
       {{ label }}
     </label>
     <select
@@ -42,11 +46,25 @@ const emit = defineEmits<{
       :aria-invalid="error"
       class="lb-select__native"
       :class="{ 'lb-select--error': error }"
-      @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value === '' ? null : (Number(($event.target as HTMLSelectElement).value) || ($event.target as HTMLSelectElement).value))"
+      @change="
+        emit(
+          'update:modelValue',
+          ($event.target as HTMLSelectElement).value === ''
+            ? null
+            : Number(($event.target as HTMLSelectElement).value) ||
+              ($event.target as HTMLSelectElement).value,
+        )
+      "
       @blur="emit('blur', $event)"
       @focus="emit('focus', $event)"
     >
-      <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
+      <option
+        v-if="placeholder"
+        value=""
+        disabled
+      >
+        {{ placeholder }}
+      </option>
       <option
         v-for="opt in options"
         :key="String(opt.value)"
@@ -55,8 +73,18 @@ const emit = defineEmits<{
         {{ opt.label }}
       </option>
     </select>
-    <p v-if="helperText && !error" class="lb-form-field__helper">{{ helperText }}</p>
-    <p v-if="error && errorMessage" class="lb-form-field__error">{{ errorMessage }}</p>
+    <p
+      v-if="helperText && !error"
+      class="lb-form-field__helper"
+    >
+      {{ helperText }}
+    </p>
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
 

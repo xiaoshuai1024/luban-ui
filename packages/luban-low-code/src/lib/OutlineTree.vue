@@ -25,7 +25,7 @@ const props = withDefaults(
     nodes: undefined,
     depth: 0,
     selectedId: null,
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -81,22 +81,30 @@ function bubbleReorder(id: string, dir: 'up' | 'down'): void {
             class="lb-outline-node__btn"
             title="上移"
             @click.stop="bubbleReorder(node.id, 'up')"
-          >↑</button>
+          >
+            ↑
+          </button>
           <button
             class="lb-outline-node__btn"
             title="下移"
             @click.stop="bubbleReorder(node.id, 'down')"
-          >↓</button>
+          >
+            ↓
+          </button>
           <button
             class="lb-outline-node__btn"
             title="复制"
             @click.stop="bubbleDuplicate(node.id)"
-          >⧉</button>
+          >
+            ⧉
+          </button>
           <button
             class="lb-outline-node__btn lb-outline-node__btn--danger"
             title="删除"
             @click.stop="bubbleDelete(node.id)"
-          >🗑</button>
+          >
+            🗑
+          </button>
         </span>
       </div>
       <!-- 递归渲染 children（自引用：组件名为 OutlineTree） -->
@@ -111,7 +119,12 @@ function bubbleReorder(id: string, dir: 'up' | 'down'): void {
         @reorder="bubbleReorder"
       />
     </div>
-    <div v-if="renderNodes.length === 0 && depth === 0" class="lb-outline-tree__empty">暂无节点</div>
+    <div
+      v-if="renderNodes.length === 0 && depth === 0"
+      class="lb-outline-tree__empty"
+    >
+      暂无节点
+    </div>
   </div>
 </template>
 

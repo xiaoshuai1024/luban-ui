@@ -14,11 +14,13 @@ describe('LubanSidePanel', () => {
             LubanSidePanel,
             {
               modelValue: visible.value,
-              'onUpdate:modelValue': (v: boolean) => { visible.value = v; },
+              'onUpdate:modelValue': (v: boolean) => {
+                visible.value = v;
+              },
               title: 'Panel Title',
               size: 'small',
             },
-            { body: () => h('div', { class: 'body-slot' }, 'Body') }
+            { body: () => h('div', { class: 'body-slot' }, 'Body') },
           );
       },
     });

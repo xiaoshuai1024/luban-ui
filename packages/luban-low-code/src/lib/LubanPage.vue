@@ -5,7 +5,11 @@ import type { PageSchema, NodeSchema } from './schema';
 import { treeResponsiveCss } from './responsiveStyle';
 import { treeAnimationCss } from './animation';
 import { useAnimationObserver } from './animationObserver';
-import { collectBoundCollectionIds, resolveCmsProps, type ResolvedCollectionItem } from './cmsBinding';
+import {
+  collectBoundCollectionIds,
+  resolveCmsProps,
+  type ResolvedCollectionItem,
+} from './cmsBinding';
 
 const props = defineProps<{
   schema: PageSchema | null | undefined;
@@ -21,7 +25,9 @@ const props = defineProps<{
    * V2-T7 CMS 拉取器：按 collectionId 拉取 items（host 注入，如调 collection items 公开端点）。
    * 缺省则 CMS 绑定节点不渲染数据（静态 props 仍生效）。
    */
-  collectionFetcher?: (collectionId: string) => Promise<ResolvedCollectionItem[]>;
+  collectionFetcher?: (
+    collectionId: string,
+  ) => Promise<ResolvedCollectionItem[]>;
 }>();
 
 const formState = computed(() => props.schema?.formState ?? {});
@@ -36,7 +42,10 @@ const pageWrapRef = ref<HTMLElement | null>(null);
  * 调 resolveCmsProps 计算注入 props，provide 给 RuntimeRenderer。
  */
 const cmsResolvedMap = ref<Record<string, Record<string, unknown>>>({});
-provide('lb-cms-resolved', computed(() => cmsResolvedMap.value));
+provide(
+  'lb-cms-resolved',
+  computed(() => cmsResolvedMap.value),
+);
 
 /** 拉取所有绑定的 collection 并解析注入 props */
 async function loadCmsBindings(): Promise<void> {
@@ -45,9 +54,13 @@ async function loadCmsBindings(): Promise<void> {
   const collectionIds = collectBoundCollectionIds(root);
   if (collectionIds.length === 0) return;
   // 收集所有绑定节点（nodeId → binding）
-  const bindings: { nodeId: string; binding: NonNullable<NodeSchema['cmsBinding']> }[] = [];
+  const bindings: {
+    nodeId: string;
+    binding: NonNullable<NodeSchema['cmsBinding']>;
+  }[] = [];
   function walk(node: NodeSchema): void {
-    if (node.cmsBinding) bindings.push({ nodeId: node.id, binding: node.cmsBinding });
+    if (node.cmsBinding)
+      bindings.push({ nodeId: node.id, binding: node.cmsBinding });
     if (node.children) for (const c of node.children) walk(c);
   }
   walk(root);
@@ -60,7 +73,7 @@ async function loadCmsBindings(): Promise<void> {
       } catch {
         itemsByCollection.set(cid, []);
       }
-    })
+    }),
   );
   // 逐节点解析
   const out: Record<string, Record<string, unknown>> = {};
@@ -77,7 +90,7 @@ async function loadCmsBindings(): Promise<void> {
  * 节点用 data-lb-node="<id>" 选择器隔离，避免全局污染。无响应式覆盖时为空串。
  */
 const responsiveCss = computed(() =>
-  props.schema?.root ? treeResponsiveCss(props.schema.root) : ''
+  props.schema?.root ? treeResponsiveCss(props.schema.root) : '',
 );
 
 /**
@@ -85,7 +98,7 @@ const responsiveCss = computed(() =>
  * 无动画节点不输出（零开销）。load/hover/in-view 三种触发由 CSS + IO 处理。
  */
 const animationCss = computed(() =>
-  props.schema?.root ? treeAnimationCss(props.schema.root) : ''
+  props.schema?.root ? treeAnimationCss(props.schema.root) : '',
 );
 
 const extraCss = computed(() => {
@@ -101,7 +114,7 @@ const extraCss = computed(() => {
  */
 const { observe: observeAnimations } = useAnimationObserver(
   () => pageWrapRef.value,
-  () => props.schema?.root ?? null
+  () => props.schema?.root ?? null,
 );
 
 /** 递归收集 schema 中所有 node.datasource 绑定（含 params） */
@@ -125,7 +138,11 @@ async function loadDatasources(): Promise<void> {
     datasourceCtx.value = {};
     return;
   }
-  const binds: { id: string; varName: string; params?: Record<string, unknown> }[] = [];
+  const binds: {
+    id: string;
+    varName: string;
+    params?: Record<string, unknown>;
+  }[] = [];
   collectDatasources(props.schema.root, binds);
   if (binds.length === 0) {
     datasourceCtx.value = {};
@@ -169,9 +186,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="pageWrapRef" class="luban-page">
+  <div
+    ref="pageWrapRef"
+    class="luban-page"
+  >
     <!-- V2-T4/T5 响应式 @media + 动画 @keyframes CSS：整树收集注入 -->
-    <component :is="'style'" v-if="extraCss" v-html="extraCss" />
+    <component
+      :is="'style'"
+      v-if="extraCss"
+      v-html="extraCss"
+    />
     <RuntimeRenderer
       v-if="schema?.root"
       :root="schema.root"

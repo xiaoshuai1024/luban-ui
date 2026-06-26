@@ -24,7 +24,8 @@ export const leadCaptureMaterial: MaterialDefinition = defineMaterial({
   name: 'LubanLeadCapture',
   version: '1.1.0',
   category: 'marketing',
-  description: '线索采集区块，展示标题、描述与联系方式输入表单（提交生成 lead）',
+  description:
+    '线索采集区块，展示标题、描述与联系方式输入表单（提交生成 lead）',
   component: LubanLeadCapture,
   /** D15-E3：声明 submit 事件，供设计器事件编排识别 */
   events: [{ name: 'submit', description: '提交表单（payload 为字段 map）' }],
@@ -35,13 +36,21 @@ export const leadCaptureMaterial: MaterialDefinition = defineMaterial({
       heading: { type: 'string', default: '获取最新资讯', label: '标题' },
       description: { type: 'string', default: '', label: '描述' },
       submitText: { type: 'string', default: '提交', label: '提交按钮' },
-      placeholder: { type: 'string', default: '请输入您的联系方式', label: '占位提示' },
+      placeholder: {
+        type: 'string',
+        default: '请输入您的联系方式',
+        label: '占位提示',
+      },
       backgroundColor: { type: 'string', default: '#f9fafb', label: '背景色' },
       showName: { type: 'boolean', default: true, label: '显示姓名' },
       showPhone: { type: 'boolean', default: true, label: '显示手机号' },
       showEmail: { type: 'boolean', default: false, label: '显示邮箱' },
       formId: { type: 'string', default: '', label: '关联表单ID（提交用）' },
-      successText: { type: 'string', default: '提交成功，我们会尽快与您联系', label: '成功提示' },
+      successText: {
+        type: 'string',
+        default: '提交成功，我们会尽快与您联系',
+        label: '成功提示',
+      },
     },
   },
 });

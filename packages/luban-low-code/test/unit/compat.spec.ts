@@ -13,11 +13,16 @@
 import { describe, it, expect } from 'vitest';
 import type { MaterialDefinition } from '../../src/lib/material/defineMaterial';
 import { defineMaterial } from '../../src/lib/material/defineMaterial';
-import { toLegacyComponentMeta, propsSchemaToLegacy } from '../../src/lib/material/compat';
+import {
+  toLegacyComponentMeta,
+  propsSchemaToLegacy,
+} from '../../src/lib/material/compat';
 import { h } from 'vue';
 
 /** 构造一个最小物料（仅用于 propsSchema 映射测试，component 用占位）。 */
-function makeDef(propsSchema: MaterialDefinition['propsSchema']): MaterialDefinition {
+function makeDef(
+  propsSchema: MaterialDefinition['propsSchema'],
+): MaterialDefinition {
   return defineMaterial({
     name: `Test_${Math.random().toString(36).slice(2, 8)}`,
     version: '1.0.0',
@@ -66,7 +71,11 @@ describe('compat.toPropSchemaItem — array mapping (D15-E0)', () => {
             properties: {
               price: { type: 'number', default: 0 },
               featured: { type: 'boolean', default: false },
-              tier: { type: 'string', enum: ['basic', 'pro'], default: 'basic' },
+              tier: {
+                type: 'string',
+                enum: ['basic', 'pro'],
+                default: 'basic',
+              },
             },
           },
         },
@@ -99,7 +108,10 @@ describe('compat.toPropSchemaItem — array mapping (D15-E0)', () => {
                 type: 'array',
                 items: {
                   type: 'object',
-                  properties: { label: { type: 'string' }, url: { type: 'string' } },
+                  properties: {
+                    label: { type: 'string' },
+                    url: { type: 'string' },
+                  },
                 },
               },
             },
@@ -151,7 +163,11 @@ describe('compat — non-array passthrough (regression)', () => {
     const def = makeDef({
       type: 'object',
       properties: {
-        align: { type: 'string', enum: ['left', 'center', 'right'], default: 'center' },
+        align: {
+          type: 'string',
+          enum: ['left', 'center', 'right'],
+          default: 'center',
+        },
       },
     });
     const legacy = propsSchemaToLegacy(def);

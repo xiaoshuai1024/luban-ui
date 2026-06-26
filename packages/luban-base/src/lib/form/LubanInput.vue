@@ -20,7 +20,7 @@ withDefaults(
     required: false,
     disabled: false,
     error: false,
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -32,7 +32,11 @@ const emit = defineEmits<{
 
 <template>
   <div class="lb-form-field">
-    <label v-if="label" class="lb-form-field__label" :class="{ 'lb-form-field__label--required': required }">
+    <label
+      v-if="label"
+      class="lb-form-field__label"
+      :class="{ 'lb-form-field__label--required': required }"
+    >
       {{ label }}
     </label>
     <input
@@ -44,12 +48,24 @@ const emit = defineEmits<{
       :aria-invalid="error"
       class="lb-input"
       :class="{ 'lb-input--error': error }"
-      @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      @input="
+        emit('update:modelValue', ($event.target as HTMLInputElement).value)
+      "
       @blur="emit('blur', $event)"
       @focus="emit('focus', $event)"
-    />
-    <p v-if="helperText && !error" class="lb-form-field__helper">{{ helperText }}</p>
-    <p v-if="error && errorMessage" class="lb-form-field__error">{{ errorMessage }}</p>
+    >
+    <p
+      v-if="helperText && !error"
+      class="lb-form-field__helper"
+    >
+      {{ helperText }}
+    </p>
+    <p
+      v-if="error && errorMessage"
+      class="lb-form-field__error"
+    >
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
 

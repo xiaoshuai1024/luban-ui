@@ -57,13 +57,21 @@ export const defaultDemoSchema: PageSchema = {
               {
                 id: 'title-text',
                 type: 'LubanText',
-                props: { tag: 'h1', variant: 'h1', content: '欢迎留下联系方式' },
+                props: {
+                  tag: 'h1',
+                  variant: 'h1',
+                  content: '欢迎留下联系方式',
+                },
                 children: [],
               },
               {
                 id: 'subtitle-text',
                 type: 'LubanText',
-                props: { variant: 'body2', secondary: true, content: '填写下方表单，我们会尽快与您联系。' },
+                props: {
+                  variant: 'body2',
+                  secondary: true,
+                  content: '填写下方表单，我们会尽快与您联系。',
+                },
                 children: [],
               },
             ],
@@ -93,12 +101,20 @@ export const defaultDemoSchema: PageSchema = {
                       {
                         id: 'card-1',
                         type: 'LubanContainer',
-                        props: { maxWidth: 'full', padded: true, 'data-cy': 'layout-card-1' },
+                        props: {
+                          maxWidth: 'full',
+                          padded: true,
+                          'data-cy': 'layout-card-1',
+                        },
                         children: [
                           {
                             id: 'card-1-btn',
                             type: 'LubanButton',
-                            props: { variant: 'text', color: 'surface', content: '左侧内容' },
+                            props: {
+                              variant: 'text',
+                              color: 'surface',
+                              content: '左侧内容',
+                            },
                             children: [],
                           },
                         ],
@@ -113,12 +129,20 @@ export const defaultDemoSchema: PageSchema = {
                       {
                         id: 'card-2',
                         type: 'LubanContainer',
-                        props: { maxWidth: 'full', padded: true, 'data-cy': 'layout-card-2' },
+                        props: {
+                          maxWidth: 'full',
+                          padded: true,
+                          'data-cy': 'layout-card-2',
+                        },
                         children: [
                           {
                             id: 'card-2-btn',
                             type: 'LubanButton',
-                            props: { variant: 'text', color: 'surface', content: '右侧内容' },
+                            props: {
+                              variant: 'text',
+                              color: 'surface',
+                              content: '右侧内容',
+                            },
                             children: [],
                           },
                         ],
@@ -146,13 +170,21 @@ export const defaultDemoSchema: PageSchema = {
                   {
                     id: 'btn-secondary',
                     type: 'LubanButton',
-                    props: { variant: 'outlined', color: 'secondary', content: '次按钮' },
+                    props: {
+                      variant: 'outlined',
+                      color: 'secondary',
+                      content: '次按钮',
+                    },
                     children: [],
                   },
                   {
                     id: 'btn-text',
                     type: 'LubanButton',
-                    props: { variant: 'text', color: 'surface', content: '文本按钮' },
+                    props: {
+                      variant: 'text',
+                      color: 'surface',
+                      content: '文本按钮',
+                    },
                     children: [],
                   },
                 ],
@@ -258,7 +290,9 @@ export const defaultDemoSchema: PageSchema = {
                     props: {
                       name: 'agree',
                       label: '同意《隐私政策》',
-                      rules: [{ required: true, message: '请先同意《隐私政策》' }],
+                      rules: [
+                        { required: true, message: '请先同意《隐私政策》' },
+                      ],
                     },
                     children: [],
                   },

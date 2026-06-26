@@ -15,17 +15,23 @@ describe('LubanForm e2e', () => {
         return () =>
           h(
             LubanForm,
-            { onSubmit: () => { submitted.value = true; } },
+            {
+              onSubmit: () => {
+                submitted.value = true;
+              },
+            },
             () => [
               h(LubanInput, {
                 label: '姓名',
                 name: 'name',
                 'data-test': 'name-input',
                 modelValue: name.value,
-                'onUpdate:modelValue': (v: string) => { name.value = v; },
+                'onUpdate:modelValue': (v: string) => {
+                  name.value = v;
+                },
               }),
               h(LubanButton, { type: 'submit', content: '提交' }),
-            ]
+            ],
           );
       },
     });

@@ -64,7 +64,7 @@ describe('LubanDrawer component — rendering & events', () => {
     });
     expect(document.body.querySelector('.lb-drawer')).not.toBeNull();
     expect(document.body.querySelector('.lb-drawer__title')!.textContent).toBe(
-      '筛选'
+      '筛选',
     );
   });
 
@@ -119,7 +119,7 @@ describe('LubanDrawer component — rendering & events', () => {
       },
     });
     const closeBtn = document.body.querySelector(
-      '.lb-drawer__close'
+      '.lb-drawer__close',
     ) as HTMLElement;
     closeBtn.dispatchEvent(new Event('click', { bubbles: true }));
     await wrapper.vm.$nextTick();
@@ -136,9 +136,7 @@ describe('LubanDrawer component — rendering & events', () => {
         },
       },
     });
-    const mask = document.body.querySelector(
-      '.lb-drawer__mask'
-    ) as HTMLElement;
+    const mask = document.body.querySelector('.lb-drawer__mask') as HTMLElement;
     mask.dispatchEvent(new Event('click', { bubbles: true }));
     await wrapper.vm.$nextTick();
     expect(lastEmitted).toBe(false);

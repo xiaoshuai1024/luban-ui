@@ -14,7 +14,7 @@ withDefaults(
     /** Object-fit for the image */
     objectFit?: ObjectFit;
   }>(),
-  { alt: '', objectFit: 'cover' }
+  { alt: '', objectFit: 'cover' },
 );
 
 defineEmits<{
@@ -29,7 +29,12 @@ defineEmits<{
     :class="{ 'lb-banner--link': !!href }"
     :href="href"
     :style="{
-      height: height === 'auto' || height == null ? undefined : typeof height === 'number' ? `${height}px` : height,
+      height:
+        height === 'auto' || height == null
+          ? undefined
+          : typeof height === 'number'
+            ? `${height}px`
+            : height,
     }"
     @click="!href && $emit('click', $event)"
   >
@@ -38,7 +43,7 @@ defineEmits<{
       :src="src"
       :alt="alt"
       :style="{ objectFit }"
-    />
+    >
   </component>
 </template>
 

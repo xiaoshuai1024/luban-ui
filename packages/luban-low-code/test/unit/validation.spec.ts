@@ -8,9 +8,21 @@ const schema: PageSchema = {
     type: 'LubanContainer',
     props: {},
     children: [
-      { id: 'name', type: 'LubanInput', props: { rules: [{ required: true }] } },
-      { id: 'email', type: 'LubanInput', props: { rules: [{ type: 'email' }] } },
-      { id: 'agree', type: 'LubanSwitch', props: { rules: [{ required: true }] } },
+      {
+        id: 'name',
+        type: 'LubanInput',
+        props: { rules: [{ required: true }] },
+      },
+      {
+        id: 'email',
+        type: 'LubanInput',
+        props: { rules: [{ type: 'email' }] },
+      },
+      {
+        id: 'agree',
+        type: 'LubanSwitch',
+        props: { rules: [{ required: true }] },
+      },
       { id: 'notes', type: 'LubanInput' }, // 无 rules
     ],
   },
@@ -27,9 +39,14 @@ describe('initFormState', () => {
 
   it('uses props.value when present', () => {
     const s: PageSchema = {
-      root: { id: 'root', type: 'LubanContainer', props: {}, children: [
-        { id: 'pre', type: 'LubanInput', props: { value: 'hello' } },
-      ] },
+      root: {
+        id: 'root',
+        type: 'LubanContainer',
+        props: {},
+        children: [
+          { id: 'pre', type: 'LubanInput', props: { value: 'hello' } },
+        ],
+      },
     };
     expect(initFormState(s)['pre']).toBe('hello');
   });

@@ -12,7 +12,7 @@ const props = withDefaults(
     /** 是否显示透明度滑块 */
     alpha?: boolean;
   }>(),
-  { modelValue: '#000000', alpha: false }
+  { modelValue: '#000000', alpha: false },
 );
 
 const emit = defineEmits<{
@@ -20,8 +20,20 @@ const emit = defineEmits<{
 }>();
 
 const PRESETS = [
-  '#000000', '#ffffff', '#f56c6c', '#e6a23c', '#67c23a', '#409eff', '#909399',
-  '#f5222d', '#fa8c16', '#faad14', '#13c2c2', '#1677ff', '#722ed1', '#eb2f96',
+  '#000000',
+  '#ffffff',
+  '#f56c6c',
+  '#e6a23c',
+  '#67c23a',
+  '#409eff',
+  '#909399',
+  '#f5222d',
+  '#fa8c16',
+  '#faad14',
+  '#13c2c2',
+  '#1677ff',
+  '#722ed1',
+  '#eb2f96',
 ];
 
 const localText = ref(props.modelValue);
@@ -29,10 +41,13 @@ const invalid = ref(false);
 
 // 外部 modelValue 变化时同步本地态
 import { watch } from 'vue';
-watch(() => props.modelValue, (val) => {
-  localText.value = val;
-  invalid.value = false;
-});
+watch(
+  () => props.modelValue,
+  (val) => {
+    localText.value = val;
+    invalid.value = false;
+  },
+);
 
 const hexPart = computed(() => {
   const v = props.modelValue ?? '';
@@ -74,7 +89,7 @@ function onTextBlur(): void {
         type="color"
         :value="hexPart"
         @input="onSelect"
-      />
+      >
       <input
         class="lb-color-setter__text"
         :class="{ 'lb-color-setter__text--invalid': invalid }"
@@ -83,7 +98,7 @@ function onTextBlur(): void {
         placeholder="#000000"
         @input="onTextInput"
         @blur="onTextBlur"
-      />
+      >
     </div>
     <div class="lb-color-setter__presets">
       <button
@@ -92,7 +107,9 @@ function onTextBlur(): void {
         class="lb-color-setter__swatch"
         :style="{ background: c }"
         :title="c"
-        :class="{ 'lb-color-setter__swatch--active': modelValue?.toLowerCase() === c }"
+        :class="{
+          'lb-color-setter__swatch--active': modelValue?.toLowerCase() === c,
+        }"
         @click="emit('update:modelValue', c)"
       />
     </div>

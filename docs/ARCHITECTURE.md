@@ -71,20 +71,20 @@ flowchart LR
 
 ### Base 组件契约表
 
-| 组件名 | 类型 | 主要 props | model 类型 | events | slots |
-|--------|------|------------|------------|--------|-------|
-| LubanButton | 无值 | variant, color, disabled, block, type | — | click | default |
-| LubanContainer | 无值 | maxWidth, padded | — | — | default |
-| LubanRow | 无值 | align, justify, direction, gap, wrap | — | — | default |
-| LubanCol | 无值 | grow, basis, alignSelf | — | — | default |
-| LubanBanner | 无值 | src, alt, href?, height?, objectFit? | — | click | — |
-| LubanText | 无值 | tag, variant, secondary?, content? | — | — | default |
-| LubanInput | 值 | label, type, placeholder, required, disabled, name, helperText, error, errorMessage | string | update:modelValue, blur, focus | — |
-| LubanTextArea | 值 | label, placeholder, required, disabled, rows, name, helperText, error, errorMessage | string | update:modelValue, blur, focus | — |
-| LubanSelect | 值 | label, placeholder, options, required, disabled, name, helperText, error, errorMessage | string \| number \| null | update:modelValue, blur, focus | — |
-| LubanCheckbox | 值 | label, required, disabled, name | boolean | update:modelValue | — |
-| LubanRadioGroup | 值 | label, name, options, required, disabled | string \| number \| null | update:modelValue | — |
-| LubanSwitch | 值 | label, disabled, name | boolean | update:modelValue | — |
+| 组件名          | 类型 | 主要 props                                                                             | model 类型               | events                         | slots   |
+| --------------- | ---- | -------------------------------------------------------------------------------------- | ------------------------ | ------------------------------ | ------- |
+| LubanButton     | 无值 | variant, color, disabled, block, type                                                  | —                        | click                          | default |
+| LubanContainer  | 无值 | maxWidth, padded                                                                       | —                        | —                              | default |
+| LubanRow        | 无值 | align, justify, direction, gap, wrap                                                   | —                        | —                              | default |
+| LubanCol        | 无值 | grow, basis, alignSelf                                                                 | —                        | —                              | default |
+| LubanBanner     | 无值 | src, alt, href?, height?, objectFit?                                                   | —                        | click                          | —       |
+| LubanText       | 无值 | tag, variant, secondary?, content?                                                     | —                        | —                              | default |
+| LubanInput      | 值   | label, type, placeholder, required, disabled, name, helperText, error, errorMessage    | string                   | update:modelValue, blur, focus | —       |
+| LubanTextArea   | 值   | label, placeholder, required, disabled, rows, name, helperText, error, errorMessage    | string                   | update:modelValue, blur, focus | —       |
+| LubanSelect     | 值   | label, placeholder, options, required, disabled, name, helperText, error, errorMessage | string \| number \| null | update:modelValue, blur, focus | —       |
+| LubanCheckbox   | 值   | label, required, disabled, name                                                        | boolean                  | update:modelValue              | —       |
+| LubanRadioGroup | 值   | label, name, options, required, disabled                                               | string \| number \| null | update:modelValue              | —       |
+| LubanSwitch     | 值   | label, disabled, name                                                                  | boolean                  | update:modelValue              | —       |
 
 ---
 
@@ -228,4 +228,4 @@ interface PageSchema {
 
 ---
 
-*文档版本：与当前代码库一致；契约表随 base 组件增删而更新。*
+_文档版本：与当前代码库一致；契约表随 base 组件增删而更新。_
