@@ -137,8 +137,8 @@ export function getCurrentTheme(): Readonly<LubanThemeTokens> {
     for (const k of keys) {
       const v = computed.getPropertyValue(`--lb-${k}`).trim();
       // 计算样式读不到（如 SSR 注水前）时回退到预设
-      (out as Record<string, unknown>)[k] =
-        v || (LIGHT_PRESET as Record<string, string>)[k];
+      (out as unknown as Record<string, unknown>)[k] =
+        v || (LIGHT_PRESET as unknown as Record<string, string>)[k];
     }
     return out;
   }
