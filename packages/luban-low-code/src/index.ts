@@ -149,6 +149,9 @@ export { evaluate, interpolate, evaluateBoolean } from './lib/expression';
 export { createActionRunner, parseAction, evalArg } from './lib/action';
 export type { ActionRunner, ActionContext } from './lib/action';
 
+// 本地 import materialRegistry 实例（getMaterial 便捷封装用）
+import { materialRegistry as materialRegistryInstance } from './lib/material';
+
 // === material contract layer (foundation, 0.1.0) ===
 // defineMaterial + MaterialRegistry + JSON Schema 类型 + compat 适配层。
 // 旧导出（getComponentMeta 等）保持不变；新物料统一通过 defineMaterial 声明。
@@ -205,5 +208,5 @@ export {
  * @since 0.1.0
  */
 export function getMaterial(name: string): MaterialDefinition | undefined {
-  return materialRegistry.get(name);
+  return materialRegistryInstance.get(name);
 }

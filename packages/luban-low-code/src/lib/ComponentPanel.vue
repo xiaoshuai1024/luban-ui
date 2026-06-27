@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue';
 import { getPaletteGroups } from './palette';
 import { getComponentMeta } from './componentMeta';
+import { getComponentIcon } from './componentIcons';
 import type { PaletteGroup, PaletteItem } from './palette';
 
 /**
@@ -109,9 +110,10 @@ function addToRecent(type: string): void {
 // 暴露给父组件记录最近使用
 defineExpose({ addToRecent });
 
-// 获取物料图标（meta.icon 或默认）
+// 获取物料图标：T-ui-6 改用 mini SVG（取代 emoji），提升专业度。
+// meta.icon 仍保留作为命名提示，视觉以 SVG 为准。
 function getIcon(type: string): string {
-  return getComponentMeta(type)?.icon ?? '📦';
+  return getComponentIcon(type);
 }
 </script>
 
@@ -145,7 +147,7 @@ function getIcon(type: string): string {
           @dragstart="onDragStart($event, item.type)"
           @dblclick="onDoubleClick(item.type)"
         >
-          <span class="lb-component-panel__icon">{{ getIcon(item.type) }}</span>
+          <span class="lb-component-panel__icon" v-html="getIcon(item.type)"></span>
           <span class="lb-component-panel__label">{{ item.label }}</span>
         </div>
       </div>
@@ -184,9 +186,7 @@ function getIcon(type: string): string {
               @dragstart="onDragStart($event, item.type)"
               @dblclick="onDoubleClick(item.type)"
             >
-              <span class="lb-component-panel__icon">{{
-                getIcon(item.type)
-              }}</span>
+              <span class="lb-component-panel__icon" v-html="getIcon(item.type)"></span>
               <span class="lb-component-panel__label">{{ item.label }}</span>
             </div>
           </div>
@@ -321,8 +321,18 @@ function getIcon(type: string): string {
   text-align: center;
 }
 .lb-component-panel__icon {
-  font-size: 18px;
+  /* T-ui-6: SVG 缩略图（取代 emoji）；inline svg 以 18px 等比缩放，描边随 currentColor */
+  width: 18px;
+  height: 18px;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lb-component-panel__icon :deep(svg) {
+  width: 18px;
+  height: 18px;
+  color: #606266;
 }
 .lb-component-panel__label {
   font-size: 12px;

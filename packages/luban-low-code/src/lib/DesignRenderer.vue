@@ -22,8 +22,12 @@ const props = withDefaults(
     isRoot?: boolean;
     /** V2-T4 设计态当前断点：按断点取 resolveResponsiveProps 渲染对应 style */
     breakpoint?: ResponsiveBreakpoint;
+    /** T-ui-5：当前节点在父容器中是否首位（NodeToolbar 上移按钮禁用态） */
+    isFirst?: boolean;
+    /** T-ui-5：当前节点在父容器中是否末位（NodeToolbar 下移按钮禁用态） */
+    isLast?: boolean;
   }>(),
-  { formErrors: () => ({}), placeholderText: '拖拽组件到此处', isRoot: false, breakpoint: 'desktop' }
+  { formErrors: () => ({}), placeholderText: '拖拽组件到此处', isRoot: false, breakpoint: 'desktop', isFirst: false, isLast: false }
 );
 
 const emit = defineEmits<{
@@ -38,6 +42,10 @@ const emit = defineEmits<{
   'context-menu': [x: number, y: number, nodeId: string];
   /** 跨容器拖拽冒泡（来自子容器 Sortable onEnd） */
   'move-node': [nodeId: string, fromParentId: string | null, toParentId: string | null, toIndex: number];
+  /** T-ui-5：层级上移（当前父容器内 index-1） */
+  'move-up': [nodeId: string];
+  /** T-ui-5：层级下移（当前父容器内 index+1） */
+  'move-down': [nodeId: string];
 }>();
 
 // hover 态用于显示 NodeToolbar（即便未选中）
@@ -191,6 +199,14 @@ function onDelete(): void {
   emit('delete', props.root.id);
 }
 
+function onMoveUp(): void {
+  emit('move-up', props.root.id);
+}
+
+function onMoveDown(): void {
+  emit('move-down', props.root.id);
+}
+
 // === 容器内 Sortable（group: luban-nodes，支持跨容器拖拽） ===
 const containerDropRef = vueRef<HTMLElement | null>(null);
 let containerSortable: Sortable | null = null;
@@ -258,6 +274,10 @@ onBeforeUnmount(() => {
       <!-- 节点浮动工具条（hover/选中显示，仅非 root） -->
       <NodeToolbar
         v-if="showToolbar"
+        :is-first="props.isFirst"
+        :is-last="props.isLast"
+        @move-up="onMoveUp"
+        @move-down="onMoveDown"
         @copy="onCopy"
         @delete="onDelete"
       />
@@ -298,7 +318,7 @@ onBeforeUnmount(() => {
           @blur="validateField(root.props?.name as string)"
         >
           <DesignRendererSelf
-            v-for="child in (root.children ?? [])"
+            v-for="(child, idx) in (root.children ?? [])"
             :key="child.id"
             :root="child"
             :form-state="formState"
@@ -306,11 +326,15 @@ onBeforeUnmount(() => {
             :selected-node-id="selectedNodeId"
             :placeholder-text="placeholderText"
             :breakpoint="breakpoint"
+            :is-first="idx === 0"
+            :is-last="idx === (root.children ?? []).length - 1"
             @select="emit('select', $event)"
             @add-node="emit('add-node', $event[0], $event[1])"
             @copy="emit('copy', $event)"
             @delete="emit('delete', $event)"
             @context-menu="emit('context-menu', $event[0], $event[1], $event[2])"
+            @move-up="emit('move-up', $event)"
+            @move-down="emit('move-down', $event)"
           />
         </component>
         <!-- Non-form components: props + slot from content or DesignRenderer children -->
@@ -328,7 +352,7 @@ onBeforeUnmount(() => {
               @drop="onContainerDrop"
             >
               <DesignRendererSelf
-                v-for="child in (root.children ?? [])"
+                v-for="(child, idx) in (root.children ?? [])"
                 :key="child.id"
                 :root="child"
                 :form-state="formState"
@@ -336,12 +360,16 @@ onBeforeUnmount(() => {
                 :selected-node-id="selectedNodeId"
                 :placeholder-text="placeholderText"
                 :breakpoint="breakpoint"
+                :is-first="idx === 0"
+                :is-last="idx === (root.children ?? []).length - 1"
                 @select="emit('select', $event)"
                 @add-node="emit('add-node', $event[0], $event[1])"
                 @copy="emit('copy', $event)"
                 @delete="emit('delete', $event)"
                 @context-menu="emit('context-menu', $event[0], $event[1], $event[2])"
                 @move-node="(nodeId, from, to, idx) => emit('move-node', nodeId, from, to, idx)"
+                @move-up="emit('move-up', $event)"
+                @move-down="emit('move-down', $event)"
               />
             </div>
           </template>
@@ -349,7 +377,7 @@ onBeforeUnmount(() => {
         </component>
         <template v-else>
           <DesignRendererSelf
-            v-for="child in (root.children ?? [])"
+            v-for="(child, idx) in (root.children ?? [])"
             :key="child.id"
             :root="child"
             :form-state="formState"
@@ -357,11 +385,15 @@ onBeforeUnmount(() => {
             :selected-node-id="selectedNodeId"
             :placeholder-text="placeholderText"
             :breakpoint="breakpoint"
+            :is-first="idx === 0"
+            :is-last="idx === (root.children ?? []).length - 1"
             @select="emit('select', $event)"
             @add-node="emit('add-node', $event[0], $event[1])"
             @copy="emit('copy', $event)"
             @delete="emit('delete', $event)"
             @context-menu="emit('context-menu', $event[0], $event[1], $event[2])"
+            @move-up="emit('move-up', $event)"
+            @move-down="emit('move-down', $event)"
           />
         </template>
       </template>

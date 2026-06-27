@@ -370,6 +370,10 @@ const emit = defineEmits<{
     toParentId: string | null,
     toIndex: number,
   ];
+  /** T-ui-5：节点上移层级（当前父容器内 index-1） */
+  'move-up': [nodeId: string];
+  /** T-ui-5：节点下移层级（当前父容器内 index+1） */
+  'move-down': [nodeId: string];
 }>();
 
 const formState = computed(() => props.schema?.formState ?? {});
@@ -672,7 +676,7 @@ const isEmpty = computed(
               class="luban-designer__sortable-list"
             >
               <div
-                v-for="child in schema.root.children"
+                v-for="(child, idx) in schema.root.children"
                 :key="child.id"
                 class="luban-designer__sortable-item"
                 :data-node-id="child.id"
@@ -684,6 +688,8 @@ const isEmpty = computed(
                   :selected-node-id="internalSelected"
                   :placeholder-text="placeholder"
                   :breakpoint="breakpoint"
+                  :is-first="idx === 0"
+                  :is-last="idx === schema.root.children.length - 1"
                   @select="syncSelected"
                   @add-node="
                     (type, parentId) => emit('add-node', type, parentId)
@@ -695,6 +701,8 @@ const isEmpty = computed(
                     (nodeId, from, to, idx) =>
                       emit('move-node', nodeId, from, to, idx)
                   "
+                  @move-up="emit('move-up', $event)"
+                  @move-down="emit('move-down', $event)"
                 />
               </div>
             </div>
