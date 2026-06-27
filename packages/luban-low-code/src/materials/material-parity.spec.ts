@@ -98,11 +98,11 @@ describe('material registry parity', () => {
     }
   });
 
-  it('form controls (6) are registered with category=form and non-container', () => {
+  it('form controls (9) are registered with category=form and non-container', () => {
     const formControls = all.filter(
       (d) => d.category === 'form' && d.isContainer !== true,
     );
-    expect(formControls.length).toBe(6);
+    expect(formControls.length).toBe(9);
     const names = formControls.map((d) => d.name).sort();
     expect(names).toEqual(
       [
@@ -112,16 +112,20 @@ describe('material registry parity', () => {
         'LubanSelect',
         'LubanSwitch',
         'LubanTextArea',
+        // T-ui-8 新增 form 控件
+        'LubanTagInput',
+        'LubanTimePicker',
+        'LubanDateRange',
       ].sort(),
     );
   });
 
-  it('LubanForm acceptTypes covers all 6 form controls', () => {
+  it('LubanForm acceptTypes covers all 9 form controls', () => {
     const form = materialRegistry.get('LubanForm');
     expect(form).toBeDefined();
     expect(form?.acceptTypes).toBeDefined();
     const accept = new Set(form?.acceptTypes ?? []);
-    expect(accept.size).toBe(6);
+    expect(accept.size).toBe(9);
     for (const c of [
       'LubanInput',
       'LubanTextArea',
@@ -129,12 +133,16 @@ describe('material registry parity', () => {
       'LubanCheckbox',
       'LubanRadioGroup',
       'LubanSwitch',
+      // T-ui-8 新增 form 控件
+      'LubanTagInput',
+      'LubanTimePicker',
+      'LubanDateRange',
     ]) {
       expect(accept.has(c)).toBe(true);
     }
   });
 
-  it('getComponent resolves all 34 materials via registry (no undefined)', () => {
+  it('getComponent resolves all 61 materials via registry (no undefined)', () => {
     // 验证 registry.ts getComponent 经 materialRegistry 取到全部物料的 component
     for (const def of all) {
       const comp = getComponent(def.name);
@@ -142,10 +150,10 @@ describe('material registry parity', () => {
     }
   });
 
-  it('getComponentMeta derives ComponentMeta for all 34 materials', () => {
+  it('getComponentMeta derives ComponentMeta for all 61 materials', () => {
     // 验证 componentMeta.ts 经 compat.toLegacyComponentMeta 派生旧 ComponentMeta
     const metas = getAllComponentMeta();
-    expect(metas.length).toBe(34);
+    expect(metas.length).toBe(61);
     for (const meta of metas) {
       expect(meta.type).toBeTruthy();
       expect(meta.component).toBeDefined();
