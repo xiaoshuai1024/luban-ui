@@ -28,6 +28,10 @@ const FORM_CONTROL_TYPES = [
   'LubanCheckbox',
   'LubanRadioGroup',
   'LubanSwitch',
+  // T-ui-8 新增 form 控件
+  'LubanTagInput',
+  'LubanTimePicker',
+  'LubanDateRange',
 ];
 
 export const formMaterial = defineMaterial({

@@ -367,6 +367,8 @@ const emit = defineEmits<{
   /** V2-T11 框选多选：emit 框内所有节点 id */
   'multi-select': [nodeIds: string[]];
   'add-node': [type: string, parentId?: string];
+  /** T-ui-10：从面板拖入变体预设 snippet；上层据 id 查表构造预填节点 */
+  'add-snippet': [snippetId: string];
   /** root.children 重排（fromIndex, toIndex） */
   reorder: [fromIndex: number, toIndex: number];
   /** 复制节点 */
@@ -481,8 +483,12 @@ function onPaletteDrop(e: DragEvent): void {
     return;
   }
   try {
-    const data = JSON.parse(raw) as { type?: string };
-    if (data?.type) {
+    const data = JSON.parse(raw) as { type?: string; snippetId?: string };
+    if (data?.snippetId) {
+      // T-ui-10：拖入的是变体预设 → emit add-snippet（上层查表构造预填节点）
+      dropError.value = null;
+      emit('add-snippet', data.snippetId);
+    } else if (data?.type) {
       dropError.value = null;
       emit('add-node', data.type);
     } else {

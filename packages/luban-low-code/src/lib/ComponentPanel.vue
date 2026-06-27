@@ -3,20 +3,25 @@ import { ref, computed, watch } from 'vue';
 import { getPaletteGroups } from './palette';
 import { getComponentMeta } from './componentMeta';
 import { getComponentIcon } from './componentIcons';
+import { getSnippetsByType, SNIPPET_TYPES, type Snippet } from './snippets';
 import type { PaletteGroup, PaletteItem } from './palette';
 
 /**
  * 组件面板（T-ui-d1）：左栏，搜索 + 分类折叠 + 拖拽源 + 最近使用。
  * 拖拽时设 dataTransfer('application/json', {type})，画布接收后 emit add-node。
+ * T-ui-10：支持变体预设（snippets），有变体的组件可展开选择预配置变体。
  */
 const emit = defineEmits<{
   'add-node': [type: string];
+  'add-snippet': [snippetId: string];
   'recent-change': [types: string[]];
 }>();
 
 const allGroups = computed<PaletteGroup[]>(() => getPaletteGroups());
 const searchQuery = ref('');
 const collapsed = ref<Record<string, boolean>>({});
+/** T-ui-10：变体展开状态（type → 是否展开显示其 snippets） */
+const expandedSnippets = ref<Record<string, boolean>>({});
 
 // 最近使用（localStorage 持久化）
 const STORAGE_KEY = 'luban_recent_components';
@@ -79,10 +84,11 @@ function isCollapsed(cat: string): boolean {
   return collapsed.value[cat] ?? false;
 }
 
-// 拖拽：设 dataTransfer
-function onDragStart(e: DragEvent, type: string): void {
+// 拖拽：设 dataTransfer（T-ui-10 支持 snippetId 透传）
+function onDragStart(e: DragEvent, type: string, snippetId?: string): void {
   if (e.dataTransfer) {
-    e.dataTransfer.setData('application/json', JSON.stringify({ type }));
+    const payload = snippetId ? { type, snippetId } : { type };
+    e.dataTransfer.setData('application/json', JSON.stringify(payload));
     e.dataTransfer.effectAllowed = 'copy';
   }
 }
@@ -91,6 +97,27 @@ function onDragStart(e: DragEvent, type: string): void {
 function onDoubleClick(type: string): void {
   emit('add-node', type);
   addToRecent(type);
+}
+
+// T-ui-10：是否该 type 有变体
+function hasSnippets(type: string): boolean {
+  return SNIPPET_TYPES.has(type);
+}
+
+// T-ui-10：获取该 type 的变体列表
+function snippetsOf(type: string): Snippet[] {
+  return getSnippetsByType(type);
+}
+
+// T-ui-10：切换变体展开
+function toggleSnippets(type: string): void {
+  expandedSnippets.value[type] = !expandedSnippets.value[type];
+}
+
+// T-ui-10：拖入/点击变体 → emit add-snippet
+function onSnippetDoubleClick(snippet: Snippet): void {
+  emit('add-snippet', snippet.id);
+  addToRecent(snippet.type);
 }
 
 // 记录最近使用
@@ -183,17 +210,48 @@ function getIcon(type: string): string {
             <div
               v-for="item in group.items"
               :key="item.type"
-              class="lb-component-panel__item"
-              draggable="true"
-              :title="`拖拽或双击添加 ${item.label}`"
-              @dragstart="onDragStart($event, item.type)"
-              @dblclick="onDoubleClick(item.type)"
+              class="lb-component-panel__item-wrapper"
             >
-              <span
-                class="lb-component-panel__icon"
-                v-html="getIcon(item.type)"
-              />
-              <span class="lb-component-panel__label">{{ item.label }}</span>
+              <div
+                class="lb-component-panel__item"
+                draggable="true"
+                :title="`拖拽或双击添加 ${item.label}`"
+                @dragstart="onDragStart($event, item.type)"
+                @dblclick="onDoubleClick(item.type)"
+              >
+                <span
+                  class="lb-component-panel__icon"
+                  v-html="getIcon(item.type)"
+                />
+                <span class="lb-component-panel__label">{{ item.label }}</span>
+                <!-- T-ui-10：有变体的组件显示展开角标 -->
+                <span
+                  v-if="hasSnippets(item.type)"
+                  class="lb-component-panel__snippet-toggle"
+                  :title="expandedSnippets[item.type] ? '收起变体' : '展开变体预设'"
+                  @click.stop="toggleSnippets(item.type)"
+                >{{ expandedSnippets[item.type] ? '▾' : '▸' }}</span>
+              </div>
+              <!-- T-ui-10：变体预设子列表 -->
+              <transition name="lb-collapse">
+                <div
+                  v-if="hasSnippets(item.type) && expandedSnippets[item.type]"
+                  class="lb-component-panel__snippets"
+                >
+                  <div
+                    v-for="snip in snippetsOf(item.type)"
+                    :key="snip.id"
+                    class="lb-component-panel__snippet"
+                    draggable="true"
+                    :title="snip.description || snip.name"
+                    @dragstart="onDragStart($event, item.type, snip.id)"
+                    @dblclick="onSnippetDoubleClick(snip)"
+                  >
+                    <span class="lb-component-panel__snippet-dot" />
+                    <span class="lb-component-panel__snippet-label">{{ snip.name }}</span>
+                  </div>
+                </div>
+              </transition>
             </div>
           </div>
         </transition>
@@ -345,6 +403,48 @@ function getIcon(type: string): string {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+/* T-ui-10 变体预设样式 */
+.lb-component-panel__item-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.lb-component-panel__snippet-toggle {
+  margin-left: auto;
+  padding: 0 4px;
+  color: #909399;
+  cursor: pointer;
+  font-size: 10px;
+  user-select: none;
+}
+.lb-component-panel__snippet-toggle:hover {
+  color: #409eff;
+}
+.lb-component-panel__snippets {
+  padding-left: 28px;
+  background: #fafafa;
+}
+.lb-component-panel__snippet {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  cursor: grab;
+  border-radius: 4px;
+}
+.lb-component-panel__snippet:hover {
+  background: #ecf5ff;
+}
+.lb-component-panel__snippet-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #409eff;
+  flex-shrink: 0;
+}
+.lb-component-panel__snippet-label {
+  font-size: 12px;
+  color: #606266;
 }
 .lb-component-panel__empty {
   text-align: center;
