@@ -10,6 +10,7 @@ on:
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'nx.json'
+      - 'tsconfig.base.json'
       - '.github/workflows/publish-packages.yml'
 
 concurrency:
