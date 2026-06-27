@@ -9,7 +9,11 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "vite/client", "vue", "dom"]
+    "types": ["node", "vite/client", "vue", "dom"],
+    "paths": {
+      "luban-base": ["../luban-base/src/index.ts"],
+      "@luban-low-code/luban-base": ["../luban-base/src/index.ts"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.vue"],
   "references": [],
