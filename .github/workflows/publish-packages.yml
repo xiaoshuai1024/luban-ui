@@ -62,6 +62,4 @@ jobs:
         run: pnpm exec nx run-many --target=test --projects=luban-base,luban-low-code --skip-nx-cache
 
       - name: Publish packages (Nx)
-        # npm 发布失败不阻断 CI（build+test 已验证代码正确性；发布失败多为 npm 认证/包名冲突，属部署侧问题）
-        continue-on-error: true
         run: pnpm exec nx run-many --target=publish --projects=luban-base,luban-low-code --skip-nx-cache

@@ -1,5 +1,5 @@
 {
-  "name": "@luban-low-code/luban-base",
+  "name": "luban-base",
   "version": "0.0.18",
   "private": false,
   "type": "module",

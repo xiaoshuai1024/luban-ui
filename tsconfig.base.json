@@ -22,8 +22,8 @@
       "@luban-ui/button": ["packages/components/button/src/index.ts"],
       "@luban-ui/types": ["packages/types/src/index.ts"],
       "@luban-ui/theme": ["packages/theme/src/index.ts"],
-      "@luban-low-code/luban-base": ["packages/luban-base/src/index.ts"],
-      "@luban-low-code/luban-low-code": ["packages/luban-low-code/src/index.ts"],
+      "luban-base": ["packages/luban-base/src/index.ts"],
+      "luban-low-code": ["packages/luban-low-code/src/index.ts"],
       "luban-base": ["packages/luban-base/src/index.ts"],
       "luban-low-code": ["packages/luban-low-code/src/index.ts"]
     }

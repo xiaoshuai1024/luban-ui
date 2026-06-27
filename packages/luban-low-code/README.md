@@ -4,10 +4,10 @@ Low-code runtime and designer for Vue 3: render from JSON schema and optional dr
 
 ## Installation
 
-Install this package; it will pull `@luban-low-code/luban-base` and `vue` as dependencies. No need to install the base package separately.
+Install this package; it will pull `luban-base` and `vue` as dependencies. No need to install the base package separately.
 
 ```bash
-pnpm add @luban-low-code/luban-low-code
+pnpm add luban-low-code
 ```
 
 ## Render from JSON
@@ -19,8 +19,8 @@ Pass a `PageSchema` (tree of `NodeSchema` + optional `formState`) to render the 
   <LubanPage :schema="schema" />
 </template>
 <script setup>
-import { LubanPage } from '@luban-low-code/luban-low-code';
-import type { PageSchema } from '@luban-low-code/luban-low-code';
+import { LubanPage } from 'luban-low-code';
+import type { PageSchema } from 'luban-low-code';
 
 const schema = { root: { id: 'root', type: 'LubanContainer', props: {}, children: [] }, formState: {} };
 </script>

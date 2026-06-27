@@ -63,6 +63,34 @@ import { pricingMaterial } from './marketing/pricing/material';
 import { testimonialCarouselMaterial } from './marketing/testimonial-carousel/material';
 import { galleryMaterial } from './marketing/gallery/material';
 import { logoCloudMaterial } from './marketing/logo-cloud/material';
+// === T-ui-8 新增 27 物料（website/lead/form/poster/marketing）===
+import { cardMaterial } from './website/card/material';
+import { collapseMaterial } from './website/collapse/material';
+import { dividerMaterial } from './website/divider/material';
+import { headingMaterial } from './website/heading/material';
+import { iconMaterial } from './website/icon/material';
+import { imageMaterial } from './website/image/material';
+import { linkMaterial } from './website/link/material';
+import { listMaterial } from './website/list/material';
+import { richTextMaterial } from './website/rich-text/material';
+import { videoMaterial } from './website/video/material';
+import { datePickerMaterial } from './lead/date-picker/material';
+import { phoneInputMaterial } from './lead/phone-input/material';
+import { ratingMaterial } from './lead/rating/material';
+import { regionSelectMaterial } from './lead/region-select/material';
+import { sliderMaterial } from './lead/slider/material';
+import { tagInputMaterial } from './form/tag-input/material';
+import { timePickerMaterial } from './form/time-picker/material';
+import { dateRangeMaterial } from './form/date-range/material';
+import { posterMaterial } from './poster/poster/material';
+import { posterImageMaterial } from './poster/poster-image/material';
+import { posterTextMaterial } from './poster/poster-text/material';
+import { qrCodeMaterial } from './poster/qr-code/material';
+import { shapeMaterial } from './poster/shape/material';
+import { carouselMaterial } from './marketing/carousel/material';
+import { countdownMaterial } from './marketing/countdown/material';
+import { couponMaterial } from './marketing/coupon/material';
+import { navBarMaterial } from './marketing/nav-bar/material';
 
 /**
  * 全部 20 物料定义（注册顺序：general → content → layout → form
@@ -109,6 +137,34 @@ export const materials: MaterialDefinition[] = [
   testimonialCarouselMaterial,
   galleryMaterial,
   logoCloudMaterial,
+  // === T-ui-8 新增 27 物料 ===
+  cardMaterial,
+  collapseMaterial,
+  dividerMaterial,
+  headingMaterial,
+  iconMaterial,
+  imageMaterial,
+  linkMaterial,
+  listMaterial,
+  richTextMaterial,
+  videoMaterial,
+  datePickerMaterial,
+  phoneInputMaterial,
+  ratingMaterial,
+  regionSelectMaterial,
+  sliderMaterial,
+  tagInputMaterial,
+  timePickerMaterial,
+  dateRangeMaterial,
+  posterMaterial,
+  posterImageMaterial,
+  posterTextMaterial,
+  qrCodeMaterial,
+  shapeMaterial,
+  carouselMaterial,
+  countdownMaterial,
+  couponMaterial,
+  navBarMaterial,
 ];
 
 /**
@@ -168,3 +224,31 @@ export { pricingMaterial } from './marketing/pricing/material';
 export { testimonialCarouselMaterial } from './marketing/testimonial-carousel/material';
 export { galleryMaterial } from './marketing/gallery/material';
 export { logoCloudMaterial } from './marketing/logo-cloud/material';
+// === T-ui-8 新增 27 物料 re-export ===
+export { cardMaterial } from './website/card/material';
+export { collapseMaterial } from './website/collapse/material';
+export { dividerMaterial } from './website/divider/material';
+export { headingMaterial } from './website/heading/material';
+export { iconMaterial } from './website/icon/material';
+export { imageMaterial } from './website/image/material';
+export { linkMaterial } from './website/link/material';
+export { listMaterial } from './website/list/material';
+export { richTextMaterial } from './website/rich-text/material';
+export { videoMaterial } from './website/video/material';
+export { datePickerMaterial } from './lead/date-picker/material';
+export { phoneInputMaterial } from './lead/phone-input/material';
+export { ratingMaterial } from './lead/rating/material';
+export { regionSelectMaterial } from './lead/region-select/material';
+export { sliderMaterial } from './lead/slider/material';
+export { tagInputMaterial } from './form/tag-input/material';
+export { timePickerMaterial } from './form/time-picker/material';
+export { dateRangeMaterial } from './form/date-range/material';
+export { posterMaterial } from './poster/poster/material';
+export { posterImageMaterial } from './poster/poster-image/material';
+export { posterTextMaterial } from './poster/poster-text/material';
+export { qrCodeMaterial } from './poster/qr-code/material';
+export { shapeMaterial } from './poster/shape/material';
+export { carouselMaterial } from './marketing/carousel/material';
+export { countdownMaterial } from './marketing/countdown/material';
+export { couponMaterial } from './marketing/coupon/material';
+export { navBarMaterial } from './marketing/nav-bar/material';

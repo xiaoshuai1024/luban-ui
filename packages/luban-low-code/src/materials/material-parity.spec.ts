@@ -24,8 +24,8 @@ import { CONTAINER_TYPES, FORM_CONTROL_TYPES } from '../lib/constants';
 describe('material registry parity', () => {
   const all = materialRegistry.getAll();
 
-  it('registers all 34 materials', () => {
-    expect(all.length).toBe(34);
+  it('registers all 61 materials', () => {
+    expect(all.length).toBe(61);
   });
 
   it('includes SidePanel (首次纳入)', () => {
@@ -204,7 +204,8 @@ describe('material registry parity', () => {
 
   it('CONTAINER_TYPES and FORM_CONTROL_TYPES derive from registry', () => {
     expect(CONTAINER_TYPES.has('LubanSidePanel')).toBe(true);
-    expect(FORM_CONTROL_TYPES.size).toBe(6);
+    // form 控件：原 6 + T-ui-8 新增 tag-input/time-picker/date-range = 9
+    expect(FORM_CONTROL_TYPES.size).toBe(9);
   });
 
   // 软约束：缺 default 仅 warn 不 fail（防止阻塞迁移），但 log 出来便于追踪。
