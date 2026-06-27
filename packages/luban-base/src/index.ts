@@ -52,7 +52,7 @@ export { default as LubanCountdown } from './lib/marketing/LubanCountdown.vue';
 export { default as LubanCoupon } from './lib/marketing/LubanCoupon.vue';
 export { default as LubanModal } from './lib/marketing/LubanModal.vue';
 export { default as LubanCarousel } from './lib/marketing/LubanCarousel.vue';
-export { default as LubanNavBar } from './lib/marketing/LubanNavBar.vue';
+export { default as LubanNavBar } from './lib/marketing/LubanNavbar.vue';
 
 // 网站搭建物料族（T-ui-8）
 export { default as LubanImage } from './lib/website/LubanImage.vue';
