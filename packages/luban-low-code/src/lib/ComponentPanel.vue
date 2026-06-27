@@ -147,7 +147,10 @@ function getIcon(type: string): string {
           @dragstart="onDragStart($event, item.type)"
           @dblclick="onDoubleClick(item.type)"
         >
-          <span class="lb-component-panel__icon" v-html="getIcon(item.type)"></span>
+          <span
+            class="lb-component-panel__icon"
+            v-html="getIcon(item.type)"
+          /><!-- v-html 安全：SVG 来自内部可信常量 componentIcons.ts，非用户输入 -->
           <span class="lb-component-panel__label">{{ item.label }}</span>
         </div>
       </div>
@@ -186,7 +189,10 @@ function getIcon(type: string): string {
               @dragstart="onDragStart($event, item.type)"
               @dblclick="onDoubleClick(item.type)"
             >
-              <span class="lb-component-panel__icon" v-html="getIcon(item.type)"></span>
+              <span
+                class="lb-component-panel__icon"
+                v-html="getIcon(item.type)"
+              />
               <span class="lb-component-panel__label">{{ item.label }}</span>
             </div>
           </div>

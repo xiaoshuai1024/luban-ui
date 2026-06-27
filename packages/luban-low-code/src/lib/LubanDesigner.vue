@@ -30,6 +30,8 @@ const alignGuidesEnabled = ref(true);
 const activeGuides = ref<GuideLine[]>([]);
 /** V2-T12 间距提示 */
 const activeSpacingHints = ref<SpacingHint[]>([]);
+/** T-ui-3 等距高亮线（紫色） */
+const activeEqualGuides = ref<GuideLine[]>([]);
 /** V2-T11 框选：拖框矩形 {start, end}（画布坐标） */
 const frameSelect = ref<{
   startX: number;
@@ -199,6 +201,8 @@ function onCanvasMouseMove(e: MouseEvent): void {
   if (!alignGuidesEnabled.value || !canvasRef.value) {
     activeGuides.value = [];
     activeSpacingHints.value = [];
+    activeEqualGuides.value = [];
+    activeEqualGuides.value = [];
     return;
   }
   const target = (e.target as HTMLElement)?.closest(
@@ -207,12 +211,16 @@ function onCanvasMouseMove(e: MouseEvent): void {
   if (!target) {
     activeGuides.value = [];
     activeSpacingHints.value = [];
+    activeEqualGuides.value = [];
+    activeEqualGuides.value = [];
     return;
   }
   const draggingId = target.dataset.lbNode;
   if (!draggingId) {
     activeGuides.value = [];
     activeSpacingHints.value = [];
+    activeEqualGuides.value = [];
+    activeEqualGuides.value = [];
     return;
   }
   const others = collectNodeRects(
@@ -222,6 +230,8 @@ function onCanvasMouseMove(e: MouseEvent): void {
   if (others.length === 0) {
     activeGuides.value = [];
     activeSpacingHints.value = [];
+    activeEqualGuides.value = [];
+    activeEqualGuides.value = [];
     return;
   }
   // 使用 canvasRef 做坐标参考（稳定，不受 viewport transform 影响）
@@ -238,6 +248,7 @@ function onCanvasMouseMove(e: MouseEvent): void {
   const result = computeAlignGuides(draggingRect, others);
   activeGuides.value = dedupeGuides(result.guides);
   activeSpacingHints.value = result.spacingHints;
+  activeEqualGuides.value = dedupeGuides(result.equalSpacingGuides);
 }
 
 /** V2-T11 框选：mousedown 空白处开始拖框 */
@@ -298,6 +309,7 @@ function onCanvasMouseUp(): void {
 function clearGuides(): void {
   activeGuides.value = [];
   activeSpacingHints.value = [];
+  activeEqualGuides.value = [];
 }
 
 onBeforeUnmount(clearGuides);
@@ -762,6 +774,36 @@ const isEmpty = computed(
               />
             </template>
           </div>
+          <!-- T-ui-3 等距高亮线 overlay（紫色：拖动节点与两邻居间距相等时） -->
+          <div
+            v-if="activeEqualGuides.length"
+            class="luban-designer__guides luban-designer__guides--equal"
+            aria-hidden="true"
+          >
+            <template
+              v-for="(g, i) in activeEqualGuides"
+              :key="'eq' + i"
+            >
+              <div
+                v-if="g.orientation === 'vertical'"
+                class="luban-designer__guide luban-designer__guide--vertical luban-designer__guide--equal"
+                :style="{
+                  left: g.position + 'px',
+                  top: g.start + 'px',
+                  height: g.end - g.start + 'px',
+                }"
+              />
+              <div
+                v-else
+                class="luban-designer__guide luban-designer__guide--horizontal luban-designer__guide--equal"
+                :style="{
+                  top: g.position + 'px',
+                  left: g.start + 'px',
+                  width: g.end - g.start + 'px',
+                }"
+              />
+            </template>
+          </div>
           <!-- V2-T12 间距提示 overlay -->
           <div
             v-if="activeSpacingHints.length"
@@ -1141,6 +1183,12 @@ const isEmpty = computed(
 
 .luban-designer__guide--horizontal {
   height: 1px;
+}
+
+/* T-ui-3 等距高亮线（紫色，区别于红色对齐线，z-index 更高以叠加在普通 guide 之上） */
+.luban-designer__guide--equal {
+  background: #722ed1;
+  z-index: 2;
 }
 
 /* V2-T12 间距提示 */

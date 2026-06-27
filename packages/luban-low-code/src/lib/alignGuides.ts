@@ -52,6 +52,8 @@ export interface AlignResult {
   guides: GuideLine[];
   /** V2-T12 间距提示（相邻节点的距离数值） */
   spacingHints: SpacingHint[];
+  /** T-ui-3 等距高亮线（紫色）：拖动节点与两个邻居间距相等时显示 */
+  equalSpacingGuides: GuideLine[];
   /** 吸附建议：若拖动节点应吸附，返回 {x?, y?} 目标坐标（与 guides 对应） */
   snap?: { x?: number; y?: number };
 }
@@ -170,11 +172,91 @@ export function computeAlignGuides(
   return {
     guides,
     spacingHints: computeSpacingHints(dragging, others, threshold),
+    equalSpacingGuides: computeEqualSpacingGuides(dragging, others, threshold),
     snap:
       snapX !== undefined || snapY !== undefined
         ? { x: snapX, y: snapY }
         : undefined,
   };
+}
+
+/**
+ * T-ui-3 计算等距高亮线（紫色）：拖动节点 D 与两个邻居 A、B 形成等距时显示。
+ *
+ * 判定条件（以水平排列为例，D 在 A、B 之间）：
+ *   gap(D→A) 与 gap(D→B) 的差值 ≤ threshold，则三者等距。
+ * 返回贯穿三个节点的辅助线（横向/纵向各一条），用于 UI 绘制紫色线 + 等距标记。
+ *
+ * 设计：仅检测"三节点同轴投影重叠"的情况（最常见的等距场景），
+ * 避免组合爆炸；阈值复用对齐 threshold。
+ */
+export function computeEqualSpacingGuides(
+  dragging: Rect,
+  others: Rect[],
+  threshold = DEFAULT_THRESHOLD,
+): GuideLine[] {
+  const guides: GuideLine[] = [];
+  if (others.length < 2) return guides;
+
+  const dRight = dragging.left + dragging.width;
+  const dBottom = dragging.top + dragging.height;
+  const dCx = dragging.left + dragging.width / 2;
+  const dCy = dragging.top + dragging.height / 2;
+
+  // 两两遍历邻居，与 dragging 组成三元组
+  for (let i = 0; i < others.length; i++) {
+    for (let j = i + 1; j < others.length; j++) {
+      const a = others[i];
+      const b = others[j];
+      const aRight = a.left + a.width;
+      const aBottom = a.top + a.height;
+      const bRight = b.left + b.width;
+      const bBottom = b.top + b.height;
+
+      // —— 水平等距：三者 y 轴投影两两重叠，且 dragging 在 a、b 之间（x 维度） ——
+      const yOverlapAB = !(dBottom < a.top || dragging.top > aBottom) &&
+        !(dBottom < b.top || dragging.top > bBottom);
+      const dBetweenX = (dragging.left > aRight && dragging.left < b.left) ||
+        (dragging.left > bRight && dragging.left < a.left);
+      if (yOverlapAB && dBetweenX) {
+        // 计算 dragging 与 a、b 的水平间距（用 aRight/aBottom 派生值，Rect 无 right/bottom 字段）
+        const gapA = aRight < dragging.left ? dragging.left - aRight : (a.left > dRight ? a.left - dRight : 0);
+        const gapB = bRight < dragging.left ? dragging.left - bRight : (b.left > dRight ? b.left - dRight : 0);
+        if (gapA > 0 && gapB > 0 && Math.abs(gapA - gapB) <= threshold) {
+          const top = Math.min(dragging.top, a.top, b.top);
+          const bottom = Math.max(dBottom, aBottom, bBottom);
+          // 垂直等距线：x=dragging 中线，y 贯穿三者顶部到底部
+          guides.push({ orientation: 'vertical', position: dCx, start: top, end: bottom });
+          // 水平等距标记线：y=三者中线，x 贯穿 a/b 最左到最右
+          const left = Math.min(dragging.left, a.left, b.left);
+          const right = Math.max(dRight, aRight, bRight);
+          guides.push({ orientation: 'horizontal', position: (top + bottom) / 2, start: left, end: right });
+        }
+      }
+
+      // —— 垂直等距：三者 x 轴投影两两重叠，且 dragging 在 a、b 之间（y 维度） ——
+      const xOverlapAB = !(dRight < a.left || dragging.left > aRight) &&
+        !(dRight < b.left || dragging.left > bRight);
+      const dBetweenY = (dragging.top > aBottom && dragging.top < b.top) ||
+        (dragging.top > bBottom && dragging.top < b.top);
+      if (xOverlapAB && dBetweenY) {
+        const gapA = aBottom < dragging.top ? dragging.top - aBottom : (a.top > dBottom ? a.top - dBottom : 0);
+        const gapB = bBottom < dragging.top ? dragging.top - bBottom : (b.top > dBottom ? b.top - dBottom : 0);
+        if (gapA > 0 && gapB > 0 && Math.abs(gapA - gapB) <= threshold) {
+          const left = Math.min(dragging.left, a.left, b.left);
+          const right = Math.max(dRight, aRight, bRight);
+          // 水平等距线：y=dragging 中线，x 贯穿三者左到右
+          guides.push({ orientation: 'horizontal', position: dCy, start: left, end: right });
+          // 垂直等距标记线：x=三者中线，y 贯穿 a/b 最顶到最底
+          const top = Math.min(dragging.top, a.top, b.top);
+          const bottom = Math.max(dBottom, aBottom, bBottom);
+          guides.push({ orientation: 'vertical', position: (left + right) / 2, start: top, end: bottom });
+        }
+      }
+    }
+  }
+
+  return guides;
 }
 
 /**
